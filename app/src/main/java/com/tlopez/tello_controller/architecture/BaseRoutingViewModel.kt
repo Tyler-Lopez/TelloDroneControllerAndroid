@@ -1,4 +1,4 @@
-package com.dodo.flashcards.architecture
+package com.tlopez.tello_controller.architecture
 
 abstract class BaseRoutingViewModel<
         TypeOfViewState : ViewState,

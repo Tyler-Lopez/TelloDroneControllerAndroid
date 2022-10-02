@@ -1,4 +1,4 @@
-package com.dodo.flashcards
+package com.tlopez.tello_controller
 
 import org.junit.Test
 

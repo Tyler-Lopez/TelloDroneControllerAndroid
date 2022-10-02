@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.theme
+package com.tlopez.tello_controller.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

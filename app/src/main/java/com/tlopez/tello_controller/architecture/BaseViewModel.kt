@@ -1,4 +1,4 @@
-package com.dodo.flashcards.architecture
+package com.tlopez.tello_controller.architecture
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
