@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -13,7 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tlopez.tello_controller.presentation.theme.FlashcardsAppTheme
-import com.tlopez.tello_controller.services.SocketService
+import com.tlopez.tello_controller.domain.SocketService
+import com.tlopez.tello_controller.util.TelloCommand
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,18 +27,32 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
-                    Button(onClick = {
-                        Intent(this, SocketService::class.java).also {
-                            startService(it)
+                    Column {
+                        Greeting("Android")
+                        Button(onClick = {
+                            Intent(this@MainActivity, SocketService::class.java).also {
+                                it.putExtra(SocketService.EXTRA_DATA, TelloCommand.Start)
+                                startService(it)
+                            }
+                        }) {
+                            Text("start service")
                         }
-                    }) {
-                        Text("start service")
-                    }
-                    Button(onClick = {
-
-                    }) {
-                        Text("send command")
+                        Button(onClick = {
+                            Intent(this@MainActivity, SocketService::class.java).also {
+                                it.putExtra(SocketService.EXTRA_DATA, TelloCommand.Takeoff)
+                                startService(it)
+                            }
+                        }) {
+                            Text("send takeoff command")
+                        }
+                        Button(onClick = {
+                            Intent(this@MainActivity, SocketService::class.java).also {
+                                it.putExtra(SocketService.EXTRA_DATA, TelloCommand.Land)
+                                startService(it)
+                            }
+                        }) {
+                            Text("send land command")
+                        }
                     }
                 }
             }
