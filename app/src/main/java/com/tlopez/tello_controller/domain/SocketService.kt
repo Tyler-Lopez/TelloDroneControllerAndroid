@@ -13,16 +13,13 @@ class SocketService : Service() {
 
     companion object {
         const val EXTRA_DATA = "extra_data"
-
-        private const val PROTOCOL_INITIALIZE = "command"
         private const val IP_ADDRESS: String = "192.168.10.1"
         private const val UDP_PORT: Int = 8889
     }
 
     private val address = InetAddress.getByName(IP_ADDRESS)
     private val scope = CoroutineScope(Dispatchers.IO)
-    private val socket: DatagramSocket = DatagramSocket()
-
+    private val socket: DatagramSocket = DatagramSocket(UDP_PORT)
 
     private fun sendCommand(command: String) {
         scope.launch {
@@ -39,6 +36,25 @@ class SocketService : Service() {
         }
     }
 
+    private fun receiveResponse() {
+        scope.launch {
+            runCatching {
+                val message = ByteArray(8000)
+                val packet = DatagramPacket(
+                    message,
+                    message.size
+                )
+                println("attempting to receive")
+                socket.soTimeout = 5000
+                socket.receive(packet)
+                println("Received message see $message")
+                message.joinToString { "$it, "}
+            }.onSuccess { println("success $it") }
+                .onFailure { println("failure $it") }
+        }
+    }
+
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
         // TODO("Not yet implemented")
@@ -48,6 +64,7 @@ class SocketService : Service() {
         intent?.getParcelableExtra<TelloCommand>(EXTRA_DATA)?.let {
             println(it)
             sendCommand(it.command)
+            receiveResponse()
         }
         return START_STICKY
     }
