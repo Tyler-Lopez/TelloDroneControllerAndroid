@@ -1,13 +1,13 @@
-package com.tlopez.tello_controller.services
+package com.tlopez.tello_controller.domain
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.tlopez.tello_controller.util.TelloCommand
+import kotlinx.coroutines.*
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import java.net.Socket
 
 class SocketService : Service() {
 
@@ -20,29 +20,34 @@ class SocketService : Service() {
     }
 
     private val address = InetAddress.getByName(IP_ADDRESS)
-    private val socket: DatagramSocket = DatagramSocket(UDP_PORT, address)
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private val socket: DatagramSocket = DatagramSocket()
 
 
-    fun connect() {
-    }
-
-    fun sendCommand(command: String) {
-        val commandArr = command.toByteArray()
-        val packet = DatagramPacket(
-            commandArr,
-            commandArr.size,
-            address,
-            UDP_PORT
-        )
+    private fun sendCommand(command: String) {
+        scope.launch {
+            runCatching {
+                val commandArr = command.toByteArray()
+                val packet = DatagramPacket(
+                    commandArr,
+                    commandArr.size,
+                    address,
+                    UDP_PORT
+                )
+                socket.send(packet)
+            }
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
+        return null
+        // TODO("Not yet implemented")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getParcelableExtra<TelloCommand>(EXTRA_DATA)?.let {
             println(it)
+            sendCommand(it.command)
         }
         return START_STICKY
     }
