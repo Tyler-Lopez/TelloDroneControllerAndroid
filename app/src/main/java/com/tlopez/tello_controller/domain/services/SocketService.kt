@@ -1,25 +1,36 @@
-package com.tlopez.tello_controller.domain
+package com.tlopez.tello_controller.domain.services
 
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.tlopez.tello_controller.util.TelloCommand
 import kotlinx.coroutines.*
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 
+/**
+ * Bound service
+ */
 class SocketService : Service() {
 
     companion object {
         const val EXTRA_DATA = "extra_data"
         private const val IP_ADDRESS: String = "192.168.10.1"
+        private const val TAG = "socket_service"
         private const val UDP_PORT: Int = 8889
     }
 
     private val address = InetAddress.getByName(IP_ADDRESS)
+    private val binder by lazy { SocketBinder() }
+    private val _telloState: MutableLiveData<Int> = MutableLiveData()
+    val telloState: LiveData<Int> = _telloState
     private val scope = CoroutineScope(Dispatchers.IO)
     private val socket: DatagramSocket = DatagramSocket(UDP_PORT)
+    private var receiveState: Boolean = false
 
     private fun sendCommand(command: String) {
         scope.launch {
@@ -54,11 +65,7 @@ class SocketService : Service() {
         }
     }
 
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-        // TODO("Not yet implemented")
-    }
+    override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getParcelableExtra<TelloCommand>(EXTRA_DATA)?.let {
@@ -67,5 +74,15 @@ class SocketService : Service() {
             receiveResponse()
         }
         return START_STICKY
+    }
+
+    /**
+     * Custom class which extends [Binder].
+     * Returns a Singleton of this Service class.
+     *
+     * Provides an access point for retrieving this service.
+     */
+    inner class SocketBinder : Binder() {
+        fun getService(): SocketService = this@SocketService
     }
 }

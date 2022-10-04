@@ -14,10 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tlopez.tello_controller.presentation.theme.FlashcardsAppTheme
-import com.tlopez.tello_controller.domain.SocketService
+import com.tlopez.tello_controller.domain.services.SocketService
 import com.tlopez.tello_controller.util.TelloCommand
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var socketService: SocketService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,6 +59,13 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, SocketService::class.java).also {
+           // bindService(it, )
         }
     }
 }
