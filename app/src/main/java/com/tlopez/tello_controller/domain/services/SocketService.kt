@@ -32,6 +32,10 @@ class SocketService : Service() {
     private val socket: DatagramSocket = DatagramSocket(UDP_PORT)
     private var receiveState: Boolean = false
 
+    fun sendTelloCommand(telloCommand: TelloCommand) {
+        sendCommand(telloCommand.command)
+    }
+
     private fun sendCommand(command: String) {
         scope.launch {
             runCatching {

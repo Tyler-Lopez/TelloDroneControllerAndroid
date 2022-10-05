@@ -5,29 +5,38 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.services.SocketService
+import com.tlopez.tello_controller.domain.usecases.SendTelloCommandUseCase
+import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.*
+import com.tlopez.tello_controller.util.TelloCommand
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ControllerViewModel @Inject constructor(
-    @ApplicationContext context: Context
+    private val sendTelloCommandUseCase: SendTelloCommandUseCase
+) : BaseViewModel<ControllerViewState, ControllerViewEvent>() {
 
-) {
-
-    init {
-        Intent(context, SocketService::class.java)
-        val b = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                val binder =  service as SocketService.SocketBinder
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-                TODO("Not yet implemented")
-            }
-
+    override fun onEvent(event: ControllerViewEvent) {
+        when (event) {
+            is ClickedConnect -> onClickedConnect()
+            is ClickedLand -> onClickedLand()
+            is ClickedTakeoff -> onClickedTakeoff()
         }
+    }
+
+    private fun onClickedConnect() {
+        sendTelloCommandUseCase(TelloCommand.Start)
+    }
+
+    private fun onClickedLand() {
+        sendTelloCommandUseCase(TelloCommand.Land)
+    }
+
+    private fun onClickedTakeoff() {
+        sendTelloCommandUseCase(TelloCommand.Takeoff)
     }
 
 }
