@@ -1,7 +1,8 @@
 package com.tlopez.tello_controller.di
 
-import com.tlopez.tello_controller.data.repository.SocketServiceRepositoryImpl
-import com.tlopez.tello_controller.domain.models.SocketServiceRepository
+import com.tlopez.tello_controller.data.repository.TelloRepositoryImpl
+import com.tlopez.tello_controller.domain.models.TelloRepository
+import com.tlopez.tello_controller.util.TelloStateUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +15,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSocketServiceRepository(): SocketServiceRepository = SocketServiceRepositoryImpl()
+    fun provideSocketServiceRepository(telloStateUtil: TelloStateUtil): TelloRepository =
+        TelloRepositoryImpl(telloStateUtil)
 }

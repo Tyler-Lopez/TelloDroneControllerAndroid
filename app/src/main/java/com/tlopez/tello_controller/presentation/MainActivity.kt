@@ -9,9 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.tlopez.tello_controller.domain.models.SocketServiceRepository
+import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.presentation.theme.FlashcardsAppTheme
-import com.tlopez.tello_controller.domain.services.SocketService
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var socketServiceRepository: SocketServiceRepository
+    lateinit var socketServiceRepository: TelloRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
