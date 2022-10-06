@@ -32,5 +32,4 @@ class ControllerViewModel @Inject constructor(
     private fun onClickedTakeoff() {
         telloRepository.sendTelloCommand(Start) {}
     }
-
 }

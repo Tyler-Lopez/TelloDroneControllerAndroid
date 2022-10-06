@@ -17,4 +17,7 @@ object AppModule {
     @Provides
     fun provideSocketServiceRepository(telloStateUtil: TelloStateUtil): TelloRepository =
         TelloRepositoryImpl(telloStateUtil)
+
+    @Provides
+    fun provideTelloStateUtil(): TelloStateUtil = TelloStateUtil()
 }

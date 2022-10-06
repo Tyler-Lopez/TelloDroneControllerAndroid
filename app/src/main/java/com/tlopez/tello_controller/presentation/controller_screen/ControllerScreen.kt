@@ -28,6 +28,5 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
         }) {
             Text("send land command")
         }
-        Text(viewModel.state.collectAsState().value.decodeToString())
     }
 }
