@@ -15,7 +15,7 @@ abstract class BaseViewModel<TypeOfViewState : ViewState, TypeOfViewEvent : View
     private var lastDebouncedTime: Long = Long.MIN_VALUE
 
     /** Utility for implementing [ViewModel] **/
-    private val lastPushedState: TypeOfViewState?
+    val lastPushedState: TypeOfViewState?
         get() = viewState.value
 
     /** Private mutable and public immutable [ViewState] **/
