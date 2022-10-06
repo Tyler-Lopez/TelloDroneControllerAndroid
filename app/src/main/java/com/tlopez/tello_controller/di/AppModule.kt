@@ -1,7 +1,7 @@
 package com.tlopez.tello_controller.di
 
 import com.tlopez.tello_controller.data.repository.SocketServiceRepositoryImpl
-import com.tlopez.tello_controller.domain.repository.SocketServiceRepository
+import com.tlopez.tello_controller.domain.models.SocketServiceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

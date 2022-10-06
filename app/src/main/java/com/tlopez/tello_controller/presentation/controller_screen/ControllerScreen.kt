@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
@@ -26,5 +28,6 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
         }) {
             Text("send land command")
         }
+        Text(viewModel.state.collectAsState().value.decodeToString())
     }
 }

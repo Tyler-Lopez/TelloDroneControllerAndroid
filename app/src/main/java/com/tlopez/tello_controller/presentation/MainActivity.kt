@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.tlopez.tello_controller.domain.repository.SocketServiceRepository
+import com.tlopez.tello_controller.domain.models.SocketServiceRepository
 import com.tlopez.tello_controller.presentation.theme.FlashcardsAppTheme
 import com.tlopez.tello_controller.domain.services.SocketService
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerScreen
