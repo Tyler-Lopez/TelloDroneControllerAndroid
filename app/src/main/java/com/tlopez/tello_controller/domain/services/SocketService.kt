@@ -39,6 +39,7 @@ class SocketService : Service() {
     fun sendCommand(command: String, onResponse: (ByteArray) -> Unit) {
         scope.launch {
             runCatching {
+                println("here sending $command to packet")
                 val commandArr = command.toByteArray()
                 val packet = DatagramPacket(
                     commandArr,

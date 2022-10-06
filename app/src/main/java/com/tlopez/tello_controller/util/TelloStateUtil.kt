@@ -31,11 +31,13 @@ class TelloStateUtil {
 
     fun ByteArray.decodeToTelloState(): TelloState {
         val string = decodeToString()
+        println("here decoding $string")
         val argumentArr = string.split(DELIMITER_CHAR)
-        val telloStateMap = mutableMapOf<String, Number>()
+        val telloStateMap = mutableMapOf<String, String>()
         argumentArr.forEach {
             it.split(SUB_DELIMITER_CHAR).apply {
-                telloStateMap[first()] to telloStateMap[last()]
+                println("Here at this $this")
+                telloStateMap[first()] = last()
             }
         }
         return TelloState(

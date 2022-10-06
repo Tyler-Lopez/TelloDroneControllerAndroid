@@ -30,13 +30,15 @@ class TelloRepositoryImpl @Inject constructor(
 
     override fun receiveTelloState(onState: (TelloState) -> Unit) {
         socketService?.receiveTelloState {
-            onState(telloStateUtil.run { it.decodeToTelloState() })
+            telloStateUtil.run { it.decodeToTelloState() }?.let {
+                onState(it)
         }
     }
+}
 
-    override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (String) -> Unit) {
-        socketService?.sendCommand(telloCommand.command) {
-            onResponse(it.decodeToString())
-        }
+override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (String) -> Unit) {
+    socketService?.sendCommand(telloCommand.command) {
+        onResponse(it.decodeToString())
     }
+}
 }

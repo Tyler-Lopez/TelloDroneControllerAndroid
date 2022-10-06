@@ -31,7 +31,9 @@ class ControllerViewModel @Inject constructor(
     override fun onEvent(event: ControllerViewEvent) {
         when (event) {
             is ClickedConnect -> onClickedConnect()
+            is ClickedForward -> onClickedForward()
             is ClickedLand -> onClickedLand()
+            is ClickedSetSpeed -> onClickedSetSpeed()
             is ClickedTakeoff -> onClickedTakeoff()
         }
     }
@@ -40,12 +42,20 @@ class ControllerViewModel @Inject constructor(
         telloRepository.sendTelloCommand(Start) {}
     }
 
+    private fun onClickedForward() {
+        telloRepository.sendTelloCommand(Forward(50)) {}
+    }
+
     private fun onClickedLand() {
         telloRepository.sendTelloCommand(Land) {}
     }
 
+    private fun onClickedSetSpeed() {
+        telloRepository.sendTelloCommand(SetSpeed(100)) {}
+    }
+
     private fun onClickedTakeoff() {
-        telloRepository.sendTelloCommand(Start) {}
+        telloRepository.sendTelloCommand(Takeoff) {}
     }
 
     private fun pollTelloStateLoop() {
@@ -58,6 +68,7 @@ class ControllerViewModel @Inject constructor(
 
     private fun pollTelloState() {
         telloRepository.receiveTelloState {
+            println("tello state received $it")
             withLastState { copy(telloState = it).push() }
         }
     }

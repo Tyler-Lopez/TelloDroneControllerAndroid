@@ -25,11 +25,22 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 Text("send takeoff command")
             }
             Button(onClick = {
+                viewModel.onEvent(ClickedSetSpeed)
+
+            }) {
+                Text("send set speed command")
+            }
+            Button(onClick = {
                 viewModel.onEvent(ClickedLand)
             }) {
                 Text("send land command")
             }
-            Text(telloState.toString())
+            Button(onClick = {
+                viewModel.onEvent(ClickedForward)
+            }) {
+                Text("send forward command")
+            }
+            Text(this@apply.telloState.toString())
         }
     }
 }

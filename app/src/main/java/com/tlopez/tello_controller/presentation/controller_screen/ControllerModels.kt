@@ -6,7 +6,9 @@ import com.tlopez.tello_controller.domain.models.TelloState
 
 sealed interface ControllerViewEvent : ViewEvent {
     object ClickedConnect : ControllerViewEvent
+    object ClickedForward : ControllerViewEvent
     object ClickedLand : ControllerViewEvent
+    object ClickedSetSpeed : ControllerViewEvent
     object ClickedTakeoff : ControllerViewEvent
 }
 
