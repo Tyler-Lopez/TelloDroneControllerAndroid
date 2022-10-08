@@ -1,5 +1,6 @@
 package com.tlopez.tello_controller.presentation.controller_screen
 
+import android.media.MediaCodec
 import androidx.lifecycle.viewModelScope
 import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.models.TelloRepository
@@ -24,37 +25,44 @@ class ControllerViewModel @Inject constructor(
     }
 
     init {
-        pushState(ControllerViewState(null))
-        pollTelloStateLoop()
+        pushState(ControllerViewState(null, null))
+        println("here sending start command")
+
     }
 
     override fun onEvent(event: ControllerViewEvent) {
         when (event) {
+            is ChangedMovement -> onChangedMovement(event)
             is ClickedConnect -> onClickedConnect()
-            is ClickedForward -> onClickedForward()
             is ClickedLand -> onClickedLand()
-            is ClickedSetSpeed -> onClickedSetSpeed()
             is ClickedTakeoff -> onClickedTakeoff()
         }
     }
 
-    private fun onClickedConnect() {
-        telloRepository.sendTelloCommand(Start) {}
+    private fun onChangedMovement(event: ChangedMovement) {
+        event.apply {
+            telloRepository.sendTelloCommand(SetMovement(roll, pitch, uplift, yaw)) {}
+        }
     }
 
-    private fun onClickedForward() {
-        telloRepository.sendTelloCommand(Forward(50)) {}
+    private fun onClickedConnect() {
+        println("here clicked connect")
+        telloRepository.sendTelloCommand(Start) {
+            println("here success")
+            telloRepository.sendTelloCommand(StartVideoStream) {
+                println("video stream start")
+                pollVideoStream()
+                pollTelloStateLoop()
+            }
+        }
     }
 
     private fun onClickedLand() {
         telloRepository.sendTelloCommand(Land) {}
     }
 
-    private fun onClickedSetSpeed() {
-        telloRepository.sendTelloCommand(SetSpeed(100)) {}
-    }
-
     private fun onClickedTakeoff() {
+        telloRepository.sendTelloCommand(SetSpeed(50)) {}
         telloRepository.sendTelloCommand(Takeoff) {}
     }
 
@@ -68,8 +76,22 @@ class ControllerViewModel @Inject constructor(
 
     private fun pollTelloState() {
         telloRepository.receiveTelloState {
-            println("tello state received $it")
             withLastState { copy(telloState = it).push() }
+        }
+    }
+
+    private fun pollTelloVideoStreamLoop() {
+        viewModelScope.launch(Dispatchers.IO) {
+            pollVideoStream()
+            delay(TELLO_STATE_POLL_DELAY_MS)
+            pollTelloVideoStreamLoop()
+        }
+    }
+
+    private fun pollVideoStream() {
+        telloRepository.receiveVideoStream {
+            println("video received")
+            withLastState { copy(latestFrame = it).push() }
         }
     }
 

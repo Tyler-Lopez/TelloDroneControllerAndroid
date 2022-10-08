@@ -1,17 +1,24 @@
 package com.tlopez.tello_controller.presentation.controller_screen
 
+import android.graphics.Bitmap
 import com.tlopez.tello_controller.architecture.ViewEvent
 import com.tlopez.tello_controller.architecture.ViewState
 import com.tlopez.tello_controller.domain.models.TelloState
 
 sealed interface ControllerViewEvent : ViewEvent {
+    data class ChangedMovement(
+        val roll: Int,
+        val pitch: Int,
+        val uplift: Int,
+        val yaw: Int
+    ) : ControllerViewEvent
+
     object ClickedConnect : ControllerViewEvent
-    object ClickedForward : ControllerViewEvent
     object ClickedLand : ControllerViewEvent
-    object ClickedSetSpeed : ControllerViewEvent
     object ClickedTakeoff : ControllerViewEvent
 }
 
 data class ControllerViewState(
-    val telloState: TelloState?
+    val telloState: TelloState?,
+    val latestFrame: Bitmap?
 ) : ViewState

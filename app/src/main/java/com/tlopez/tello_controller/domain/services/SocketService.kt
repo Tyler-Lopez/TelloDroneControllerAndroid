@@ -31,15 +31,31 @@ class SocketService : Service() {
     private val scope = CoroutineScope(Dispatchers.IO)
     private val socketCommands: DatagramSocket = DatagramSocket(UDP_PORT_COMMANDS)
     private val socketState: DatagramSocket = DatagramSocket(UDP_PORT_STATE)
+    private val socketVideoStream: DatagramSocket = DatagramSocket(UDP_PORT_VIDEO)
 
     fun receiveTelloState(onState: (ByteArray) -> Unit) {
         socketState.receiveResponse(onState)
     }
 
+    fun receiveVideoStream(onVideoStream: (DatagramPacket) -> Unit) {
+        val message = ByteArray(2048)
+        val packet = DatagramPacket(
+            message,
+            message.size
+        )
+        scope.launch {
+            runCatching {
+                socketVideoStream.soTimeout = 5000
+                socketVideoStream.receive(packet)
+            }.onSuccess {
+                onVideoStream(packet)
+            }
+        }
+    }
+
     fun sendCommand(command: String, onResponse: (ByteArray) -> Unit) {
         scope.launch {
             runCatching {
-                println("here sending $command to packet")
                 val commandArr = command.toByteArray()
                 val packet = DatagramPacket(
                     commandArr,
@@ -48,12 +64,13 @@ class SocketService : Service() {
                     UDP_PORT_COMMANDS
                 )
                 socketCommands.send(packet)
+                socketCommands.receiveResponse(onResponse)
             }
         }
     }
 
     private fun DatagramSocket.receiveResponse(onSuccess: (ByteArray) -> Unit) {
-        val message = ByteArray(8000)
+        val message = ByteArray(60000)
         scope.launch {
             runCatching {
                 val packet = DatagramPacket(
