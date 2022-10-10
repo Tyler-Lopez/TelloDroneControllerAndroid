@@ -44,7 +44,7 @@ class MediaCodecH624 {
             format.setByteBuffer("csd-0", ByteBuffer.wrap(headerSps))
             format.setByteBuffer("csd-1", ByteBuffer.wrap(headerPps))
             format.setInteger(KEY_MAX_INPUT_SIZE, VIDEO_WIDTH_PX * VIDEO_HEIGHT_PX)
-
+            format.setInteger(KEY_FRAME_RATE, 30)
             val codecList  =MediaCodecList(MediaCodecList.REGULAR_CODECS)
             codecList.codecInfos.forEach {
                 println("here $it")

@@ -13,13 +13,15 @@ import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickViewEvent.*
 
 @Composable
 fun Thumbstick(
     modifier: Modifier,
     thumbstickRelativePercentSize: Float = 0.8f,
-    viewModel: ThumbstickViewModel = hiltViewModel()
+    onThumbstickDraggedToPercent: ((Pair<Float, Float>) -> Unit)
 ) {
+    val viewModel: ThumbstickViewModel = hiltViewModel()
     viewModel.viewState.collectAsState().value?.apply {
         Canvas(
             modifier = modifier
@@ -27,26 +29,18 @@ fun Thumbstick(
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            println("on drag")
                             viewModel.onEvent(
-                                ThumbstickViewEvent.DraggedThumbstick(
+                                DraggedThumbstick(
                                     dragAmount,
-                                    size.run {
-                                        minOf(width, height) / 2f
-                                    }
+                                    size.run { minOf(width, height) / 2f },
+                                    onThumbstickDraggedToPercent
                                 )
                             )
                             change.consume()
                         },
-                        onDragEnd = {
-                            println("on drag end ")
-                            viewModel.onEvent(
-                                ThumbstickViewEvent.ReleasedThumbstick
-                            )
-                        },
-                        onDragStart = {
-                            println("on drag start")
-                        })
+                        onDragCancel = { viewModel.onEvent(ReleasedThumbstick(onThumbstickDraggedToPercent)) },
+                        onDragEnd = { viewModel.onEvent(ReleasedThumbstick(onThumbstickDraggedToPercent)) }
+                    )
                 }
         ) {
             val radius = size.minDimension / 2.0f

@@ -87,14 +87,26 @@ class TelloRepositoryImpl @Inject constructor(
                     codec.releaseOutputBuffer(outputIndex, false)
                 }
             }
-            println("here receiving video stream")
             this@TelloRepositoryImpl.receiveVideoStream(onState)
         }
     }
 
     override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (String) -> Unit) {
-        socketService?.sendCommand(telloCommand.command) {
-            onResponse(it.decodeToString())
+        socketService?.apply {
+
+            when (telloCommand) {
+                is TelloCommand.SetLeverForce -> {
+                    sendCommandWithoutResponse(telloCommand.command)
+                }
+                else -> {
+                    sendCommand(telloCommand.command) {
+                        println("response was ${it.decodeToString()}")
+                        onResponse(it.decodeToString())
+                    }
+                }
+            }
+
+
         }
     }
 

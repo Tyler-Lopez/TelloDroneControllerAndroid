@@ -35,9 +35,58 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Thumbstick(
-                    modifier = Modifier.size(200.dp)
-                )
+                Row {
+                    Thumbstick(
+                        modifier = Modifier.size(100.dp),
+                        onThumbstickDraggedToPercent = {
+                            viewModel.onEvent(ChangedMovement(
+                                0,
+                                0,
+                                (it.first * 100).toInt(),
+                                (it.second * 100).toInt(),
+                            ))
+                        }
+                    )
+                    Thumbstick(
+                        modifier = Modifier.size(100.dp),
+                        onThumbstickDraggedToPercent = {
+                            viewModel.onEvent(ChangedMovement(
+                                (it.first * 100).toInt(),
+                                (it.second * 100).toInt(),
+                                0,
+                                0
+                            ))
+                        }
+                    )
+                }
+
+                Button(onClick = {
+                    viewModel.onEvent(ClickedConnect)
+                }) {
+                    Text("start service")
+                }
+                Button(onClick = {
+                    viewModel.onEvent(ClickedStartVideo)
+                }) {
+                    Text("start video")
+                }
+                Button(onClick = {
+                    viewModel.onEvent(ClickedTakeoff)
+
+                }) {
+                    Text("send takeoff command")
+                }
+                Button(onClick = {
+                    viewModel.onEvent(ClickedLand)
+                }) {
+                    Text("send land command")
+                }
+                Button(onClick = {
+                    viewModel.onEvent(ClickedBreak)
+                }) {
+                    Text("send break command")
+                }
+                Text(this@apply.telloState.toString())
             }
         }
     }

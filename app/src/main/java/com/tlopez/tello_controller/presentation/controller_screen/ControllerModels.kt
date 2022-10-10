@@ -9,13 +9,15 @@ sealed interface ControllerViewEvent : ViewEvent {
     data class ChangedMovement(
         val roll: Int,
         val pitch: Int,
-        val uplift: Int,
+        val throttle: Int,
         val yaw: Int
     ) : ControllerViewEvent
 
+    object ClickedBreak : ControllerViewEvent
     object ClickedConnect : ControllerViewEvent
     object ClickedLand : ControllerViewEvent
     object ClickedTakeoff : ControllerViewEvent
+    object ClickedStartVideo : ControllerViewEvent
 }
 
 data class ControllerViewState(

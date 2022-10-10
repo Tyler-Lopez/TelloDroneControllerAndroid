@@ -7,10 +7,13 @@ import com.tlopez.tello_controller.architecture.ViewState
 sealed interface ThumbstickViewEvent : ViewEvent {
     data class DraggedThumbstick(
         val draggedTo: Offset,
-        val thumbstickRadius: Float
+        val thumbstickRadius: Float,
+        val onThumbstickDraggedToPercent: ((Pair<Float, Float>) -> Unit)
     ) : ThumbstickViewEvent
 
-    object ReleasedThumbstick : ThumbstickViewEvent
+    data class ReleasedThumbstick(
+        val onThumbstickDraggedToPercent: ((Pair<Float, Float>) -> Unit)
+    ) : ThumbstickViewEvent
 }
 
 data class ThumbstickViewState(

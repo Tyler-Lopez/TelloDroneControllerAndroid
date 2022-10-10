@@ -49,6 +49,8 @@ class SocketService : Service() {
                 socketVideoStream.receive(packet)
             }.onSuccess {
                 onVideoStream(packet)
+            }.onFailure {
+                println("whoops failure $it")
             }
         }
     }
@@ -65,6 +67,21 @@ class SocketService : Service() {
                 )
                 socketCommands.send(packet)
                 socketCommands.receiveResponse(onResponse)
+            }
+        }
+    }
+
+    fun sendCommandWithoutResponse(command: String) {
+        scope.launch {
+            runCatching {
+                val commandArr = command.toByteArray()
+                val packet = DatagramPacket(
+                    commandArr,
+                    commandArr.size,
+                    address,
+                    UDP_PORT_COMMANDS
+                )
+                socketCommands.send(packet)
             }
         }
     }
