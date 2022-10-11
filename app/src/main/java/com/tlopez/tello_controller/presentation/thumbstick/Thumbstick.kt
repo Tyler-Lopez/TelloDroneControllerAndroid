@@ -12,6 +12,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 
 /**
+ * Composable used to represent a thumbstick which a user may drag and release.
+ *
  * @param thumbstickRelativePercentSize The relative size of the thumbstick relative
  * to its container [0f --> 1f]
  * @param thumbstickState Where the thumbstick is currently held relative to its container's center
