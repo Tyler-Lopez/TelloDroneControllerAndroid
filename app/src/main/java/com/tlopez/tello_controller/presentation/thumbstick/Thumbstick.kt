@@ -1,64 +1,72 @@
 package com.tlopez.tello_controller.presentation.thumbstick
 
-import android.util.Size
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerId
-import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickViewEvent.*
+import androidx.compose.ui.platform.LocalDensity
 
+/**
+ * @param thumbstickRelativePercentSize The relative size of the thumbstick relative
+ * to its container [0f --> 1f]
+ * @param thumbstickState Where the thumbstick is currently held relative to its container's center
+ * @param onThumbstickDraggedToState Callback when a thumbstick is dragged to a new [ThumbstickState]
+ * @param onThumbstickReleased Callback when a thumbstick is released
+ */
 @Composable
 fun Thumbstick(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    colorContainer: Color = Color.Cyan,
+    colorThumbstick: Color = Color.Gray,
     thumbstickRelativePercentSize: Float = 0.8f,
-    onThumbstickDraggedToPercent: ((Pair<Float, Float>) -> Unit)
+    thumbstickState: ThumbstickState = ThumbstickState(0f, 0f),
+    onThumbstickDraggedToState: (ThumbstickState) -> Unit,
+    onThumbstickReleased: () -> Unit
 ) {
-    val viewModel: ThumbstickViewModel = hiltViewModel()
-    viewModel.viewState.collectAsState().value?.apply {
+    /** Set within Canvas draw block **/
+    BoxWithConstraints {
+        val radiusContainer = LocalDensity.current.run {
+            minOf(maxHeight, maxWidth).roundToPx() / 2.0f
+        }
         Canvas(
             modifier = modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            viewModel.onEvent(
-                                DraggedThumbstick(
-                                    dragAmount,
-                                    size.run { minOf(width, height) / 2f },
-                                    onThumbstickDraggedToPercent
-                                )
+                            onThumbstickDraggedToState(
+                                thumbstickState.run {
+                                    val draggedX = dragAmount.x / radiusContainer
+                                    val draggedY = dragAmount.y / radiusContainer
+                                    copy(
+                                        fractionHorizontal = fractionHorizontal + draggedX,
+                                        fractionVertical = fractionVertical + draggedY
+                                    )
+                                }
                             )
                             change.consume()
                         },
-                        onDragCancel = { viewModel.onEvent(ReleasedThumbstick(onThumbstickDraggedToPercent)) },
-                        onDragEnd = { viewModel.onEvent(ReleasedThumbstick(onThumbstickDraggedToPercent)) }
+                        onDragCancel = { onThumbstickReleased() },
+                        onDragEnd = { onThumbstickReleased() }
+                    )
+                }) {
+            val radiusThumbstick = radiusContainer * thumbstickRelativePercentSize
+            drawCircle(color = colorContainer, radius = radiusContainer)
+            drawCircle(
+                color = colorThumbstick,
+                radius = radiusThumbstick,
+                center = thumbstickState.run {
+                    center + Offset(
+                        x = radiusContainer * fractionHorizontal,
+                        y = radiusContainer * fractionVertical,
                     )
                 }
-        ) {
-            val radius = size.minDimension / 2.0f
-            drawCircle(
-                color = Color.Cyan,
-                radius = radius,
-                center = center
             )
-            val thumbstickCenter = Offset(
-                center.x + (xOffsetFraction * 0.5f),
-                center.y + (yOffsetFraction * 0.5f)
-            )
-            drawCircle(
-                color = Color.Black,
-                radius = (radius * thumbstickRelativePercentSize).coerceIn(0f, radius),
-                center = thumbstickCenter
-            )
-
         }
     }
 }
