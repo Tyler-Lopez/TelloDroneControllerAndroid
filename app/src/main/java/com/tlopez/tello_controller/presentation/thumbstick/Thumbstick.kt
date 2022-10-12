@@ -1,15 +1,20 @@
 package com.tlopez.tello_controller.presentation.thumbstick
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * Composable used to represent a thumbstick which a user may drag and release.
@@ -22,35 +27,33 @@ import androidx.compose.ui.platform.LocalDensity
  */
 @Composable
 fun Thumbstick(
+    thumbstickState: ThumbstickState,
     modifier: Modifier = Modifier,
     colorContainer: Color = Color.Cyan,
     colorThumbstick: Color = Color.Gray,
     thumbstickRelativePercentSize: Float = 0.8f,
-    thumbstickState: ThumbstickState = ThumbstickState(0f, 0f),
-    onThumbstickDraggedToState: (ThumbstickState) -> Unit,
+    onThumbstickDraggedToFloatPercent: (Offset) -> Unit,
     onThumbstickReleased: () -> Unit
 ) {
     /** Set within Canvas draw block **/
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier.background(Color.Red)) {
         val radiusContainer = LocalDensity.current.run {
             minOf(maxHeight, maxWidth).roundToPx() / 2.0f
         }
+        println("hey making canvas state is $thumbstickState")
         Canvas(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            onThumbstickDraggedToState(
-                                thumbstickState.run {
-                                    val draggedX = dragAmount.x / radiusContainer
-                                    val draggedY = dragAmount.y / radiusContainer
-                                    copy(
-                                        fractionHorizontal = fractionHorizontal + draggedX,
-                                        fractionVertical = fractionVertical + draggedY
-                                    )
-                                }
-                            )
+                            val draggedX = dragAmount.x / radiusContainer
+                            val draggedY = dragAmount.y / radiusContainer
+                            //    println("fraction horizontal was $fractionHorizontal")
+                            //   println("drag amount was ${dragAmount.x}")
+                            //  println("drag x was ${draggedX}")
+                            println("but in here thumbstick state is $thumbstickState")
+                            onThumbstickDraggedToFloatPercent(Offset(draggedX, draggedY))
                             change.consume()
                         },
                         onDragCancel = { onThumbstickReleased() },

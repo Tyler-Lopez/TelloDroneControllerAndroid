@@ -1,6 +1,6 @@
 package com.tlopez.tello_controller.presentation.thumbstick
 
 data class ThumbstickState(
-    val fractionHorizontal: Float,
-    val fractionVertical: Float
+    val fractionHorizontal: Float = 0f,
+    val fractionVertical: Float = 0f
 )

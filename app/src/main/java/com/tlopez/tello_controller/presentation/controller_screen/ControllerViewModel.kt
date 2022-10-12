@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.*
+import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
+import com.tlopez.tello_controller.util.TelloCommand
 import com.tlopez.tello_controller.util.TelloCommand.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,33 +22,75 @@ class ControllerViewModel @Inject constructor(
         private const val TELLO_STATE_POLL_DELAY_MS = 1000L
     }
 
-    init {
-        pushState(ControllerViewState(null, null))
+    private var leverForce: LeverForce = LeverForce()
+        set(value) {
+            field = value
+            value.apply {
+                telloRepository.sendTelloCommand(SetLeverForce(roll, pitch, throttle, yaw)) {}
+            }
+        }
 
+    init {
+        pushState(ControllerViewState(null, ThumbstickState(), ThumbstickState(), null))
     }
 
     override fun onEvent(event: ControllerViewEvent) {
         when (event) {
-            is ChangedMovement -> onChangedMovement(event)
+            is MovedThrottleYawThumbstick -> onMovedThrottleYawThumbstick(event)
+            is MovedRollPitchThumbstick -> onMovedRollPitchThumbstick(event)
+            is ResetThrottleYawThumbstick -> onResetThrottleYawThumbstick()
+            is ResetRollPitchThumbstick -> onResetRollPitchThumbstick()
             is ClickedBreak -> onClickedStop()
             is ClickedConnect -> onClickedConnect()
             is ClickedLand -> onClickedLand()
             is ClickedTakeoff -> onClickedTakeoff()
             is ClickedStartVideo -> onClickStartVideo()
+            else -> {}
         }
     }
 
-    private fun onChangedMovement(event: ChangedMovement) {
-        event.apply {
-            val goodRange = -100..100
-            telloRepository.sendTelloCommand(SetLeverForce(
-                roll.coerceIn(goodRange),
-                pitch.coerceIn(goodRange),
-                throttle.coerceIn(goodRange),
-                yaw.coerceIn(goodRange)
-            )) {}
+    private fun onMovedRollPitchThumbstick(event: MovedRollPitchThumbstick) {
+            withLastState {
+                val newState = thumbstickRight.copy(
+                    fractionHorizontal = (thumbstickRight.fractionHorizontal + event.movedByPercent.x)
+                        .coerceIn(-1f..1f),
+                    fractionVertical = (thumbstickRight.fractionVertical + event.movedByPercent.y)
+                        .coerceIn(-1f..1f)
+                )
+                leverForce = leverForce.copy(
+                    roll = (newState.fractionHorizontal * 100).toInt(),
+                    pitch = (newState.fractionVertical * 100).toInt(),
+                )
+                lastPushedState?.copy(thumbstickRight = newState)?.push()
+            }
+
+    }
+    private fun onMovedThrottleYawThumbstick(event: MovedThrottleYawThumbstick) {
+        withLastState {
+            val newState = thumbstickLeft.copy(
+                fractionHorizontal = (thumbstickLeft.fractionHorizontal + event.movedByPercent.x)
+                    .coerceIn(-1f..1f),
+                fractionVertical = (thumbstickLeft.fractionVertical + event.movedByPercent.y)
+                    .coerceIn(-1f..1f)
+            )
+            leverForce = leverForce.copy(
+                throttle = (newState.fractionHorizontal * 100).toInt(),
+                yaw = (newState.fractionVertical * 100).toInt(),
+            )
+            lastPushedState?.copy(thumbstickLeft = newState)?.push()
         }
     }
+
+    private fun onResetThrottleYawThumbstick() {
+        leverForce = leverForce.copy(throttle = 0, yaw = 0)
+        lastPushedState?.copy(thumbstickLeft = ThumbstickState(0f, 0f))?.push()
+    }
+
+    private fun onResetRollPitchThumbstick() {
+        leverForce = leverForce.copy(roll = 0, pitch = 0)
+        lastPushedState?.copy(thumbstickRight = ThumbstickState(0f, 0f))?.push()
+    }
+
 
     private fun onClickedStop() {
         telloRepository.sendTelloCommand(Start) {
@@ -56,7 +100,6 @@ class ControllerViewModel @Inject constructor(
 
     private fun onClickStartVideo() {
         telloRepository.sendTelloCommand(StartVideoStream) {
-            println("response to start video $it")
             pollVideoStream()
         }
     }
@@ -74,7 +117,7 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onClickedTakeoff() {
-      //  telloRepository.sendTelloCommand(SetSpeed(50)) {}
+        //  telloRepository.sendTelloCommand(SetSpeed(50)) {}
         telloRepository.sendTelloCommand(Takeoff) {}
     }
 
@@ -102,4 +145,10 @@ class ControllerViewModel @Inject constructor(
         lastPushedState?.run(block)
     }
 
+    private data class LeverForce(
+        val roll: Int = 0,
+        val pitch: Int = 0,
+        val throttle: Int = 0,
+        val yaw: Int = 0
+    )
 }

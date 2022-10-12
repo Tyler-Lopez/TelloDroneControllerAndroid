@@ -1,6 +1,7 @@
 package com.tlopez.tello_controller.presentation.controller_screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -8,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.*
 import com.tlopez.tello_controller.presentation.thumbstick.Thumbstick
+import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
 
 @Composable
 fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
@@ -32,28 +35,31 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Magenta),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     Thumbstick(
-                        modifier = Modifier.size(100.dp),
-                        onThumbstickDraggedToPercent = {
-                            viewModel.onEvent(ChangedMovement(
-                                0,
-                                0,
-                                (it.first * 100).toInt(),
-                                (it.second * 100).toInt(),
-                            ))
-                        }
+                        thumbstickState = thumbstickLeft,
+                        modifier = Modifier.size(150.dp),
+                        onThumbstickDraggedToFloatPercent = {
+                            viewModel.onEvent(MovedThrottleYawThumbstick(it))
+                        },
+                        onThumbstickReleased = {
+                            viewModel.onEvent(ResetThrottleYawThumbstick)
+                        },
                     )
                     Thumbstick(
-                        modifier = Modifier.size(100.dp),
-                        onThumbstickDraggedToPercent = {
-                            viewModel.onEvent(ChangedMovement(
-                                (it.first * 100).toInt(),
-                                (it.second * 100).toInt(),
-                                0,
-                                0
-                            ))
-                        }
+                        thumbstickState = thumbstickRight,
+                        modifier = Modifier.size(150.dp),
+                        onThumbstickDraggedToFloatPercent = {
+                            viewModel.onEvent(MovedRollPitchThumbstick(it))
+                        },
+                        onThumbstickReleased = {
+                            viewModel.onEvent(ResetRollPitchThumbstick)
+                        },
                     )
                 }
 
