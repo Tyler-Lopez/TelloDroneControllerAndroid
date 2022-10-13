@@ -58,4 +58,5 @@ fun ControllerViewState.ConnectedViewState.Flying.ControllerFlying(
             }
         )
     }
+    Text(telloState.toString())
 }

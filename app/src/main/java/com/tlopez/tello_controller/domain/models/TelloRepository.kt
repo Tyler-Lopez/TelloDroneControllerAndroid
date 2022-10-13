@@ -10,4 +10,5 @@ interface TelloRepository {
     fun receiveVideoStream(onState: (Bitmap) -> Unit)
     val serviceConnection: ServiceConnection
     fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (TelloResponse) -> Unit)
+    fun toggleVideo(onResponse: (Boolean) -> Unit)
 }

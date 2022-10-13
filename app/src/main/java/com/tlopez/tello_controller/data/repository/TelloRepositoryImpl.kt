@@ -18,6 +18,7 @@ import com.tlopez.tello_controller.util.TelloCommand
 import com.tlopez.tello_controller.util.TelloResponse
 import com.tlopez.tello_controller.util.TelloStateUtil
 import java.io.ByteArrayOutputStream
+import java.lang.IllegalStateException
 import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,6 +36,22 @@ class TelloRepositoryImpl @Inject constructor(
     private var destPos = 0
     private val startMs = System.currentTimeMillis()
     private var socketService: SocketService? = null
+    private var isPollingVideo: Boolean = false
+
+    override fun toggleVideo(onResponse: (Boolean) -> Unit) {
+        onResponse(
+            if (!isPollingVideo) {
+                sendTelloCommand(TelloCommand.StartVideoStream, onResponse = {})
+                isPollingVideo = true
+                true
+            } else {
+                sendTelloCommand(TelloCommand.StopVideoStream, onResponse = {})
+                isPollingVideo = false
+                false
+            }
+        )
+    }
+
     override val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder: SocketService.SocketBinder = service as SocketService.SocketBinder
@@ -68,7 +85,12 @@ class TelloRepositoryImpl @Inject constructor(
                 output.reset()
                 output.flush()
                 output.close()
-                val inputIndex = codec.dequeueInputBuffer(10000)
+                val inputIndex = try {
+                    codec.dequeueInputBuffer(10000)
+                } catch (e: IllegalStateException) {
+                    println("CAUGHT ERROR INPUT BUFFER")
+                    -1
+                }
                 if (inputIndex >= 0) {
                     val buffer = codec.getInputBuffer(inputIndex)
                     if (buffer != null) {
@@ -80,7 +102,12 @@ class TelloRepositoryImpl @Inject constructor(
                 }
 
                 val info = MediaCodec.BufferInfo()
-                val outputIndex = codec.dequeueOutputBuffer(info, 100)
+                val outputIndex = try {
+                    codec.dequeueOutputBuffer(info, 100)
+                } catch (e: IllegalStateException) {
+                    println("CAUGHT ERROR OUTPUT BUFFER")
+                    -1
+                }
                 if (outputIndex >= 0) {
                     val image = codec.getOutputImage(outputIndex)
                     val bm = imgToBom(image!!)

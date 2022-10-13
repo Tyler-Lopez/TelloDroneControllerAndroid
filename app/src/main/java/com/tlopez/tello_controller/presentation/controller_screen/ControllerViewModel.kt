@@ -24,6 +24,7 @@ class ControllerViewModel @Inject constructor(
     companion object {
         private const val POLL_DELAY_MS_FLIGHT_TIME = 100L
         private const val POLL_DELAY_MS_CONNECTION_CHECK = 500L
+        private const val POLL_DELAY_MS_TELLO_STATE = 500L
     }
 
     private var flightStartedUnixMs: Long = 0
@@ -31,6 +32,7 @@ class ControllerViewModel @Inject constructor(
     private var pollConnectionJob: Job? = null
     private var pollLeverForceJob: Job? = null
     private var pollFlightTimeJob: Job? = null
+    private var pollTelloStateJob: Job? = null
 
     init {
         DisconnectedIdle.push()
@@ -65,6 +67,7 @@ class ControllerViewModel @Inject constructor(
         telloRepository.sendTelloCommand(Land) {
             if (it is TelloResponse.Ok) {
                 pollFlightTimeJob?.cancel()
+                pollTelloStateJob?.cancel()
                 withLastStateAsFlying {
                     ConnectedIdle(
                         latestFrame = latestFrame,
@@ -85,6 +88,8 @@ class ControllerViewModel @Inject constructor(
                 flightStartedUnixMs = System.currentTimeMillis()
                 pollFlightTimeLoop()
                 pollLeverForceLoop()
+                pollTelloStateLoop()
+                pollVideoStream()
                 withLastStateAsConnected {
                     Flying(latestFrame, videoOn).push()
                 }
@@ -100,7 +105,7 @@ class ControllerViewModel @Inject constructor(
             )
             leverForce = leverForce.copy(
                 roll = (newState.fractionHorizontal * 100).toInt(),
-                pitch = (newState.fractionVertical * 100).toInt(),
+                pitch = (newState.fractionVertical * -100).toInt(),
             )
             copy(rollPitchThumbstickState = newState).push()
         }
@@ -113,8 +118,8 @@ class ControllerViewModel @Inject constructor(
                 event.movedByPercent.y
             )
             leverForce = leverForce.copy(
-                throttle = (newState.fractionHorizontal * 100).toInt(),
-                yaw = (newState.fractionVertical * 100).toInt(),
+                yaw = (newState.fractionHorizontal * 100).toInt(),
+                throttle = (newState.fractionVertical * 100).toInt(),
             )
             copy(throttleYawThumbstickState = newState).push()
         }
@@ -135,9 +140,17 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onToggleVideo() {
-        telloRepository.sendTelloCommand(StartVideoStream) {
-            pollVideoStream()
-        }
+       telloRepository.toggleVideo {
+           withLastStateAsConnected {
+               when (this) {
+                   is ConnectedIdle -> copy(videoOn = it)
+                   is ConnectedError -> copy(videoOn = it)
+                   is Flying -> copy(videoOn = it)
+                   is TakingOff -> copy(videoOn = it)
+               }.push()
+           }
+           pollVideoStream()
+       }
     }
 
     private fun pollConnectionLoop() {
@@ -156,6 +169,7 @@ class ControllerViewModel @Inject constructor(
                 pollConnectionJob?.cancel()
                 pollLeverForceJob?.cancel()
                 pollFlightTimeJob?.cancel()
+                pollTelloStateJob?.cancel()
                 DisconnectedError.push()
             }
         }
@@ -165,6 +179,8 @@ class ControllerViewModel @Inject constructor(
         pollLeverForceJob = viewModelScope.launch(Dispatchers.IO) {
             pollLeverForce()
             delay(POLL_DELAY_MS_FLIGHT_TIME)
+        }
+        pollLeverForceJob?.invokeOnCompletion {
             pollLeverForceLoop()
         }
     }
@@ -179,6 +195,8 @@ class ControllerViewModel @Inject constructor(
         pollFlightTimeJob = viewModelScope.launch(Dispatchers.IO) {
             pollFlightTime()
             delay(POLL_DELAY_MS_FLIGHT_TIME)
+        }
+        pollFlightTimeJob?.invokeOnCompletion {
             pollFlightTimeLoop()
         }
     }
@@ -189,8 +207,35 @@ class ControllerViewModel @Inject constructor(
         }
     }
 
-    private fun pollVideoStream() {
+    private fun pollTelloStateLoop() {
+        pollTelloStateJob = viewModelScope.launch(Dispatchers.IO) {
+            pollTelloState()
+            delay(POLL_DELAY_MS_TELLO_STATE)
+        }
+        pollTelloStateJob?.invokeOnCompletion {
+            pollTelloStateLoop()
+        }
+    }
 
+    private fun pollTelloState() {
+        telloRepository.receiveTelloState {
+            withLastStateAsFlying {
+                copy(telloState = it).push()
+            }
+        }
+    }
+
+    private fun pollVideoStream() {
+        telloRepository.receiveVideoStream {
+            withLastStateAsConnected {
+                when (this) {
+                    is ConnectedIdle -> copy(latestFrame = it)
+                    is ConnectedError -> copy(latestFrame = it)
+                    is Flying -> copy(latestFrame = it)
+                    is TakingOff -> copy(latestFrame = it)
+                }.push()
+            }
+        }
     }
 
     private inline fun withLastStateAsConnected(block: ConnectedViewState.() -> Unit) {

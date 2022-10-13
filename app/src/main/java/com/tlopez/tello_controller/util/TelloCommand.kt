@@ -62,4 +62,8 @@ sealed interface TelloCommand {
     object StartVideoStream : TelloCommand {
         override val command: String = COMMAND_VIDEO_STREAM_START
     }
+
+    object StopVideoStream : TelloCommand {
+        override val command: String = COMMAND_VIDEO_STREAM_STOP
+    }
 }

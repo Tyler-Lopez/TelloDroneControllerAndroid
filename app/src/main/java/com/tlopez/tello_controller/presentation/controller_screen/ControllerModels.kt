@@ -47,20 +47,9 @@ sealed interface ControllerViewState : ViewState {
             override val latestFrame: Bitmap?,
             override val videoOn: Boolean,
             val flightLengthMs: Long = 0L,
+            val telloState: TelloState? = null,
             val throttleYawThumbstickState: ThumbstickState = ThumbstickState(),
             val rollPitchThumbstickState: ThumbstickState = ThumbstickState()
         ) : ConnectedViewState
     }
 }
-
-/*
-data class ControllerViewState(
-    val isInFlight: Boolean,
-    val telloState: TelloState?,
-    val thumbstickLeft: ThumbstickState,
-    val thumbstickRight: ThumbstickState,
-    val flightLength: String,
-    val latestFrame: Bitmap?
-) : ViewState
-
- */
