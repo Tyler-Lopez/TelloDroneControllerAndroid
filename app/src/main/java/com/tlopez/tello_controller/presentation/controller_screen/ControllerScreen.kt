@@ -29,7 +29,6 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 )
             }
         }
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

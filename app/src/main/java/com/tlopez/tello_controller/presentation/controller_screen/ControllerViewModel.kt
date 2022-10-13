@@ -140,17 +140,12 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onToggleVideo() {
-       telloRepository.toggleVideo {
-           withLastStateAsConnected {
-               when (this) {
-                   is ConnectedIdle -> copy(videoOn = it)
-                   is ConnectedError -> copy(videoOn = it)
-                   is Flying -> copy(videoOn = it)
-                   is TakingOff -> copy(videoOn = it)
-               }.push()
-           }
-           pollVideoStream()
-       }
+        telloRepository.toggleVideo {
+            withLastStateAsConnected {
+                copyWithVideoChange(videoOn = it)
+            }
+            pollVideoStream()
+        }
     }
 
     private fun pollConnectionLoop() {
@@ -228,18 +223,14 @@ class ControllerViewModel @Inject constructor(
     private fun pollVideoStream() {
         telloRepository.receiveVideoStream {
             withLastStateAsConnected {
-                when (this) {
-                    is ConnectedIdle -> copy(latestFrame = it)
-                    is ConnectedError -> copy(latestFrame = it)
-                    is Flying -> copy(latestFrame = it)
-                    is TakingOff -> copy(latestFrame = it)
-                }.push()
+                copyWithVideoChange(latestFrame = it).push()
             }
         }
     }
 
     private inline fun withLastStateAsConnected(block: ConnectedViewState.() -> Unit) {
         (lastPushedState as? ConnectedViewState)?.run(block)
+
     }
 
     private inline fun withLastStateAsFlying(block: Flying.() -> Unit) {

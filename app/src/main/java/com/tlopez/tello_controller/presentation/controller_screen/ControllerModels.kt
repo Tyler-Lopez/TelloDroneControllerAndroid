@@ -24,24 +24,51 @@ sealed interface ControllerViewState : ViewState {
     object DisconnectedIdle : ControllerViewState
 
     sealed interface ConnectedViewState : ControllerViewState {
+
         val latestFrame: Bitmap?
         val videoOn: Boolean
+
+        fun copyWithVideoChange(
+            latestFrame: Bitmap? = null,
+            videoOn: Boolean? = null
+        ) : ConnectedViewState
 
         data class ConnectedError(
             override val latestFrame: Bitmap? = null,
             override val videoOn: Boolean = false
-        ) : ConnectedViewState
+        ) : ConnectedViewState {
+            override fun copyWithVideoChange(latestFrame: Bitmap?, videoOn: Boolean?): ConnectedError {
+                return copy(
+                    latestFrame = latestFrame ?: this.latestFrame,
+                    videoOn = videoOn ?: this.videoOn
+                )
+            }
+        }
 
         data class ConnectedIdle(
             override val latestFrame: Bitmap? = null,
             override val videoOn: Boolean = false,
             val lastFlightMs: Long? = null
-        ) : ConnectedViewState
+        ) : ConnectedViewState {
+            override fun copyWithVideoChange(latestFrame: Bitmap?, videoOn: Boolean?): ConnectedIdle {
+                return copy(
+                    latestFrame = latestFrame ?: this.latestFrame,
+                    videoOn = videoOn ?: this.videoOn
+                )
+            }
+        }
 
         data class TakingOff(
             override val latestFrame: Bitmap?,
             override val videoOn: Boolean
-        ) : ConnectedViewState
+        ) : ConnectedViewState {
+            override fun copyWithVideoChange(latestFrame: Bitmap?, videoOn: Boolean?): TakingOff {
+                return copy(
+                    latestFrame = latestFrame ?: this.latestFrame,
+                    videoOn = videoOn ?: this.videoOn
+                )
+            }
+        }
 
         data class Flying(
             override val latestFrame: Bitmap?,
@@ -50,6 +77,13 @@ sealed interface ControllerViewState : ViewState {
             val telloState: TelloState? = null,
             val throttleYawThumbstickState: ThumbstickState = ThumbstickState(),
             val rollPitchThumbstickState: ThumbstickState = ThumbstickState()
-        ) : ConnectedViewState
+        ) : ConnectedViewState {
+            override fun copyWithVideoChange(latestFrame: Bitmap?, videoOn: Boolean?): Flying {
+                return copy(
+                    latestFrame = latestFrame ?: this.latestFrame,
+                    videoOn = videoOn ?: this.videoOn
+                )
+            }
+        }
     }
 }
