@@ -13,7 +13,6 @@ fun ConnectedViewState.ConnectedIdle.ControllerIdle(eventReceiver: EventReceiver
     }
     Button(onClick = {
         eventReceiver.onEventDebounced(ControllerViewEvent.ClickedTakeoff)
-
     }) {
         Text("TAKEOFF")
     }

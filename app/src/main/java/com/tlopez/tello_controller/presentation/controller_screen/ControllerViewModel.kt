@@ -4,18 +4,19 @@ import androidx.lifecycle.viewModelScope
 import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.*
-import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.*
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState.*
-import com.tlopez.tello_controller.util.TelloCommand
+import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
 import com.tlopez.tello_controller.util.TelloCommand.*
 import com.tlopez.tello_controller.util.TelloResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-@OptIn(ExperimentalCoroutinesApi::class)
 class ControllerViewModel @Inject constructor(
     private val telloRepository: TelloRepository
 ) : BaseViewModel<ControllerViewState, ControllerViewEvent>() {
@@ -27,12 +28,8 @@ class ControllerViewModel @Inject constructor(
 
     private var flightStartedUnixMs: Long = 0
     private var leverForce: LeverForce = LeverForce()
-        set(value) {
-            field = value
-            println("new lever force $value")
-        }
-    private var pollLeverForceJob: Job? = null
     private var pollConnectionJob: Job? = null
+    private var pollLeverForceJob: Job? = null
     private var pollFlightTimeJob: Job? = null
 
     init {
@@ -52,16 +49,55 @@ class ControllerViewModel @Inject constructor(
         }
     }
 
+    private fun onClickedConnect() {
+        telloRepository.sendTelloCommand(Start) {
+            if (it is TelloResponse.Ok) {
+                ConnectedIdle().push()
+                pollConnectionLoop()
+            } else {
+                DisconnectedError.push()
+            }
+        }
+    }
+
+    private fun onClickedLand() {
+        pollLeverForceJob?.cancel()
+        telloRepository.sendTelloCommand(Land) {
+            if (it is TelloResponse.Ok) {
+                pollFlightTimeJob?.cancel()
+                withLastStateAsFlying {
+                    ConnectedIdle(
+                        latestFrame = latestFrame,
+                        videoOn = videoOn,
+                        lastFlightMs = System.currentTimeMillis() - flightStartedUnixMs
+                    ).push()
+                }
+            }
+        }
+    }
+
+    private fun onClickedTakeoff() {
+        withLastStateAsConnected {
+            TakingOff(latestFrame, videoOn).push()
+        }
+        telloRepository.sendTelloCommand(Takeoff) {
+            if (it is TelloResponse.Ok) {
+                flightStartedUnixMs = System.currentTimeMillis()
+                pollFlightTimeLoop()
+                pollLeverForceLoop()
+                withLastStateAsConnected {
+                    Flying(latestFrame, videoOn).push()
+                }
+            }
+        }
+    }
+
     private fun onMovedRollPitchThumbstick(event: MovedRollPitchThumbstick) {
         withLastStateAsFlying {
-            val newState = rollPitchThumbstickState.run {
-                copy(
-                    fractionHorizontal = (fractionHorizontal + event.movedByPercent.x)
-                        .coerceIn(-1f..1f),
-                    fractionVertical = (fractionVertical + event.movedByPercent.y)
-                        .coerceIn(-1f..1f)
-                )
-            }
+            val newState = rollPitchThumbstickState.copyWithPercentAdjustment(
+                event.movedByPercent.x,
+                event.movedByPercent.y
+            )
             leverForce = leverForce.copy(
                 roll = (newState.fractionHorizontal * 100).toInt(),
                 pitch = (newState.fractionVertical * 100).toInt(),
@@ -72,14 +108,10 @@ class ControllerViewModel @Inject constructor(
 
     private fun onMovedThrottleYawThumbstick(event: MovedThrottleYawThumbstick) {
         withLastStateAsFlying {
-            val newState = throttleYawThumbstickState.run {
-                copy(
-                    fractionHorizontal = (fractionHorizontal + event.movedByPercent.x)
-                        .coerceIn(-1f..1f),
-                    fractionVertical = (fractionVertical + event.movedByPercent.y)
-                        .coerceIn(-1f..1f)
-                )
-            }
+            val newState = throttleYawThumbstickState.copyWithPercentAdjustment(
+                event.movedByPercent.x,
+                event.movedByPercent.y
+            )
             leverForce = leverForce.copy(
                 throttle = (newState.fractionHorizontal * 100).toInt(),
                 yaw = (newState.fractionVertical * 100).toInt(),
@@ -102,49 +134,6 @@ class ControllerViewModel @Inject constructor(
         }
     }
 
-    private fun onClickedConnect() {
-        telloRepository.sendTelloCommand(Start) {
-            if (it is TelloResponse.Ok) {
-                ConnectedIdle().push()
-                pollConnectionLoop()
-            }
-        }
-    }
-
-    private fun onClickedLand() {
-        pollLeverForceJob?.cancel()
-            telloRepository.sendTelloCommand(Land) {
-                if (it is TelloResponse.Ok) {
-                    pollFlightTimeJob?.cancel()
-                    withLastStateAsFlying {
-                        ConnectedIdle(
-                            latestFrame = latestFrame,
-                            videoOn = videoOn,
-                            lastFlightMs = System.currentTimeMillis() - flightStartedUnixMs
-                        ).push()
-                    }
-                }
-        }
-    }
-
-    private fun onClickedTakeoff() {
-        withLastStateAsConnected {
-            TakingOff(latestFrame, videoOn).push()
-        }
-        telloRepository.sendTelloCommand(Takeoff) {
-            if (it is TelloResponse.Ok) {
-                flightStartedUnixMs = System.currentTimeMillis()
-                pollFlightTimeJob?.cancel()
-                pollLeverForceJob?.cancel()
-                pollFlightTimeLoop()
-                pollLeverForceLoop()
-                withLastStateAsConnected {
-                    Flying(latestFrame, videoOn).push()
-                }
-            }
-        }
-    }
-
     private fun onToggleVideo() {
         telloRepository.sendTelloCommand(StartVideoStream) {
             pollVideoStream()
@@ -163,6 +152,10 @@ class ControllerViewModel @Inject constructor(
     private fun pollConnection() {
         telloRepository.sendTelloCommand(Start) {
             if (it is TelloResponse.Error) {
+                // Connection was lost, cancel all polling.
+                pollConnectionJob?.cancel()
+                pollLeverForceJob?.cancel()
+                pollFlightTimeJob?.cancel()
                 DisconnectedError.push()
             }
         }
