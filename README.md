@@ -18,12 +18,12 @@ This is an application to control a Ryze Tech Tello EDU drone using an Android d
 
 ## Running This Application
 
-*From an APK*
+*From an APK (easy)*
 
 // todo
 Open this link on your phone to install the pre-built application directly.
 
-*Building the Application Yourself*
+*Building the Application Yourself (hard)*
 1. If not yet downloaded, download the latest version of Android Studio.
 2. Download this repository and extract it.
 3. Open the extracted folder in Android Studio.
