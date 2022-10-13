@@ -9,7 +9,14 @@ This is an application to control a Ryze Tech Tello EDU drone using an Android d
 * Track the time-of-flight, determined behind-the-scenes by the difference in the time of a successful landing and a successful takeoff.
 * Receive in-flight data (speed, height, position).
 
-## Replicating This Work
+## Future Features
+
+* Output in-flight data, time-of-flight, to a DynamoDB database.
+* Add some sort of team / competition system.
+* Save videos taken during flight.
+* Upload saved videos to an S3 Bucket.
+
+## Running This Application
 
 *From an APK*
 
