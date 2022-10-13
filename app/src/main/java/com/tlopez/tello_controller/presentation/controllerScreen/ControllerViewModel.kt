@@ -1,11 +1,11 @@
-package com.tlopez.tello_controller.presentation.controller_screen
+package com.tlopez.tello_controller.presentation.controllerScreen
 
 import androidx.lifecycle.viewModelScope
 import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.models.TelloRepository
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.*
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.*
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState.*
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewEvent.*
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.*
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.ConnectedViewState.*
 import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
 import com.tlopez.tello_controller.util.TelloCommand.*
 import com.tlopez.tello_controller.util.TelloResponse

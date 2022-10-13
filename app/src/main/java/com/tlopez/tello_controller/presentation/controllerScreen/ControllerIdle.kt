@@ -1,10 +1,10 @@
-package com.tlopez.tello_controller.presentation.controller_screen
+package com.tlopez.tello_controller.presentation.controllerScreen
 
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import com.tlopez.tello_controller.architecture.EventReceiver
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.ConnectedViewState
 
 @Composable
 fun ConnectedViewState.ConnectedIdle.ControllerIdle(eventReceiver: EventReceiver<ControllerViewEvent>) {

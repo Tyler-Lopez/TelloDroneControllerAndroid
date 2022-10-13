@@ -1,4 +1,4 @@
-package com.tlopez.tello_controller.presentation.controller_screen
+package com.tlopez.tello_controller.presentation.controllerScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.ToggleVideo
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.*
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState
-import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState.*
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewEvent.ToggleVideo
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.*
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.ConnectedViewState
+import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.ConnectedViewState.*
 
 @Composable
 fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {

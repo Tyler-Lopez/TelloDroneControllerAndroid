@@ -1,4 +1,4 @@
-package com.tlopez.tello_controller.presentation.controller_screen
+package com.tlopez.tello_controller.presentation.controllerScreen
 
 import androidx.compose.material.Button
 import androidx.compose.material.Text
