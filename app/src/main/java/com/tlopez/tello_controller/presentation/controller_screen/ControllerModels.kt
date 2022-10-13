@@ -8,20 +8,59 @@ import com.tlopez.tello_controller.domain.models.TelloState
 import com.tlopez.tello_controller.presentation.thumbstick.ThumbstickState
 
 sealed interface ControllerViewEvent : ViewEvent {
-    object ClickedBreak : ControllerViewEvent
     object ClickedConnect : ControllerViewEvent
     object ClickedLand : ControllerViewEvent
     object ClickedTakeoff : ControllerViewEvent
-    object ClickedStartVideo : ControllerViewEvent
     data class MovedRollPitchThumbstick(val movedByPercent: Offset) : ControllerViewEvent
     data class MovedThrottleYawThumbstick(val movedByPercent: Offset) : ControllerViewEvent
     object ResetRollPitchThumbstick : ControllerViewEvent
     object ResetThrottleYawThumbstick : ControllerViewEvent
+    object ToggleVideo : ControllerViewEvent
 }
 
+sealed interface ControllerViewState : ViewState {
+
+    object DisconnectedError : ControllerViewState
+    object DisconnectedIdle : ControllerViewState
+
+    sealed interface ConnectedViewState : ControllerViewState {
+        val latestFrame: Bitmap?
+        val videoOn: Boolean
+
+        data class ConnectedError(
+            override val latestFrame: Bitmap? = null,
+            override val videoOn: Boolean = false
+        ) : ConnectedViewState
+
+        data class ConnectedIdle(
+            override val latestFrame: Bitmap? = null,
+            override val videoOn: Boolean = false,
+            val lastFlightMs: Long? = null
+        ) : ConnectedViewState
+
+        data class TakingOff(
+            override val latestFrame: Bitmap?,
+            override val videoOn: Boolean
+        ) : ConnectedViewState
+
+        data class Flying(
+            override val latestFrame: Bitmap?,
+            override val videoOn: Boolean,
+            val flightLengthMs: Long = 0L,
+            val throttleYawThumbstickState: ThumbstickState = ThumbstickState(),
+            val rollPitchThumbstickState: ThumbstickState = ThumbstickState()
+        ) : ConnectedViewState
+    }
+}
+
+/*
 data class ControllerViewState(
+    val isInFlight: Boolean,
     val telloState: TelloState?,
     val thumbstickLeft: ThumbstickState,
     val thumbstickRight: ThumbstickState,
+    val flightLength: String,
     val latestFrame: Bitmap?
 ) : ViewState
+
+ */

@@ -15,6 +15,7 @@ import com.tlopez.tello_controller.domain.models.TelloState
 import com.tlopez.tello_controller.domain.services.SocketService
 import com.tlopez.tello_controller.util.MediaCodecH624
 import com.tlopez.tello_controller.util.TelloCommand
+import com.tlopez.tello_controller.util.TelloResponse
 import com.tlopez.tello_controller.util.TelloStateUtil
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -91,7 +92,7 @@ class TelloRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (String) -> Unit) {
+    override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (TelloResponse) -> Unit) {
         socketService?.apply {
 
             when (telloCommand) {
@@ -100,13 +101,17 @@ class TelloRepositoryImpl @Inject constructor(
                 }
                 else -> {
                     sendCommand(telloCommand.command) {
-                        println("response was ${it.decodeToString()}")
-                        onResponse(it.decodeToString())
+                        val endIndex: Int = it.indexOf(0)
+                        println("response was ${it.decodeToString(0, endIndex)}")
+                        onResponse(
+                            when (it.decodeToString(0, endIndex)) {
+                                "ok" -> TelloResponse.Ok
+                                else -> TelloResponse.Error
+                            }
+                        )
                     }
                 }
             }
-
-
         }
     }
 

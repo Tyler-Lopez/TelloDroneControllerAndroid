@@ -12,6 +12,7 @@ sealed interface TelloCommand {
     companion object {
         private const val COMMAND_LAND = "land"
         private const val COMMAND_LEVER_FORCE = "rc %d %d %d %d"
+        private const val COMMAND_MOTOR_ON = "motoron"
         private const val COMMAND_STOP = "stop"
         private const val COMMAND_START_SDK_MODE = "command"
         private const val COMMAND_TAKEOFF = "takeoff"
@@ -48,6 +49,10 @@ sealed interface TelloCommand {
 
     object Start : TelloCommand {
         override val command = COMMAND_START_SDK_MODE
+    }
+
+    object MotorOn : TelloCommand {
+        override val command = COMMAND_MOTOR_ON
     }
 
     object Takeoff : TelloCommand {

@@ -66,8 +66,12 @@ class SocketService : Service() {
                     UDP_PORT_COMMANDS
                 )
                 socketCommands.send(packet)
-                socketCommands.receiveResponse(onResponse)
             }
+                .onSuccess {
+                    socketCommands.receiveResponse(onResponse)
+                }.onFailure {
+                    println("Failure to send command $it")
+                }
         }
     }
 
@@ -87,7 +91,7 @@ class SocketService : Service() {
     }
 
     private fun DatagramSocket.receiveResponse(onSuccess: (ByteArray) -> Unit) {
-        val message = ByteArray(60000)
+        val message = ByteArray(65507)
         scope.launch {
             runCatching {
                 val packet = DatagramPacket(
@@ -97,6 +101,11 @@ class SocketService : Service() {
                 soTimeout = 5000
                 receive(packet)
             }.onSuccess {
+                println("new succ")
+                println("message is $message")
+                onSuccess(message)
+            }.onFailure {
+                println("failure $it")
                 onSuccess(message)
             }
         }

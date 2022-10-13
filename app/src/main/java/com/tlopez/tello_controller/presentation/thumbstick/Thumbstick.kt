@@ -1,20 +1,14 @@
 package com.tlopez.tello_controller.presentation.thumbstick
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * Composable used to represent a thumbstick which a user may drag and release.
@@ -29,30 +23,28 @@ import kotlinx.coroutines.launch
 fun Thumbstick(
     thumbstickState: ThumbstickState,
     modifier: Modifier = Modifier,
-    colorContainer: Color = Color.Cyan,
-    colorThumbstick: Color = Color.Gray,
-    thumbstickRelativePercentSize: Float = 0.8f,
+    colorContainerExterior: Color = Color.Gray,
+    colorContainerInterior: Color = Color.DarkGray,
+    colorThumbstick: Color = Color.LightGray,
     onThumbstickDraggedToFloatPercent: (Offset) -> Unit,
     onThumbstickReleased: () -> Unit
 ) {
     /** Set within Canvas draw block **/
-    BoxWithConstraints(modifier = modifier.background(Color.Red)) {
-        val radiusContainer = LocalDensity.current.run {
-            minOf(maxHeight, maxWidth).roundToPx() / 2.0f
+    BoxWithConstraints(modifier = modifier) {
+        val radiusView = LocalDensity.current.run {
+            (minOf(maxHeight, maxWidth).roundToPx() / 2.0f)
         }
-        println("hey making canvas state is $thumbstickState")
+        val radiusContainerExterior = radiusView
+        val radiusContainerInterior = radiusContainerExterior * 0.5f
+        val radiusThumbstick = radiusContainerInterior * 0.7f
         Canvas(
             modifier = Modifier
-                .fillMaxSize()
+                .requiredSize(minWidth, minWidth)
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            val draggedX = dragAmount.x / radiusContainer
-                            val draggedY = dragAmount.y / radiusContainer
-                            //    println("fraction horizontal was $fractionHorizontal")
-                            //   println("drag amount was ${dragAmount.x}")
-                            //  println("drag x was ${draggedX}")
-                            println("but in here thumbstick state is $thumbstickState")
+                            val draggedX = dragAmount.x / radiusView
+                            val draggedY = dragAmount.y / radiusView
                             onThumbstickDraggedToFloatPercent(Offset(draggedX, draggedY))
                             change.consume()
                         },
@@ -60,15 +52,15 @@ fun Thumbstick(
                         onDragEnd = { onThumbstickReleased() }
                     )
                 }) {
-            val radiusThumbstick = radiusContainer * thumbstickRelativePercentSize
-            drawCircle(color = colorContainer, radius = radiusContainer)
+            drawCircle(color = colorContainerExterior, radius = radiusContainerExterior)
+            drawCircle(color = colorContainerInterior, radius = radiusContainerInterior)
             drawCircle(
                 color = colorThumbstick,
                 radius = radiusThumbstick,
                 center = thumbstickState.run {
                     center + Offset(
-                        x = radiusContainer * fractionHorizontal,
-                        y = radiusContainer * fractionVertical,
+                        x = radiusContainerInterior * fractionHorizontal,
+                        y = radiusContainerInterior * fractionVertical,
                     )
                 }
             )
