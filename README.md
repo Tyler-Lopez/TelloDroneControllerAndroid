@@ -1,6 +1,20 @@
 # Tello Drone Controller Android
 
-This is an application to control a Ryze Tech Tello EDU drone using an Android device written in Kotlin using the Jetpack Compose framework.
+This is an application to control a Ryze Tech Tello EDU drone using an Android device with virtual joysticks written in Kotlin using the Jetpack Compose framework. The 3.0 SDK provided by Ryze Tech was used to create a wrapper class to interact with the robot over WIFI UDP. 
+
+## Features
+
+* Live-stream video-feed from the front-facing camera.
+* Control roll, pitch, throttle, and yaw from virtual joysticks.
+* Track the time-of-flight, determined behind-the-scenes by the difference in the time of a successful landing and a successful takeoff.
+* Receive in-flight data (speed, height, position).
+
+## Replicating This Work
+
+1. If not yet downloaded, download the latest version of Android Studio.
+2. Download this repository and extract it.
+3. Open the extracted folder in Android Studio.
+4. Once Gradle builds the project, either run it on an emulated device or by connecting a physical device by USB.
 
 ## References
 Tello SDK 3.0 User Guide
