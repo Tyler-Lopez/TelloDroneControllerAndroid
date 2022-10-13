@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewEvent.ToggleVideo
+import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.*
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState
 import com.tlopez.tello_controller.presentation.controller_screen.ControllerViewState.ConnectedViewState.*
 
@@ -43,8 +44,8 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 )
             }
             when (it) {
-                is ControllerViewState.DisconnectedIdle -> ControllerDisconnected(eventReceiver = viewModel)
-                is ControllerViewState.DisconnectedError -> ControllerError(eventReceiver = viewModel)
+                is DisconnectedIdle -> ControllerDisconnected(eventReceiver = viewModel)
+                is DisconnectedError -> ControllerError(eventReceiver = viewModel)
                 is Flying -> it.ControllerFlying(eventReceiver = viewModel)
                 is ConnectedIdle -> it.ControllerIdle(eventReceiver = viewModel)
                 is ConnectedError -> ControllerError(eventReceiver = viewModel)
