@@ -29,10 +29,9 @@ class ControllerViewModel @Inject constructor(
     private var leverForce: LeverForce = LeverForce()
         set(value) {
             field = value
-            value.apply {
-                telloRepository.sendTelloCommand(SetLeverForce(roll, pitch, throttle, yaw)) {}
-            }
+            println("new lever force $value")
         }
+    private var pollLeverForceJob: Job? = null
     private var pollConnectionJob: Job? = null
     private var pollFlightTimeJob: Job? = null
 
@@ -113,17 +112,18 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onClickedLand() {
-        telloRepository.sendTelloCommand(Land) {
-            if (it is TelloResponse.Ok) {
-                pollFlightTimeJob?.cancel()
-                withLastStateAsFlying {
-                    ConnectedIdle(
-                        latestFrame = latestFrame,
-                        videoOn = videoOn,
-                        lastFlightMs = System.currentTimeMillis() - flightStartedUnixMs
-                    ).push()
+        pollLeverForceJob?.cancel()
+            telloRepository.sendTelloCommand(Land) {
+                if (it is TelloResponse.Ok) {
+                    pollFlightTimeJob?.cancel()
+                    withLastStateAsFlying {
+                        ConnectedIdle(
+                            latestFrame = latestFrame,
+                            videoOn = videoOn,
+                            lastFlightMs = System.currentTimeMillis() - flightStartedUnixMs
+                        ).push()
+                    }
                 }
-            }
         }
     }
 
@@ -135,7 +135,9 @@ class ControllerViewModel @Inject constructor(
             if (it is TelloResponse.Ok) {
                 flightStartedUnixMs = System.currentTimeMillis()
                 pollFlightTimeJob?.cancel()
+                pollLeverForceJob?.cancel()
                 pollFlightTimeLoop()
+                pollLeverForceLoop()
                 withLastStateAsConnected {
                     Flying(latestFrame, videoOn).push()
                 }
@@ -163,6 +165,20 @@ class ControllerViewModel @Inject constructor(
             if (it is TelloResponse.Error) {
                 DisconnectedError.push()
             }
+        }
+    }
+
+    private fun pollLeverForceLoop() {
+        pollLeverForceJob = viewModelScope.launch(Dispatchers.IO) {
+            pollLeverForce()
+            delay(POLL_DELAY_MS_FLIGHT_TIME)
+            pollLeverForceLoop()
+        }
+    }
+
+    private fun pollLeverForce() {
+        leverForce.apply {
+            telloRepository.sendTelloCommand(SetLeverForce(roll, pitch, throttle, yaw)) {}
         }
     }
 
