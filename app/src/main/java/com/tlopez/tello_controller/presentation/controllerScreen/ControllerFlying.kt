@@ -30,22 +30,6 @@ fun ControllerViewState.ConnectedViewState.Flying.ControllerFlying(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Thumbstick(
-            thumbstickState = throttleYawThumbstickState,
-            modifier = Modifier
-                .weight(1f)
-                .wrapContentHeight(),
-            onThumbstickDraggedToFloatPercent = {
-                eventReceiver.onEvent(ControllerViewEvent.MovedThrottleYawThumbstick(it))
-            },
-            onThumbstickReleased = {
-                eventReceiver.onEvent(ControllerViewEvent.ResetThrottleYawThumbstick)
-            }
-        )
-        Spacer(
-            modifier = Modifier
-                .width(16.dp)
-        )
-        Thumbstick(
             thumbstickState = rollPitchThumbstickState,
             modifier = Modifier
                 .weight(1f)
@@ -55,6 +39,23 @@ fun ControllerViewState.ConnectedViewState.Flying.ControllerFlying(
             },
             onThumbstickReleased = {
                 eventReceiver.onEvent(ControllerViewEvent.ResetRollPitchThumbstick)
+            }
+        )
+        Spacer(
+            modifier = Modifier
+                .width(16.dp)
+        )
+
+        Thumbstick(
+            thumbstickState = throttleYawThumbstickState,
+            modifier = Modifier
+                .weight(1f)
+                .wrapContentHeight(),
+            onThumbstickDraggedToFloatPercent = {
+                eventReceiver.onEvent(ControllerViewEvent.MovedThrottleYawThumbstick(it))
+            },
+            onThumbstickReleased = {
+                eventReceiver.onEvent(ControllerViewEvent.ResetThrottleYawThumbstick)
             }
         )
     }

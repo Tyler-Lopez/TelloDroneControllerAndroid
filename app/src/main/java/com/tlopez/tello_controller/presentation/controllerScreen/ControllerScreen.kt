@@ -44,11 +44,11 @@ fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
                 )
             }
             when (it) {
-                is DisconnectedIdle -> ControllerDisconnected(eventReceiver = viewModel)
-                is DisconnectedError -> ControllerError(eventReceiver = viewModel)
+                is DisconnectedIdle -> ControllerDisconnectedIdle(eventReceiver = viewModel)
+                is DisconnectedError -> ControllerDisconnectedError(eventReceiver = viewModel)
                 is Flying -> it.ControllerFlying(eventReceiver = viewModel)
-                is ConnectedIdle -> it.ControllerIdle(eventReceiver = viewModel)
-                is ConnectedError -> ControllerError(eventReceiver = viewModel)
+                is ConnectedIdle -> it.ControllerConnectedIdle(eventReceiver = viewModel)
+                is ConnectedError -> ControllerConnectedError(eventReceiver = viewModel)
                 is TakingOff -> ControllerTakingOff()
             }
         }

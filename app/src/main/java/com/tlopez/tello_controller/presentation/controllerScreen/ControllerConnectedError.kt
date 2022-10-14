@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 import com.tlopez.tello_controller.architecture.EventReceiver
 
 @Composable
-fun ControllerError(eventReceiver: EventReceiver<ControllerViewEvent>) {
-    Text("There was an error")
+fun ControllerConnectedError(eventReceiver: EventReceiver<ControllerViewEvent>) {
+    Text("There was an error while disconnected")
 }

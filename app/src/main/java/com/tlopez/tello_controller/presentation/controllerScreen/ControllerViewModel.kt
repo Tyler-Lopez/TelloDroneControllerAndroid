@@ -119,7 +119,7 @@ class ControllerViewModel @Inject constructor(
             )
             leverForce = leverForce.copy(
                 yaw = (newState.fractionHorizontal * 100).toInt(),
-                throttle = (newState.fractionVertical * 100).toInt(),
+                throttle = (newState.fractionVertical * -100).toInt(),
             )
             copy(throttleYawThumbstickState = newState).push()
         }

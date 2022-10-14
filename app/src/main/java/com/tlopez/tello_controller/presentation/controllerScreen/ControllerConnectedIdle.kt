@@ -7,7 +7,7 @@ import com.tlopez.tello_controller.architecture.EventReceiver
 import com.tlopez.tello_controller.presentation.controllerScreen.ControllerViewState.ConnectedViewState
 
 @Composable
-fun ConnectedViewState.ConnectedIdle.ControllerIdle(eventReceiver: EventReceiver<ControllerViewEvent>) {
+fun ConnectedViewState.ConnectedIdle.ControllerConnectedIdle(eventReceiver: EventReceiver<ControllerViewEvent>) {
     lastFlightMs?.let {
         Text("Last flight was $it long")
     }
