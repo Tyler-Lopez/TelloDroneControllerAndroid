@@ -20,7 +20,8 @@ This is an application to control a Ryze Tech Tello EDU drone using an Android d
 
 *From an APK (easy)*
 
-// todo
+https://github.com/Tyler-Lopez/TelloDroneControllerAndroid/blob/main/tellodronecontroller.apk
+
 Open this link on your phone to install the pre-built application directly.
 
 *Building the Application Yourself (hard)*
