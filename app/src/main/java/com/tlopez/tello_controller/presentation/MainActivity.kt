@@ -34,7 +34,9 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
         super.onCreate(savedInstanceState)
         setContent {
             navController = rememberAnimatedNavController()
-            MainNavHost(navController, Screen.Welcome.route, this)
+            FlashcardsAppTheme {
+                MainNavHost(navController, Screen.Welcome.route, this)
+            }
         }
     }
 

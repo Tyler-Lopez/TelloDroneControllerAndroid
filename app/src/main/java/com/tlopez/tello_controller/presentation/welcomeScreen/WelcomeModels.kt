@@ -1,4 +1,4 @@
-package com.tlopez.tello_controller.presentation.welcome_screen
+package com.tlopez.tello_controller.presentation.welcomeScreen
 
 import com.tlopez.tello_controller.architecture.ViewEvent
 import com.tlopez.tello_controller.architecture.ViewState

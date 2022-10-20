@@ -2,7 +2,9 @@ package com.tlopez.tello_controller.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Green = Color(4, 106, 56)
+val GreenLight = Color(67, 153, 99)
+val GreenDark = Color(0, 62, 17)
+val Neon = Color(151, 215, 0)
+val NeonLight = Color(204, 255, 79)
+val NeonDark = Color(98, 165, 0)
