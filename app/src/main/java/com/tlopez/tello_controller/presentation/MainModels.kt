@@ -4,4 +4,6 @@ import com.tlopez.tello_controller.architecture.Destination
 
 sealed interface MainDestination : Destination {
     object NavigateController : MainDestination
+    object NavigateEnterName : MainDestination
+    object NavigateWelcome : MainDestination
 }
