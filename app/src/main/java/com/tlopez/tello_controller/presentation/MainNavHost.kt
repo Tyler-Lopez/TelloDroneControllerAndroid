@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tlopez.tello_controller.architecture.Router
+import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameScreen
+import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameViewModel
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeScreen
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeViewModel
 
@@ -23,6 +25,11 @@ fun MainNavHost(
     ) {
         composable(route = Screen.Welcome.route) {
             WelcomeScreen(viewModel = hiltViewModel<WelcomeViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = Screen.EnterName.route) {
+            EnterNameScreen(viewModel = hiltViewModel<EnterNameViewModel>().apply {
                 attachRouter(router)
             })
         }
