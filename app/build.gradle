@@ -52,6 +52,17 @@ android {
 }
 
 dependencies {
+    // Amazon SDK
+    // github.com/aws-amplify/aws-sdk-android
+    // github.com/aws-amplify/amplify-android
+    implementation "com.amplifyframework:aws-api:$amplify_version"
+    implementation "com.amplifyframework:aws-datastore:$amplify_version"
+    implementation "com.amazonaws:aws-android-sdk-core:$aws_version"
+    implementation "com.amazonaws:aws-android-sdk-cognitoauth:$aws_version"
+    implementation "com.amazonaws:aws-android-sdk-cognitoidentityprovider:$aws_version"
+    implementation "com.amazonaws:aws-android-sdk-cognitoidentityprovider-asf:$aws_version"
+
+
     // Serialization
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2'
     // Retrofit

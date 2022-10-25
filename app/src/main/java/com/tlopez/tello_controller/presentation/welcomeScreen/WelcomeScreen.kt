@@ -9,7 +9,9 @@ import com.tlopez.tello_controller.presentation.common.ScreenBackground
 @Composable
 fun WelcomeScreen(viewModel: WelcomeViewModel) {
     ScreenBackground {
+        println("here welcome screen")
         viewModel.viewState.collectAsState().value?.apply {
+            println("here welcome screen")
             Button(onClick = { /*TODO*/ }) {
                 Text("Start Flight")
             }

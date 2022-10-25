@@ -3,6 +3,8 @@ buildscript {
     ext {
         kotlin_version = '1.7.10'
         compose_version = '1.2.1'
+        aws_version = '2.55.0'
+        amplify_version = '1.37.5'
     }
     repositories {
         google()
