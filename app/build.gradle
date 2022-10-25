@@ -55,6 +55,7 @@ dependencies {
     // Amazon SDK
     // github.com/aws-amplify/aws-sdk-android
     // github.com/aws-amplify/amplify-android
+    implementation "com.amplifyframework:core:$amplify_version"
     implementation "com.amplifyframework:aws-api:$amplify_version"
     implementation "com.amplifyframework:aws-datastore:$amplify_version"
     implementation "com.amazonaws:aws-android-sdk-core:$aws_version"
