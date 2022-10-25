@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.amplifyframework.datastore.generated.model.Flight
 import com.tlopez.tello_controller.presentation.MainDestination.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tlopez.tello_controller.architecture.Router
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
         setContent {
             navController = rememberAnimatedNavController()
             FlashcardsAppTheme {
+                Flight.builder().flightLength(5)
                 MainNavHost(navController, Screen.Welcome.route, this)
             }
         }
