@@ -7,6 +7,10 @@ sealed interface Screen {
         override val route: String = "EnterName"
     }
 
+    object Login : Screen {
+        override val route: String = "Login"
+    }
+
     object Welcome : Screen {
         override val route: String = "Welcome"
     }

@@ -6,12 +6,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tlopez.tello_controller.architecture.Router
 import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.domain.services.SocketService
 import com.tlopez.tello_controller.presentation.MainDestination.*
+import com.tlopez.tello_controller.presentation.MainViewState.*
+import com.tlopez.tello_controller.presentation.Screen.*
 import com.tlopez.tello_controller.presentation.theme.FlashcardsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,15 +26,27 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     @Inject
     lateinit var socketServiceRepository: TelloRepository
 
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
+
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel = hiltViewModel<MainViewModel>()
             navController = rememberAnimatedNavController()
             FlashcardsAppTheme {
-                MainNavHost(navController, Screen.Welcome.route, this)
+                viewModel.viewState.collectAsState().value?.apply {
+                    MainNavHost(
+                        navController,
+                        if (this is Authenticated) {
+                            Welcome.route
+                        } else {
+                            Login.route
+                        },
+                        this@MainActivity
+                    )
+                }
             }
         }
     }

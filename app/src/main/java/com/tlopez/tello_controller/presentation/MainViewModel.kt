@@ -1,10 +1,36 @@
 package com.tlopez.tello_controller.presentation
 
-import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
-import com.amplifyframework.core.Amplify
+import androidx.lifecycle.viewModelScope
+import com.tlopez.tello_controller.presentation.MainViewState.*
+import com.tlopez.tello_controller.architecture.BaseViewModel
+import com.tlopez.tello_controller.domain.usecase.GetAuthenticatedUserUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase
+) : BaseViewModel<MainViewState, MainViewEvent>() {
+
     init {
-        Amplify.addPlugin(AWSCognitoAuthPlugin())
+        viewModelScope.launch(Dispatchers.IO) {
+            getAuthenticatedUserUseCase()
+                .getOrNull()
+                .run {
+                    when (this) {
+                        null -> Unauthenticated
+                        else -> Authenticated
+                    }
+                }
+                .push()
+
+        }
     }
+
+    override fun onEvent(event: MainViewEvent) {
+        TODO("Not yet implemented")
+    }
+
 }
