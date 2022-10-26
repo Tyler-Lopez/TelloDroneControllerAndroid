@@ -1,5 +1,6 @@
 package com.tlopez.tello_controller.di
 
+import com.amplifyframework.core.Amplify
 import com.tlopez.tello_controller.data.repository.TelloRepositoryImpl
 import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.util.MediaCodecH624
