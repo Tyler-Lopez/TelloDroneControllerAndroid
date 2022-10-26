@@ -4,10 +4,10 @@ import com.tlopez.tello_controller.architecture.ViewEvent
 import com.tlopez.tello_controller.architecture.ViewState
 
 sealed interface LoginViewEvent : ViewEvent {
-
+    object ClickedRegister : LoginViewEvent
 }
 
 data class LoginViewState(
-    val textUsername: String,
-    val textPassword: String
+    val textUsername: String = String(),
+    val textPassword: String = String()
 ) : ViewState

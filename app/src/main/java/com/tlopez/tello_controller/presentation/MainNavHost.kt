@@ -11,6 +11,8 @@ import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameScreen
 import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameViewModel
 import com.tlopez.tello_controller.presentation.loginScreen.LoginScreen
 import com.tlopez.tello_controller.presentation.loginScreen.LoginViewModel
+import com.tlopez.tello_controller.presentation.registerScreen.RegisterScreen
+import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewModel
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeScreen
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeViewModel
 
@@ -32,6 +34,11 @@ fun MainNavHost(
         }
         composable(route = Screen.EnterName.route) {
             EnterNameScreen(viewModel = hiltViewModel<EnterNameViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = Screen.Register.route) {
+            RegisterScreen(viewModel = hiltViewModel<RegisterViewModel>().apply {
                 attachRouter(router)
             })
         }

@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
         when (destination) {
             is NavigateController -> navigateController()
             is NavigateEnterName -> navigateEnterName()
+            is NavigateRegister -> navigateRegister()
             is NavigateWelcome -> navigateWelcome()
         }
     }
@@ -79,6 +80,10 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     private fun navigateEnterName() {
 
+    }
+
+    private fun navigateRegister() {
+        navController.navigate(Register.route)
     }
 
     private fun navigateWelcome() {
