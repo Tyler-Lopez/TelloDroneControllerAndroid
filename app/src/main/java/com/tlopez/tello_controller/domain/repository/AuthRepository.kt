@@ -10,5 +10,6 @@ interface AuthRepository {
     suspend fun getAccessToken(): Result<String>
     suspend fun fetchAuthSession(): Result<AuthenticatedUser>
     suspend fun fetchUserAttributes(): Result<CognitoUserAttributes>
+    suspend fun registerUser(email: String, username: String, password: String): Result<Unit>
     suspend fun logout(): Result<Unit>
 }

@@ -3,6 +3,8 @@ package com.tlopez.tello_controller.presentation.registerScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,18 +20,21 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         viewModel.viewState.collectAsState().value?.apply {
-            TextField(
-                value = textUsername,
-                onValueChange = {
-                    viewModel.onEvent(TextChangedUsername(it))
-                }
-            )
-            TextField(
-                value = textPassword,
-                onValueChange = {
-                    viewModel.onEvent(TextChangedPassword(it))
-                }
-            )
+            if (successfulRegistration) {
+                RegisterSuccess(
+                    textEmail = textEmail,
+                    textUsername = textUsername,
+                    eventReceiver = viewModel
+                )
+            } else {
+                RegisterIdle(
+                    buttonsEnabled = buttonsEnabled,
+                    textEmail = textEmail,
+                    textUsername = textUsername,
+                    textPassword = textPassword,
+                    eventReceiver = viewModel
+                )
+            }
         }
     }
 }

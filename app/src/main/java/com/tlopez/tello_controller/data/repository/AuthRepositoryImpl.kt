@@ -2,17 +2,15 @@ package com.tlopez.tello_controller.data.repository
 
 import android.content.Context
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes
-import com.amplifyframework.auth.AuthException
-import com.amplifyframework.auth.AuthSession
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
-import com.amplifyframework.auth.AuthException.SignedOutException
+import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
+import com.amplifyframework.auth.options.AuthSignUpOptions
 import com.amplifyframework.core.Amplify
 import com.tlopez.tello_controller.domain.models.AuthenticatedUser
 import com.tlopez.tello_controller.domain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -27,7 +25,18 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signIn(username: String, password: String): Result<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.Auth.signIn(
+                    username,
+                    password,
+                    { continuation.resume(Result.success(Unit)) }
+                ) { continuation.resumeWithException(it) }
+            }
+        } catch (e: Exception) {
+            println("error $e")
+            Result.failure(e)
+        }
     }
 
     override suspend fun updatePassword(oldPassword: String, newPassword: String): Result<Unit> {
@@ -61,6 +70,33 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun fetchUserAttributes(): Result<CognitoUserAttributes> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun registerUser(
+        email: String,
+        username: String,
+        password: String
+    ): Result<Unit> {
+        return try {
+            suspendCoroutine { continuation ->
+                val options = AuthSignUpOptions.builder()
+                    .userAttribute(AuthUserAttributeKey.email(), email)
+                    .build()
+                Amplify.Auth.signUp(
+                    username,
+                    password,
+                    options,
+                    {
+                        println("success")
+                        Result.success(Unit)
+                    },
+                    { continuation.resumeWithException(it) }
+                )
+            }
+        } catch (e: Exception) {
+            println("error $e")
+            Result.failure(e)
+        }
     }
 
     override suspend fun logout(): Result<Unit> {

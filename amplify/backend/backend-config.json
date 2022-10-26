@@ -1,6 +1,6 @@
 {
   "auth": {
-    "telloc0649f89": {
+    "telloce19e59e": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
