@@ -1,9 +1,10 @@
 package com.tlopez.tello_controller.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.tlopez.tello_controller.presentation.MainViewState.*
 import com.tlopez.tello_controller.architecture.BaseViewModel
 import com.tlopez.tello_controller.domain.usecase.GetAuthenticatedUserUseCase
+import com.tlopez.tello_controller.presentation.MainViewState.Authenticated
+import com.tlopez.tello_controller.presentation.MainViewState.Unauthenticated
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,6 @@ class MainViewModel @Inject constructor(
                     }
                 }
                 .push()
-
         }
     }
 

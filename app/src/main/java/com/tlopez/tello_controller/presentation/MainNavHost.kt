@@ -13,6 +13,8 @@ import com.tlopez.tello_controller.presentation.loginScreen.LoginScreen
 import com.tlopez.tello_controller.presentation.loginScreen.LoginViewModel
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterScreen
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewModel
+import com.tlopez.tello_controller.presentation.verifyEmailScreen.VerifyEmailScreen
+import com.tlopez.tello_controller.presentation.verifyEmailScreen.VerifyEmailViewModel
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeScreen
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeViewModel
 
@@ -44,6 +46,11 @@ fun MainNavHost(
         }
         composable(route = Screen.Login.route) {
             LoginScreen(viewModel = hiltViewModel<LoginViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = Screen.VerifyEmail.route + "?email={email}&username={username}") {
+            VerifyEmailScreen(viewModel = hiltViewModel<VerifyEmailViewModel>().apply {
                 attachRouter(router)
             })
         }

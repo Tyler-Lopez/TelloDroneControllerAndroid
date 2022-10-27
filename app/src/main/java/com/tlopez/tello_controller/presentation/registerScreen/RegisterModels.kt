@@ -13,7 +13,6 @@ sealed interface RegisterViewEvent : ViewEvent {
 
 data class RegisterViewState(
     val buttonsEnabled: Boolean = true,
-    val successfulRegistration: Boolean = false,
     val textEmail: String = String(),
     val textUsername: String = String(),
     val textPassword: String = String()

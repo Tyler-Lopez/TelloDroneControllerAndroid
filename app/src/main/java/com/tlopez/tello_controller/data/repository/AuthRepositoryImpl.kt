@@ -16,7 +16,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class AuthRepositoryImpl @Inject constructor(
-    @ApplicationContext private val applicationContext: Context
+    @ApplicationContext applicationContext: Context
 ) : AuthRepository {
 
     init {
@@ -55,11 +55,11 @@ class AuthRepositoryImpl @Inject constructor(
                         .awsCredentials
                         .run {
                             error?.also { continuation.resumeWithException(it) }
-                            Result.success(
+                            continuation.resume(Result.success(
                                 object : AuthenticatedUser {
 
                                 }
-                            )
+                            ))
                         }
                 }, { continuation.resumeWithException(it) })
             }
@@ -88,7 +88,29 @@ class AuthRepositoryImpl @Inject constructor(
                     options,
                     {
                         println("success")
-                        Result.success(Unit)
+                        continuation.resume(Result.success(Unit))
+                    },
+                    { continuation.resumeWithException(it) }
+                )
+            }
+        } catch (e: Exception) {
+            println("error $e")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun verify(
+        username: String,
+        confirmationCode: String
+    ): Result<Unit> {
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.Auth.confirmSignUp(
+                    username,
+                    confirmationCode,
+                    {
+                        println("success")
+                        continuation.resume(Result.success(Unit))
                     },
                     { continuation.resumeWithException(it) }
                 )

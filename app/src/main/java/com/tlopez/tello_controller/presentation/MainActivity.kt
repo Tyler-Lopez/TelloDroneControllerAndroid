@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
             is NavigateController -> navigateController()
             is NavigateEnterName -> navigateEnterName()
             is NavigateRegister -> navigateRegister()
+            is NavigateVerifyEmail -> navigateVerifyEmail(destination)
             is NavigateWelcome -> navigateWelcome()
         }
     }
@@ -84,6 +85,16 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     private fun navigateRegister() {
         navController.navigate(Register.route)
+    }
+
+    private fun navigateVerifyEmail(destination: NavigateVerifyEmail) {
+        navController.navigate(VerifyEmail.route + "?email=${destination.email}&username=${destination.username}") {
+            popUpTo(
+                route = Register.route
+            ) {
+                inclusive = true
+            }
+        }
     }
 
     private fun navigateWelcome() {

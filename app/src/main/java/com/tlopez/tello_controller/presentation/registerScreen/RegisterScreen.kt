@@ -10,31 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.tlopez.tello_controller.presentation.common.ScreenBackground
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewEvent.*
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
-            if (successfulRegistration) {
-                RegisterSuccess(
-                    textEmail = textEmail,
-                    textUsername = textUsername,
-                    eventReceiver = viewModel
-                )
-            } else {
-                RegisterIdle(
-                    buttonsEnabled = buttonsEnabled,
-                    textEmail = textEmail,
-                    textUsername = textUsername,
-                    textPassword = textPassword,
-                    eventReceiver = viewModel
-                )
-            }
+            RegisterIdle(
+                buttonsEnabled = buttonsEnabled,
+                textEmail = textEmail,
+                textUsername = textUsername,
+                textPassword = textPassword,
+                eventReceiver = viewModel
+            )
         }
     }
 }

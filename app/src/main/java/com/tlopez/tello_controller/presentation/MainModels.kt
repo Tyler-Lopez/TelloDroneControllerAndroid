@@ -8,6 +8,11 @@ sealed interface MainDestination : Destination {
     object NavigateController : MainDestination
     object NavigateEnterName : MainDestination
     object NavigateRegister : MainDestination
+    data class NavigateVerifyEmail(
+        val email: String,
+        val username: String
+    ) : MainDestination
+
     object NavigateWelcome : MainDestination
 }
 

@@ -1,15 +1,19 @@
 package com.tlopez.tello_controller.presentation.registerScreen
 
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tlopez.tello_controller.architecture.BaseRoutingViewModel
 import com.tlopez.tello_controller.domain.usecase.RegisterUserUseCase
 import com.tlopez.tello_controller.domain.usecase.SignInUserUseCase
 import com.tlopez.tello_controller.presentation.MainDestination
+import com.tlopez.tello_controller.presentation.MainDestination.*
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewEvent.*
+import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewState.*
+import com.tlopez.tello_controller.util.doOnFailure
+import com.tlopez.tello_controller.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,8 +40,8 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
                 signInUserUseCase(
-                    textUsername,
-                    textPassword
+                    username = textUsername,
+                    password = textPassword
                 )
             }
         }
@@ -51,8 +55,19 @@ class RegisterViewModel @Inject constructor(
                     email = textEmail,
                     username = textUsername,
                     password = textPassword
-                )
-                toggleButtonsEnabled()
+                ).doOnSuccess {
+                    println("here it is success")
+                    withContext(Dispatchers.Main) {
+                        routeTo(
+                            NavigateVerifyEmail(
+                                email = textEmail,
+                                username = textUsername
+                            )
+                        )
+                    }
+                }.doOnFailure {
+                    toggleButtonsEnabled()
+                }
             }
         }
     }
