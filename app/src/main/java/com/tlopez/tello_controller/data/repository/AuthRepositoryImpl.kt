@@ -47,17 +47,19 @@ class AuthRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchAuthSession(): Result<AuthenticatedUser> {
+    override suspend fun getUser(): Result<AuthenticatedUser> {
         return try {
+            val email = getEmail()
+            val username = Amplify.Auth.currentUser.username
             suspendCoroutine { continuation ->
                 Amplify.Auth.fetchAuthSession({ auth ->
                     (auth as AWSCognitoAuthSession)
-                        .awsCredentials
                         .run {
-                            error?.also { continuation.resumeWithException(it) }
+                            awsCredentials.error?.also { continuation.resumeWithException(it) }
                             continuation.resume(Result.success(
                                 object : AuthenticatedUser {
-
+                                    override val username = username
+                                    override val email = email
                                 }
                             ))
                         }
@@ -68,8 +70,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchUserAttributes(): Result<CognitoUserAttributes> {
-        TODO("Not yet implemented")
+    private suspend fun getEmail(): String {
+        return suspendCoroutine { continuation ->
+            Amplify.Auth.fetchUserAttributes({ attrs ->
+                attrs
+                    .find { it.key == AuthUserAttributeKey.email() }
+                    ?.let { continuation.resume(it.value) }
+            }) {
+                continuation.resumeWithException(it)
+            }
+        }
     }
 
     override suspend fun registerUser(

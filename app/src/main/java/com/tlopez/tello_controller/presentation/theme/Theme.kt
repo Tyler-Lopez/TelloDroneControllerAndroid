@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 private val LightColorPalette = lightColors(
     primary = Green,
     primaryVariant = GreenDark,
-    secondary = Neon
+    secondary = Neon,
 
     /* Other default colors to override
     background = Color.White,

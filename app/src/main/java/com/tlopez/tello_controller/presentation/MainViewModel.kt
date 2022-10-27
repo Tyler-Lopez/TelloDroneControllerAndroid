@@ -22,7 +22,10 @@ class MainViewModel @Inject constructor(
                 .run {
                     when (this) {
                         null -> Unauthenticated
-                        else -> Authenticated
+                        else -> {
+                            println("hi man ${this.username} and ${this.email}")
+                            Authenticated
+                        }
                     }
                 }
                 .push()

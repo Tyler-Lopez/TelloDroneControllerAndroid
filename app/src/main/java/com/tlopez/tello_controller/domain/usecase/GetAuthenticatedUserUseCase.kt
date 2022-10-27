@@ -8,6 +8,6 @@ class GetAuthenticatedUserUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(): Result<AuthenticatedUser> {
-        return authRepository.fetchAuthSession()
+        return authRepository.getUser()
     }
 }
