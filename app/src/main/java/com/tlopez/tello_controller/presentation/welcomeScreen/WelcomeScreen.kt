@@ -15,6 +15,11 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
             Button(onClick = { /*TODO*/ }) {
                 Text("Start Flight")
             }
+            Button(onClick = {
+                viewModel.onEventDebounced(WelcomeViewEvent.ClickedLogout)
+            }) {
+                Text("Logout")
+            }
         }
     }
 }

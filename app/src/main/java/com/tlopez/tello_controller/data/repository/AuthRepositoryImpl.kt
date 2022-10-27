@@ -1,7 +1,6 @@
 package com.tlopez.tello_controller.data.repository
 
 import android.content.Context
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
@@ -111,13 +110,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verify(
         username: String,
-        confirmationCode: String
+        code: String
     ): Result<Unit> {
         return try {
             suspendCoroutine { continuation ->
                 Amplify.Auth.confirmSignUp(
                     username,
-                    confirmationCode,
+                    code,
                     {
                         println("success")
                         continuation.resume(Result.success(Unit))
@@ -132,6 +131,15 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout(): Result<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.Auth.signOut({
+                    continuation.resume(Result.success(Unit))
+                }) { continuation.resumeWithException(it) }
+            }
+        } catch (e: Exception) {
+            println("error $e")
+            Result.failure(e)
+        }
     }
 }
