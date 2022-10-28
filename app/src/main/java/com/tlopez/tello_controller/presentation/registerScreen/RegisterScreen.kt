@@ -19,6 +19,10 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
         viewModel.viewState.collectAsState().value?.apply {
             RegisterIdle(
                 buttonsEnabled = buttonsEnabled,
+                errorMessageEmail = errorMessageEmail,
+                errorMessageUsername = errorMessageUsername,
+                errorMessagePassword = errorMessagePassword,
+                passHidden = passHidden,
                 textEmail = textEmail,
                 textUsername = textUsername,
                 textPassword = textPassword,

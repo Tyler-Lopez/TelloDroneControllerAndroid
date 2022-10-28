@@ -1,28 +1,38 @@
 package com.tlopez.tello_controller.presentation.common
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 sealed interface TextFieldType {
-    val keyboardType: KeyboardType
+    val keyboardOptions: KeyboardOptions
     val label: String
     val placeholder: String?
 
     object Email : TextFieldType {
-        override val keyboardType: KeyboardType = KeyboardType.Email
+        override val keyboardOptions: KeyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        )
         override val label: String = "Email"
         override val placeholder: String = "example@gmail.com"
     }
 
     object Username : TextFieldType {
-        override val keyboardType: KeyboardType = KeyboardType.Text
+        override val keyboardOptions: KeyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        )
         override val label: String = "Username"
         override val placeholder: String? = null
     }
@@ -31,7 +41,11 @@ sealed interface TextFieldType {
         val isHidden: Boolean,
         val onIconClicked: () -> Unit
     ) : TextFieldType {
-        override val keyboardType: KeyboardType = KeyboardType.Password
+        override val keyboardOptions: KeyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
+        )
         override val label: String = "Password"
         override val placeholder: String? = null
 

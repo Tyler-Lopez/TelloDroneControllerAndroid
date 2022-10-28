@@ -14,6 +14,7 @@ sealed interface MainDestination : Destination {
     ) : MainDestination
 
     object NavigateWelcome : MainDestination
+    object NavigateUp : MainDestination
 }
 
 sealed interface MainViewEvent : ViewEvent {

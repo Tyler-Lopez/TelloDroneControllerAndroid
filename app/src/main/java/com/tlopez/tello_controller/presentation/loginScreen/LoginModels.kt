@@ -6,6 +6,8 @@ import com.tlopez.tello_controller.architecture.ViewState
 sealed interface LoginViewEvent : ViewEvent {
     object ClickedLogin : LoginViewEvent
     object ClickedRegister : LoginViewEvent
+    object ClosedKeyboardUsername : LoginViewEvent
+    object ClosedKeyboardPassword : LoginViewEvent
     data class TextChangedUsername(val changedTo: String) : LoginViewEvent
     data class TextChangedPassword(val changedTo: String) : LoginViewEvent
     object ToggledPassVisibility : LoginViewEvent

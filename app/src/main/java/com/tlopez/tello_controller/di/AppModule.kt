@@ -5,6 +5,7 @@ import com.tlopez.tello_controller.data.repository.AuthRepositoryImpl
 import com.tlopez.tello_controller.data.repository.TelloRepositoryImpl
 import com.tlopez.tello_controller.domain.models.TelloRepository
 import com.tlopez.tello_controller.domain.repository.AuthRepository
+import com.tlopez.tello_controller.util.InputValidationUtil
 import com.tlopez.tello_controller.util.MediaCodecH624
 import com.tlopez.tello_controller.util.TelloStateUtil
 import dagger.Module
@@ -37,4 +38,7 @@ object AppModule {
 
     @Provides
     fun provideMediaCodecH624(): MediaCodecH624 = MediaCodecH624()
+
+    @Provides
+    fun provideInputValidationUtil(): InputValidationUtil = InputValidationUtil()
 }
