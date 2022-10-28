@@ -29,6 +29,7 @@ class LoginViewModel @Inject constructor(
             is ClickedRegister -> onClickedRegister()
             is TextChangedPassword -> onTextChangedPassword(event)
             is TextChangedUsername -> onTextChangedUsername(event)
+            is ToggledPassVisibility -> onToggledPassVisibility()
         }
     }
 
@@ -50,5 +51,11 @@ class LoginViewModel @Inject constructor(
 
     private fun onTextChangedUsername(event: TextChangedUsername) {
         lastPushedState?.copy(textUsername = event.changedTo)?.push()
+    }
+
+    private fun onToggledPassVisibility() {
+        lastPushedState?.run {
+            copy(passHidden = !passHidden)
+        }?.push()
     }
 }
