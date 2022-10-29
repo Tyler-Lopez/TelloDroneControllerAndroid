@@ -37,6 +37,17 @@ sealed interface TextFieldType {
         override val placeholder: String? = null
     }
 
+
+    object VerificationCode : TextFieldType {
+        override val keyboardOptions: KeyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.NumberPassword,
+            imeAction = ImeAction.Done
+        )
+        override val label: String = "Code"
+        override val placeholder: String? = null
+    }
+
     data class Password(
         val isHidden: Boolean,
         val onIconClicked: () -> Unit

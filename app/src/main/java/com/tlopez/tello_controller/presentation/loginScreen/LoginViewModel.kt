@@ -17,6 +17,7 @@ import com.tlopez.tello_controller.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,18 +59,32 @@ class LoginViewModel @Inject constructor(
                     return@launch
                 }
                 signInUserUseCase(textUsername, textPassword)
-                    .doOnSuccess {}
+                    .doOnSuccess {
+                        withContext(Dispatchers.Main) {
+                            routeTo(NavigateWelcome)
+                        }
+                    }
                     .doOnFailure {
                         when (it) {
                             is UserNotFoundException ->
                                 copy(errorMessageUsername = "User does not exist").push()
                             is NotAuthorizedException ->
                                 copy(errorMessagePassword = "Invalid password").push()
+                            is UserNotConfirmedException -> {
+                                lastPushedState?.copy(buttonsEnabled = true)?.push()
+                                withContext(Dispatchers.Main) {
+                                    routeTo(
+                                        NavigateVerifyEmail(
+                                            email = null,
+                                            username = textUsername
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
             }
         }
-        lastPushedState?.copy(buttonsEnabled = true)?.push()
     }
 
     private fun onClickedRegister() {

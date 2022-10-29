@@ -142,4 +142,16 @@ class AuthRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun resendVerificationEmail(username: String): Result<Unit> {
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.Auth.resendSignUpCode(username, {
+                    continuation.resume(Result.success(Unit))
+                }) { continuation.resumeWithException(it) }
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

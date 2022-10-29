@@ -4,12 +4,14 @@ import androidx.lifecycle.viewModelScope
 import com.tlopez.tello_controller.architecture.BaseRoutingViewModel
 import com.tlopez.tello_controller.domain.usecase.LogoutUserUseCase
 import com.tlopez.tello_controller.presentation.MainDestination
+import com.tlopez.tello_controller.presentation.MainDestination.*
 import com.tlopez.tello_controller.presentation.welcomeScreen.WelcomeViewEvent.*
+import com.tlopez.tello_controller.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
@@ -29,6 +31,11 @@ class WelcomeViewModel @Inject constructor(
     private fun onClickedLogout() {
         viewModelScope.launch(Dispatchers.IO) {
             logoutUserUseCase()
+                .doOnSuccess {
+                    withContext(Dispatchers.Main) {
+                        routeTo(NavigateLogin)
+                    }
+                }
         }
     }
 

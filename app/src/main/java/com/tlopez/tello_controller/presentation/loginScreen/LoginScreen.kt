@@ -12,6 +12,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tlopez.tello_controller.presentation.common.ActionButton
 import com.tlopez.tello_controller.presentation.common.SingleLineOutlinedTextField
 import com.tlopez.tello_controller.presentation.common.ScreenBackground
 import com.tlopez.tello_controller.presentation.common.TextFieldType
@@ -60,13 +61,10 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    enabled = buttonsEnabled,
-                    modifier = Modifier.defaultMinSize(minWidth = 164.dp),
-                    onClick = { viewModel.onEventDebounced(ClickedLogin) }
-                ) {
-                    Text("Login")
-                }
+                ActionButton(
+                    isLoading = !buttonsEnabled,
+                    text = "Login",
+                ) { viewModel.onEventDebounced(ClickedLogin) }
                 TextButton(
                     enabled = buttonsEnabled,
                     modifier = Modifier.defaultMinSize(minWidth = 164.dp),

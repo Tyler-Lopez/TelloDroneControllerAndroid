@@ -5,7 +5,6 @@ import com.tlopez.tello_controller.architecture.ViewState
 import com.tlopez.tello_controller.presentation.loginScreen.LoginViewEvent
 
 sealed interface RegisterViewEvent : ViewEvent {
-    object ClickedContinueToApp : RegisterViewEvent
     object ClickedLogin : RegisterViewEvent
     object ClickedRegister : RegisterViewEvent
     object ClosedKeyboardEmail : RegisterViewEvent

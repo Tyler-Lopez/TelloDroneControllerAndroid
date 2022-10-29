@@ -6,10 +6,10 @@ import com.tlopez.tello_controller.architecture.ViewState
 
 sealed interface MainDestination : Destination {
     object NavigateController : MainDestination
-    object NavigateEnterName : MainDestination
     object NavigateRegister : MainDestination
+    object NavigateLogin : MainDestination
     data class NavigateVerifyEmail(
-        val email: String,
+        val email: String?,
         val username: String
     ) : MainDestination
 

@@ -14,17 +14,17 @@ import com.tlopez.tello_controller.presentation.theme.Typography
 fun SingleLineOutlinedTextField(
     enabled: Boolean,
     errorMessage: String?,
-    onKeyboardClosed: () -> Unit,
     onValueChange: (String) -> Unit,
     textFieldType: TextFieldType,
     value: String,
+    onKeyboardClosed: (() -> Unit)? = null
 ) {
     OutlinedTextField(
         enabled = enabled,
         isError = errorMessage != null,
         keyboardActions = KeyboardActions(
-            onDone = { onKeyboardClosed() },
-            onNext = { onKeyboardClosed() }
+            onDone = { onKeyboardClosed?.invoke() },
+            onNext = { onKeyboardClosed?.invoke() }
         ),
         keyboardOptions = textFieldType.keyboardOptions,
         label = { Text(textFieldType.label) },

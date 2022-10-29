@@ -4,11 +4,11 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tlopez.tello_controller.architecture.Router
-import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameScreen
-import com.tlopez.tello_controller.presentation.enterNameScreen.EnterNameViewModel
 import com.tlopez.tello_controller.presentation.loginScreen.LoginScreen
 import com.tlopez.tello_controller.presentation.loginScreen.LoginViewModel
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterScreen
@@ -34,11 +34,6 @@ fun MainNavHost(
                 attachRouter(router)
             })
         }
-        composable(route = Screen.EnterName.route) {
-            EnterNameScreen(viewModel = hiltViewModel<EnterNameViewModel>().apply {
-                attachRouter(router)
-            })
-        }
         composable(route = Screen.Register.route) {
             RegisterScreen(viewModel = hiltViewModel<RegisterViewModel>().apply {
                 attachRouter(router)
@@ -49,7 +44,16 @@ fun MainNavHost(
                 attachRouter(router)
             })
         }
-        composable(route = Screen.VerifyEmail.route + "?email={email}&username={username}") {
+        composable(
+            route = Screen.VerifyEmail.route + "?username={username}&email={email}",
+            arguments = listOf(
+                navArgument("email") {
+                    nullable = true
+                    type = NavType.StringType
+                },
+                navArgument("username") { type = NavType.StringType },
+            )
+        ) {
             VerifyEmailScreen(viewModel = hiltViewModel<VerifyEmailViewModel>().apply {
                 attachRouter(router)
             })

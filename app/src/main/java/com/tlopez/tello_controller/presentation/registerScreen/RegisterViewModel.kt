@@ -2,9 +2,9 @@ package com.tlopez.tello_controller.presentation.registerScreen
 
 import androidx.lifecycle.viewModelScope
 import com.amplifyframework.auth.AuthException
+import com.amplifyframework.auth.AuthException.*
 import com.tlopez.tello_controller.architecture.BaseRoutingViewModel
 import com.tlopez.tello_controller.domain.usecase.RegisterUserUseCase
-import com.tlopez.tello_controller.domain.usecase.SignInUserUseCase
 import com.tlopez.tello_controller.presentation.MainDestination
 import com.tlopez.tello_controller.presentation.MainDestination.*
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewEvent.*
@@ -15,12 +15,12 @@ import com.tlopez.tello_controller.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase,
-    private val signInUserUseCase: SignInUserUseCase,
     private val inputValidationUtil: InputValidationUtil
 ) : BaseRoutingViewModel<RegisterViewState, RegisterViewEvent, MainDestination>() {
 
@@ -30,7 +30,6 @@ class RegisterViewModel @Inject constructor(
 
     override fun onEvent(event: RegisterViewEvent) {
         when (event) {
-            is ClickedContinueToApp -> onClickedContinueToApp()
             is ClickedLogin -> onClickedLogin()
             is ClickedRegister -> onClickedRegister()
             is ClosedKeyboardEmail -> onClosedKeyboardEmail()
@@ -40,17 +39,6 @@ class RegisterViewModel @Inject constructor(
             is TextChangedUsername -> onTextChangedUsername(event)
             is TextChangedPassword -> onTextChangedPassword(event)
             is ToggledPassVisibility -> onToggledPassVisibility()
-        }
-    }
-
-    private fun onClickedContinueToApp() {
-        viewModelScope.launch(Dispatchers.IO) {
-            lastPushedState?.apply {
-                signInUserUseCase(
-                    username = textUsername,
-                    password = textPassword
-                )
-            }
         }
     }
 
@@ -76,40 +64,22 @@ class RegisterViewModel @Inject constructor(
                         return@launch
                     }
                 }
-                signInUserUseCase(textUsername, textPassword)
-                    .doOnSuccess {}
+                registerUserUseCase(textEmail, textUsername, textPassword)
+                    .doOnSuccess {
+                        withContext(Dispatchers.Main) {
+                            routeTo(NavigateVerifyEmail(textEmail, textUsername))
+                        }
+                    }
                     .doOnFailure {
-                        println("here $it")
+                        when (it) {
+                            is UsernameExistsException ->
+                                copy(errorMessageUsername = "User already exists").push()
+                        }
                     }
             }
             toggleButtonsEnabled()
         }
     }
-    /*toggleButtonsEnabled()
-        viewModelScope.launch(Dispatchers.IO) {
-            lastPushedState?.apply {
-                registerUserUseCase(
-                    email = textEmail,
-                    username = textUsername,
-                    password = textPassword
-                ).doOnSuccess {
-                    println("here it is success")
-                    withContext(Dispatchers.Main) {
-                        routeTo(
-                            NavigateVerifyEmail(
-                                email = textEmail,
-                                username = textUsername
-                            )
-                        )
-                    }
-                }.doOnFailure {
-                    toggleButtonsEnabled()
-                }
-            }
-        }
-
-     */
-
 
     private fun onClosedKeyboardEmail() {
         lastPushedState?.apply {

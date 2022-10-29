@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tlopez.tello_controller.architecture.EventReceiver
+import com.tlopez.tello_controller.presentation.common.ActionButton
 import com.tlopez.tello_controller.presentation.common.SingleLineOutlinedTextField
 import com.tlopez.tello_controller.presentation.common.TextFieldType
 import com.tlopez.tello_controller.presentation.registerScreen.RegisterViewEvent.*
@@ -84,13 +85,10 @@ fun RegisterIdle(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            enabled = buttonsEnabled,
-            modifier = Modifier.defaultMinSize(minWidth = 164.dp),
-            onClick = { eventReceiver.onEventDebounced(ClickedRegister) }
-        ) {
-            Text("Register")
-        }
+        ActionButton(
+            isLoading = !buttonsEnabled,
+            text = "Register",
+        ) { eventReceiver.onEventDebounced(ClickedRegister) }
         TextButton(
             enabled = buttonsEnabled,
             modifier = Modifier.defaultMinSize(minWidth = 164.dp),

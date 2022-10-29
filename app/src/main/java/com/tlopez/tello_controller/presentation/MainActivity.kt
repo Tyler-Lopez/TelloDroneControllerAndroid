@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     override fun routeTo(destination: MainDestination) {
         when (destination) {
             is NavigateController -> navigateController()
-            is NavigateEnterName -> navigateEnterName()
+            is NavigateLogin -> navigateLogin()
             is NavigateRegister -> navigateRegister()
             is NavigateVerifyEmail -> navigateVerifyEmail(destination)
             is NavigateWelcome -> navigateWelcome()
@@ -80,8 +80,10 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     }
 
-    private fun navigateEnterName() {
-
+    private fun navigateLogin() {
+        navController.navigate(Login.route) {
+            popUpTo(0) { inclusive = true }
+        }
     }
 
     private fun navigateRegister() {
@@ -89,7 +91,13 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     }
 
     private fun navigateVerifyEmail(destination: NavigateVerifyEmail) {
-        navController.navigate(VerifyEmail.route + "?email=${destination.email}&username=${destination.username}") {
+        val args = buildString {
+            append("?username=${destination.username}")
+            if (destination.email != null) {
+                append("&email=${destination.email}")
+            }
+        }
+        navController.navigate(VerifyEmail.route + args) {
             popUpTo(
                 route = Register.route
             ) {
@@ -99,7 +107,9 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     }
 
     private fun navigateWelcome() {
-
+        navController.navigate(Welcome.route) {
+            popUpTo(0) { inclusive = true }
+        }
     }
 
     private fun navigateUp() {

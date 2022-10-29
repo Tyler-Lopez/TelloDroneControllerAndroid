@@ -21,6 +21,7 @@ class InputValidationUtil {
         return when {
             username.isBlank() -> "Cannot be empty"
             username.contains(' ') -> "Cannot contain spaces"
+            !username.matches(Regex("[a-zA-Z0-9]*$")) -> "Can only contain letters and numbers"
             else -> null
         }
     }
