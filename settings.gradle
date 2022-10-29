@@ -12,5 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "FlashcardsApp"
+rootProject.name = "TelloShare"
 include ':app'
+include ':core'
+include ':authorization'
