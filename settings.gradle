@@ -15,4 +15,8 @@ dependencyResolutionManagement {
 rootProject.name = "TelloShare"
 include ':app'
 include ':core'
-include ':authorization'
+include ':auth'
+include ':auth:authData'
+include ':auth:authDomain'
+include ':auth:authPresentation'
+
