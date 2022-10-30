@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.tlopez.tello_controller">
+    package="com.tlopez.telloShare">
 
     <application
-        android:name="com.tlopez.tello_controller.TelloControllerApplication"
+        android:name="com.tlopez.telloShare.TelloShareApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +15,7 @@
         android:theme="@style/Theme.TelloController"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.tlopez.telloShare.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TelloController">
             <intent-filter>
@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".domain.services.SocketService" />
+        <service android:name="com.tlopez.telloShare.domain.services.SocketService" />
     </application>
 
 </manifest>
