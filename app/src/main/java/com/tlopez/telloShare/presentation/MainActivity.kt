@@ -21,7 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity(), Router<MainDestination> {
+class MainActivity :
+    ComponentActivity(),
+    Router<MainDestination> {
 
     @Inject
     lateinit var socketServiceRepository: TelloRepository

@@ -58,12 +58,13 @@ dependencies {
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
-    /*
+
     implementation(project(Modules.core))
+    implementation(project(Modules.corePresentation))
     implementation(project(Modules.authData))
     implementation(project(Modules.authDomain))
     implementation(project(Modules.authPresentation))
-     */
+
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
 
