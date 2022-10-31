@@ -1,55 +1,112 @@
 plugins {
-    id 'org.jetbrains.kotlin.plugin.serialization'
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'kotlin-parcelize'
-    id 'dagger.hilt.android.plugin'
+    id("com.android.application")
+    kotlin("android")
+    id("dagger.hilt.android.plugin")
+    id("kotlin-kapt")
 }
 
 android {
-    compileSdk 32
+    compileSdk = ProjectConfig.compileSdk
 
     defaultConfig {
-        applicationId "com.tlopez.tello_controller"
-        minSdk 23
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        applicationId = ProjectConfig.appId
+        minSdk = ProjectConfig.minSdk
+        targetSdk = ProjectConfig.targetSdk
+        versionCode = ProjectConfig.versionCode
+        versionName = ProjectConfig.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        getByName("release") {
+            isMinifyEnabled = false
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
     buildFeatures {
-        compose true
+        compose = true
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerExtensionVersion '1.3.1'
-    }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+        kotlinCompilerExtensionVersion = Compose.composeCompilerVersion
     }
 }
+
+dependencies {
+    implementation(Compose.compiler)
+    implementation(Compose.ui)
+    implementation(Compose.icons)
+    implementation(Compose.uiToolingPreview)
+    implementation(Compose.hiltNavigationCompose)
+    implementation(Compose.material)
+    implementation(Compose.runtime)
+    implementation(Compose.navigation)
+    implementation(Compose.viewModelCompose)
+    implementation(Compose.lifecycleRuntime)
+    implementation(Compose.lifecycleViewModelSavedState)
+    implementation(Compose.activityCompose)
+
+    implementation(DaggerHilt.hiltAndroid)
+    kapt(DaggerHilt.hiltCompiler)
+
+    /*
+    implementation(project(Modules.core))
+    implementation(project(Modules.authData))
+    implementation(project(Modules.authDomain))
+    implementation(project(Modules.authPresentation))
+     */
+    implementation(AndroidX.coreKtx)
+    implementation(AndroidX.appCompat)
+
+    implementation(Coil.coilCompose)
+
+    implementation(Google.material)
+
+    implementation(Retrofit.okHttp)
+    implementation(Retrofit.retrofit)
+    implementation(Retrofit.okHttpLoggingInterceptor)
+    implementation(Retrofit.moshiConverter)
+
+    kapt(Room.roomCompiler)
+    implementation(Room.roomKtx)
+    implementation(Room.roomRuntime)
+
+    Accompanist.accompanistDependencies.forEach { implementation(it) }
+    Amazon.awsDependencies.forEach { implementation(it) }
+    Amazon.amplifyDependencies.forEach { implementation(it) }
+
+    testImplementation(Testing.junit4)
+    testImplementation(Testing.junitAndroidExt)
+    testImplementation(Testing.truth)
+    testImplementation(Testing.coroutines)
+    testImplementation(Testing.turbine)
+    testImplementation(Testing.composeUiTest)
+    testImplementation(Testing.mockk)
+    testImplementation(Testing.mockWebServer)
+
+    androidTestImplementation(Testing.junit4)
+    androidTestImplementation(Testing.junitAndroidExt)
+    androidTestImplementation(Testing.truth)
+    androidTestImplementation(Testing.coroutines)
+    androidTestImplementation(Testing.turbine)
+    androidTestImplementation(Testing.composeUiTest)
+    androidTestImplementation(Testing.mockkAndroid)
+    androidTestImplementation(Testing.mockWebServer)
+    androidTestImplementation(Testing.hiltTesting)
+    kaptAndroidTest(DaggerHilt.hiltCompiler)
+    androidTestImplementation(Testing.testRunner)
+}
+
+/*
 
 dependencies {
     // Amazon SDK
@@ -111,6 +168,7 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.5.2")
+    implementation("com.google.android.gms:play-services:12.0.1")
 
 
     // Navigation library
@@ -155,4 +213,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // Splash Screen
-    implementation "androidx.core:core-splashscreen:1.0.0"}
+    implementation "androidx.core:core-splashscreen:1.0.0"
+}
+
+
+ */
