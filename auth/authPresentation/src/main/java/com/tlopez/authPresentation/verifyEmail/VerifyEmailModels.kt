@@ -1,8 +1,7 @@
-package com.tlopez.telloShare.presentation.verifyEmailScreen
+package com.tlopez.authPresentation.verifyEmail
 
-import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent
-import com.tlopez.telloShare.architecture.ViewEvent
-import com.tlopez.telloShare.architecture.ViewState
+import com.tlopez.core.architecture.ViewEvent
+import com.tlopez.core.architecture.ViewState
 
 sealed interface VerifyEmailViewEvent : ViewEvent {
     object ClickedResendCode : VerifyEmailViewEvent

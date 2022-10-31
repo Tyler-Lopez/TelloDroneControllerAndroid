@@ -1,4 +1,4 @@
-package com.tlopez.telloShare.presentation.verifyEmailScreen
+package com.tlopez.authPresentation.verifyEmail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tlopez.telloShare.presentation.common.ActionButton
-import com.tlopez.telloShare.presentation.common.ScreenBackground
-import com.tlopez.telloShare.presentation.common.SingleLineOutlinedTextField
-import com.tlopez.telloShare.presentation.common.TextFieldType
-import com.tlopez.telloShare.presentation.theme.Typography
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent.*
-import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewModel
+import com.tlopez.corePresentation.common.ActionButton
+import com.tlopez.corePresentation.common.ScreenBackground
+import com.tlopez.corePresentation.common.SingleLineOutlinedTextField
+import com.tlopez.corePresentation.common.TextFieldType
+import com.tlopez.corePresentation.theme.Typography
 
 @Composable
 fun VerifyEmailScreen(viewModel: VerifyEmailViewModel) {

@@ -9,8 +9,8 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tlopez.telloShare.architecture.Router
-import com.tlopez.telloShare.presentation.verifyEmailScreen.VerifyEmailScreen
-import com.tlopez.telloShare.presentation.verifyEmailScreen.VerifyEmailViewModel
+import com.tlopez.authPresentation.verifyEmail.VerifyEmailScreen
+import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewModel
 import com.tlopez.telloShare.presentation.welcomeScreen.WelcomeScreen
 import com.tlopez.telloShare.presentation.welcomeScreen.WelcomeViewModel
 

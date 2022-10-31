@@ -1,18 +1,15 @@
-package com.tlopez.telloShare.presentation.verifyEmailScreen
+package com.tlopez.authPresentation.verifyEmail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.amplifyframework.auth.AuthException.*
-import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent
-import com.tlopez.telloShare.architecture.BaseRoutingViewModel
-import com.tlopez.telloShare.domain.usecase.ResendVerificationUseCase
-import com.tlopez.telloShare.domain.usecase.VerifyUserUseCase
-import com.tlopez.telloShare.presentation.MainDestination
-import com.tlopez.telloShare.presentation.MainDestination.*
+import com.amazonaws.services.cognitoidentityprovider.model.CodeMismatchException
+import com.tlopez.authDomain.usecase.AuthUseCases
+import com.tlopez.authPresentation.AuthDestination
+import com.tlopez.authPresentation.AuthDestination.NavigateWelcome
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent.*
-import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewState
-import com.tlopez.telloShare.util.doOnFailure
-import com.tlopez.telloShare.util.doOnSuccess
+import com.tlopez.core.architecture.BaseRoutingViewModel
+import com.tlopez.core.ext.doOnFailure
+import com.tlopez.core.ext.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,10 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VerifyEmailViewModel @Inject constructor(
-    private val verifyUserUseCase: VerifyUserUseCase,
-    private val resendVerificationUseCase: ResendVerificationUseCase,
+    private val useCases: AuthUseCases,
     savedStateHandle: SavedStateHandle
-) : BaseRoutingViewModel<VerifyEmailViewState, VerifyEmailViewEvent, MainDestination>() {
+) : BaseRoutingViewModel<VerifyEmailViewState, VerifyEmailViewEvent, AuthDestination>() {
 
     init {
         VerifyEmailViewState(
@@ -50,7 +46,7 @@ class VerifyEmailViewModel @Inject constructor(
                     return@launch
                 }
                 copy(buttonsEnabled = false).push()
-                verifyUserUseCase(
+                useCases.verifyUser(
                     username = username,
                     confirmationCode = textCode
                 )
@@ -76,9 +72,9 @@ class VerifyEmailViewModel @Inject constructor(
     private fun onClickedResendCode() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
-                resendVerificationUseCase(username)
-                    .doOnSuccess {  }
-                    .doOnFailure {  }
+                useCases.resendVerification(username)
+                    .doOnSuccess { }
+                    .doOnFailure { }
             }
         }
     }
