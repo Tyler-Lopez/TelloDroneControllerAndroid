@@ -1,4 +1,4 @@
-package com.tlopez.core
+package com.tlopez.corePresentation
 
 import org.junit.Test
 

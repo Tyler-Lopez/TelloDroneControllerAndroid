@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.tlopez.telloShare.domain.services.SocketService" />
+        <service android:name="com.tlopez.authDomain.services.SocketService" />
     </application>
 
 </manifest>

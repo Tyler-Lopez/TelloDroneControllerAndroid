@@ -2,6 +2,8 @@ object Modules {
     const val app = ":app"
 
     const val core = ":core"
+    const val corePresentation = ":corePresentation"
+
 
     const val authData = ":auth:authData"
     const val authDomain = ":auth:authDomain"
