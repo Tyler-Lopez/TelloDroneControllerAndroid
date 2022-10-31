@@ -11,6 +11,8 @@ import androidx.navigation.navArgument
 import com.tlopez.navigation.Screen.*
 import com.tlopez.authPresentation.login.LoginScreen
 import com.tlopez.authPresentation.login.LoginViewModel
+import com.tlopez.authPresentation.register.RegisterScreen
+import com.tlopez.authPresentation.register.RegisterViewModel
 import com.tlopez.navigation.router.AuthRouter
 
 @Composable
@@ -23,6 +25,11 @@ fun TelloNavHost(navController: NavHostController) {
     ) {
         composable(route = Login.route) {
             LoginScreen(viewModel = hiltViewModel<LoginViewModel>().also {
+                it.attachRouter(authRouter)
+            })
+        }
+        composable(route = Register.route) {
+            RegisterScreen(viewModel = hiltViewModel<RegisterViewModel>().also {
                 it.attachRouter(authRouter)
             })
         }

@@ -9,10 +9,6 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.tlopez.telloShare.architecture.Router
-import com.tlopez.telloShare.presentation.loginScreen.LoginScreen
-import com.tlopez.telloShare.presentation.loginScreen.LoginViewModel
-import com.tlopez.telloShare.presentation.registerScreen.RegisterScreen
-import com.tlopez.telloShare.presentation.registerScreen.RegisterViewModel
 import com.tlopez.telloShare.presentation.verifyEmailScreen.VerifyEmailScreen
 import com.tlopez.telloShare.presentation.verifyEmailScreen.VerifyEmailViewModel
 import com.tlopez.telloShare.presentation.welcomeScreen.WelcomeScreen
@@ -35,14 +31,20 @@ fun MainNavHost(
             })
         }
         composable(route = Screen.Register.route) {
+            /*
             RegisterScreen(viewModel = hiltViewModel<RegisterViewModel>().apply {
                 attachRouter(router)
             })
+
+             */
         }
         composable(route = Screen.Login.route) {
+            /*
             LoginScreen(viewModel = hiltViewModel<LoginViewModel>().apply {
                 attachRouter(router)
             })
+
+             */
         }
         composable(
             route = Screen.VerifyEmail.route + "?username={username}&email={email}",

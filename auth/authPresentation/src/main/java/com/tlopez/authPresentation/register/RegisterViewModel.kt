@@ -1,15 +1,16 @@
-package com.tlopez.telloShare.presentation.registerScreen
+package com.tlopez.authPresentation.register
 
 import androidx.lifecycle.viewModelScope
-import com.amplifyframework.auth.AuthException.*
-import com.tlopez.telloShare.architecture.BaseRoutingViewModel
-import com.tlopez.telloShare.domain.usecase.RegisterUserUseCase
-import com.tlopez.telloShare.presentation.MainDestination
-import com.tlopez.telloShare.presentation.MainDestination.*
-import com.tlopez.telloShare.presentation.registerScreen.RegisterViewEvent.*
-import com.tlopez.telloShare.util.InputValidationUtil
-import com.tlopez.telloShare.util.doOnFailure
-import com.tlopez.telloShare.util.doOnSuccess
+import com.amazonaws.services.cognitoidentityprovider.model.UsernameExistsException
+import com.tlopez.authDomain.usecase.AuthUseCases
+import com.tlopez.authPresentation.AuthDestination
+import com.tlopez.authPresentation.AuthDestination.NavigateUp
+import com.tlopez.authPresentation.AuthDestination.NavigateVerifyEmail
+import com.tlopez.authPresentation.register.RegisterViewEvent.*
+import com.tlopez.authPresentation.util.InputValidationUtil
+import com.tlopez.core.architecture.BaseRoutingViewModel
+import com.tlopez.core.ext.doOnFailure
+import com.tlopez.core.ext.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,9 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUserUseCase: RegisterUserUseCase,
+    private val useCases: AuthUseCases,
     private val inputValidationUtil: InputValidationUtil
-) : BaseRoutingViewModel<RegisterViewState, RegisterViewEvent, MainDestination>() {
+) : BaseRoutingViewModel<RegisterViewState, RegisterViewEvent, AuthDestination>() {
 
     init {
         RegisterViewState().push()
@@ -62,7 +63,7 @@ class RegisterViewModel @Inject constructor(
                         return@launch
                     }
                 }
-                registerUserUseCase(textEmail, textUsername, textPassword)
+                useCases.registerUser(textEmail, textUsername, textPassword)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
                             routeTo(NavigateVerifyEmail(textEmail, textUsername))

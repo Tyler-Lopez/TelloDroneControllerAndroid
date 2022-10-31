@@ -1,7 +1,7 @@
-package com.tlopez.telloShare.presentation.registerScreen
+package com.tlopez.authPresentation.register
 
-import com.tlopez.telloShare.architecture.ViewEvent
-import com.tlopez.telloShare.architecture.ViewState
+import com.tlopez.core.architecture.ViewEvent
+import com.tlopez.core.architecture.ViewState
 
 sealed interface RegisterViewEvent : ViewEvent {
     object ClickedLogin : RegisterViewEvent

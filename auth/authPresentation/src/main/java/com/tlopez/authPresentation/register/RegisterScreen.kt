@@ -1,6 +1,8 @@
-package com.tlopez.telloShare.presentation.loginScreen
+package com.tlopez.authPresentation.register
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -11,20 +13,19 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tlopez.telloShare.presentation.common.ActionButton
-import com.tlopez.telloShare.presentation.common.SingleLineOutlinedTextField
-import com.tlopez.telloShare.presentation.common.ScreenBackground
-import com.tlopez.telloShare.presentation.common.TextFieldType
-import com.tlopez.telloShare.presentation.loginScreen.LoginViewEvent.*
-import com.tlopez.telloShare.presentation.theme.Typography
+import com.tlopez.corePresentation.common.ActionButton
+import com.tlopez.corePresentation.common.ScreenBackground
+import com.tlopez.corePresentation.common.SingleLineOutlinedTextField
+import com.tlopez.corePresentation.common.TextFieldType
+import com.tlopez.corePresentation.theme.Typography
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
-    val focusManager = LocalFocusManager.current
+fun RegisterScreen(viewModel: RegisterViewModel) {
     ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
+            val focusManager = LocalFocusManager.current
             Text(
-                text = "Tello Share",
+                text = "Create Account",
                 textAlign = TextAlign.Center,
                 style = Typography.h4
             )
@@ -34,12 +35,25 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 value = textUsername,
                 onKeyboardClosed = {
                     focusManager.moveFocus(focusDirection = FocusDirection.Down)
-                    viewModel.onEvent(ClosedKeyboardUsername)
+                    viewModel.onEvent(RegisterViewEvent.ClosedKeyboardUsername)
                 },
                 onValueChange = {
-                    viewModel.onEvent(TextChangedUsername(it))
+                    viewModel.onEvent(RegisterViewEvent.TextChangedUsername(it))
                 },
                 textFieldType = TextFieldType.Username
+            )
+            SingleLineOutlinedTextField(
+                enabled = buttonsEnabled,
+                errorMessage = errorMessageEmail,
+                value = textEmail,
+                onKeyboardClosed = {
+                    focusManager.moveFocus(focusDirection = FocusDirection.Down)
+                    viewModel.onEvent(RegisterViewEvent.ClosedKeyboardEmail)
+                },
+                onValueChange = {
+                    viewModel.onEvent(RegisterViewEvent.TextChangedEmail(it))
+                },
+                textFieldType = TextFieldType.Email
             )
             SingleLineOutlinedTextField(
                 enabled = buttonsEnabled,
@@ -47,13 +61,13 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 value = textPassword,
                 onKeyboardClosed = {
                     focusManager.clearFocus()
-                    viewModel.onEvent(ClosedKeyboardPassword)
+                    viewModel.onEvent(RegisterViewEvent.ClosedKeyboardPassword)
                 },
                 onValueChange = {
-                    viewModel.onEvent(TextChangedPassword(it))
+                    viewModel.onEvent(RegisterViewEvent.TextChangedPassword(it))
                 },
                 textFieldType = TextFieldType.Password(isHidden = passHidden) {
-                    viewModel.onEvent(ToggledPassVisibility)
+                    viewModel.onEvent(RegisterViewEvent.ToggledPassVisibility)
                 }
             )
             Column(
@@ -62,14 +76,14 @@ fun LoginScreen(viewModel: LoginViewModel) {
             ) {
                 ActionButton(
                     isLoading = !buttonsEnabled,
-                    text = "Login",
-                ) { viewModel.onEventDebounced(ClickedLogin) }
+                    text = "Register",
+                ) { viewModel.onEventDebounced(RegisterViewEvent.ClickedRegister) }
                 TextButton(
                     enabled = buttonsEnabled,
                     modifier = Modifier.defaultMinSize(minWidth = 164.dp),
-                    onClick = { viewModel.onEventDebounced(ClickedRegister) }
+                    onClick = { viewModel.onEventDebounced(RegisterViewEvent.ClickedLogin) }
                 ) {
-                    Text("Need an account? Register")
+                    Text("Have an account? Login")
                 }
             }
         }
