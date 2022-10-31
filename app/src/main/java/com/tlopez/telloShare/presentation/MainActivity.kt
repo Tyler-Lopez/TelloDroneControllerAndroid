@@ -1,33 +1,24 @@
 package com.tlopez.telloShare.presentation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.tlopez.telloShare.architecture.Router
-import com.tlopez.telloShare.domain.models.TelloRepository
-import com.tlopez.telloShare.domain.services.SocketService
-import com.tlopez.telloShare.presentation.MainDestination.*
-import com.tlopez.telloShare.presentation.MainViewState.*
-import com.tlopez.telloShare.presentation.Screen.*
-import com.tlopez.telloShare.presentation.theme.FlashcardsAppTheme
+import com.tlopez.corePresentation.theme.TelloShareTheme
+import com.tlopez.navigation.TelloNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity :
-    ComponentActivity(),
-    Router<MainDestination> {
+class MainActivity : ComponentActivity() {
 
+    /*
     @Inject
     lateinit var socketServiceRepository: TelloRepository
 
+
+     */
     private lateinit var navController: NavHostController
 
 
@@ -35,38 +26,48 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel = hiltViewModel<MainViewModel>()
-            navController = rememberAnimatedNavController()
-            FlashcardsAppTheme {
-                viewModel.viewState.collectAsState().value?.apply {
-                    MainNavHost(
-                        navController,
-                        if (this is Authenticated) {
-                            Welcome.route
-                        } else {
-                            Login.route
-                        },
-                        this@MainActivity
-                    )
-                }
+            //      val viewModel = hiltViewModel<MainViewModel>()
+            TelloShareTheme {
+                TelloNavHost(navController = rememberAnimatedNavController())
             }
+            //   FlashcardsAppTheme {
+            //      viewModel.viewState.collectAsState().value?.apply {
+
+            /*
+            MainNavHost(
+                navController,
+                if (this is Authenticated) {
+                    Welcome.route
+                } else {
+                    Login.route
+                },
+                this@MainActivity
+            )
+
+             */
+            //    }
+            //      }
         }
     }
 
     override fun onStart() {
         super.onStart()
+        /*
         bindService(
             Intent(this, SocketService::class.java),
             socketServiceRepository.serviceConnection,
             Context.BIND_AUTO_CREATE
         )
+
+         */
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(socketServiceRepository.serviceConnection)
+        //unbindService(socketServiceRepository.serviceConnection)
     }
 
+    /*
     override fun routeTo(destination: MainDestination) {
         when (destination) {
             is NavigateController -> navigateController()
@@ -117,4 +118,6 @@ class MainActivity :
     private fun navigateUp() {
         navController.navigateUp()
     }
+
+     */
 }

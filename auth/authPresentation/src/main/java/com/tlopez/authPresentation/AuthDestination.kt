@@ -12,3 +12,7 @@ sealed interface AuthDestination : Destination {
     object NavigateWelcome : AuthDestination
     object NavigateUp : AuthDestination
 }
+
+sealed interface TestDestination : Destination {
+
+}
