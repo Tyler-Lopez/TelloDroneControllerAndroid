@@ -6,7 +6,7 @@ import com.amazonaws.services.cognitoidentityprovider.model.CodeMismatchExceptio
 import com.tlopez.authDomain.usecase.ResendVerification
 import com.tlopez.authDomain.usecase.VerifyUser
 import com.tlopez.authPresentation.AuthDestination
-import com.tlopez.authPresentation.AuthDestination.NavigateWelcome
+import com.tlopez.authPresentation.AuthDestination.NavigateFeed
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent.*
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
@@ -54,7 +54,7 @@ class VerifyEmailViewModel @Inject constructor(
                 )
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
-                            routeTo(NavigateWelcome)
+                            routeTo(NavigateFeed)
                         }
                     }
                     .doOnFailure {

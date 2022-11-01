@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             MainNavHost(
                 navController,
                 if (this is Authenticated) {
-                    Welcome.route
+                    Home.route
                 } else {
                     Login.route
                 },
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
             is NavigateLogin -> navigateLogin()
             is NavigateRegister -> navigateRegister()
             is NavigateVerifyEmail -> navigateVerifyEmail(destination)
-            is NavigateWelcome -> navigateWelcome()
+            is NavigateFeed -> navigateWelcome()
             is NavigateUp -> navigateUp()
         }
     }
@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun navigateWelcome() {
-        navController.navigate(Welcome.route) {
+        navController.navigate(Home.route) {
             popUpTo(0) { inclusive = true }
         }
     }

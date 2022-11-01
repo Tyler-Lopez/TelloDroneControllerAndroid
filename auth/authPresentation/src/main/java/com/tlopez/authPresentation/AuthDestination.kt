@@ -9,6 +9,6 @@ sealed interface AuthDestination : Destination {
         val email: String?,
         val username: String
     ) : AuthDestination
-    object NavigateWelcome : AuthDestination
+    object NavigateFeed : AuthDestination
     object NavigateUp : AuthDestination
 }

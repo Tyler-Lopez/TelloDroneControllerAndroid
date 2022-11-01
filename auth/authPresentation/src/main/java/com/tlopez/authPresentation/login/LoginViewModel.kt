@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
 import com.amazonaws.services.cognitoidentityprovider.model.UserNotConfirmedException
 import com.amazonaws.services.cognitoidentityprovider.model.UserNotFoundException
+import com.tlopez.authDomain.usecase.GetUser
 import com.tlopez.authDomain.usecase.SignInUser
 import com.tlopez.authPresentation.AuthDestination
 import com.tlopez.authPresentation.AuthDestination.*
@@ -20,12 +21,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val getUser: GetUser,
     private val signInUser: SignInUser,
     private val inputValidationUtil: InputValidationUtil,
 ) : BaseRoutingViewModel<LoginViewState, LoginViewEvent, AuthDestination>() {
 
     init {
-        LoginViewState().push()
+        viewModelScope.launch(Dispatchers.IO) {
+            getUser()
+                .doOnSuccess {
+                    LoginViewState().push()
+                }
+                .doOnFailure {
+                    withContext(Dispatchers.Main) {
+                        routeTo(NavigateFeed)
+                    }
+                }
+        }
     }
 
     override fun onEvent(event: LoginViewEvent) {
@@ -60,7 +72,7 @@ class LoginViewModel @Inject constructor(
                 signInUser(textUsername, textPassword)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
-                            routeTo(NavigateWelcome)
+                            routeTo(NavigateFeed)
                         }
                     }
                     .doOnFailure {

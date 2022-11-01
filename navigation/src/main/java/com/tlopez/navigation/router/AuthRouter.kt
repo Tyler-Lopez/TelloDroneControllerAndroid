@@ -15,7 +15,7 @@ data class AuthRouter(private val navController: NavController) : Router<AuthDes
             is NavigateRegister -> onNavigateRegister()
             is NavigateUp -> onNavigateUp()
             is NavigateVerifyEmail -> onNavigateVerifyEmail(destination)
-            is NavigateWelcome -> onNavigateWelcome()
+            is NavigateFeed -> onNavigateFeed()
         }
     }
 
@@ -41,6 +41,7 @@ data class AuthRouter(private val navController: NavController) : Router<AuthDes
         navController.navigate(Screen.VerifyEmail.route + args)
     }
 
-    private fun onNavigateWelcome() {
+    private fun onNavigateFeed() {
+        navController.navigateClearBackstack(Screen.Home.route)
     }
 }
