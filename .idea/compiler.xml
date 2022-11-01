@@ -4,6 +4,8 @@
     <bytecodeTargetLevel target="11">
       <module name="FlashcardsApp.app" target="11" />
       <module name="FlashcardsApp.core" target="11" />
+      <module name="TelloShare.feed.main" target="1.7" />
+      <module name="TelloShare.feed.test" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

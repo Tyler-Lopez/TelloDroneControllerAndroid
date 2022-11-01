@@ -2,7 +2,7 @@ package com.tlopez.authPresentation.register
 
 import androidx.lifecycle.viewModelScope
 import com.amazonaws.services.cognitoidentityprovider.model.UsernameExistsException
-import com.tlopez.authDomain.usecase.AuthUseCases
+import com.tlopez.authDomain.usecase.RegisterUser
 import com.tlopez.authPresentation.AuthDestination
 import com.tlopez.authPresentation.AuthDestination.NavigateUp
 import com.tlopez.authPresentation.AuthDestination.NavigateVerifyEmail
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val useCases: AuthUseCases,
+    private val registerUser: RegisterUser,
     private val inputValidationUtil: InputValidationUtil
 ) : BaseRoutingViewModel<RegisterViewState, RegisterViewEvent, AuthDestination>() {
 
@@ -63,7 +63,7 @@ class RegisterViewModel @Inject constructor(
                         return@launch
                     }
                 }
-                useCases.registerUser(textEmail, textUsername, textPassword)
+                registerUser(textEmail, textUsername, textPassword)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
                             routeTo(NavigateVerifyEmail(textEmail, textUsername))

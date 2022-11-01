@@ -14,14 +14,37 @@ object AuthDomainModule {
 
     @ViewModelScoped
     @Provides
-    fun provideAuthUseCases(repository: AuthRepository): AuthUseCases {
-        return AuthUseCases(
-            getUser = GetUser(repository),
-            logoutUser = LogoutUser(repository),
-            registerUser = RegisterUser(repository),
-            resendVerification = ResendVerification(repository),
-            signInUser = SignInUser(repository),
-            verifyUser = VerifyUser(repository)
-        )
+    fun provideGetUserUseCase(repository: AuthRepository): GetUser {
+        return GetUser(repository)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideLogoutUserUseCase(repository: AuthRepository): LogoutUser {
+        return LogoutUser(repository)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideRegisterUserUseCase(repository: AuthRepository): RegisterUser {
+        return RegisterUser(repository)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideResendVerificationUseCase(repository: AuthRepository): ResendVerification {
+        return ResendVerification(repository)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideSignInUserUseCase(repository: AuthRepository): SignInUser {
+        return SignInUser(repository)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideVerifyUserUseCase(repository: AuthRepository): VerifyUser {
+        return VerifyUser(repository)
     }
 }

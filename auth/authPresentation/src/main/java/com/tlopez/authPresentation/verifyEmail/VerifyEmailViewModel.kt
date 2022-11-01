@@ -3,7 +3,8 @@ package com.tlopez.authPresentation.verifyEmail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.amazonaws.services.cognitoidentityprovider.model.CodeMismatchException
-import com.tlopez.authDomain.usecase.AuthUseCases
+import com.tlopez.authDomain.usecase.ResendVerification
+import com.tlopez.authDomain.usecase.VerifyUser
 import com.tlopez.authPresentation.AuthDestination
 import com.tlopez.authPresentation.AuthDestination.NavigateWelcome
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent.*
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VerifyEmailViewModel @Inject constructor(
-    private val useCases: AuthUseCases,
+    private val verifyUser: VerifyUser,
+    private val resendVerification: ResendVerification,
     savedStateHandle: SavedStateHandle
 ) : BaseRoutingViewModel<VerifyEmailViewState, VerifyEmailViewEvent, AuthDestination>() {
 
@@ -46,7 +48,7 @@ class VerifyEmailViewModel @Inject constructor(
                     return@launch
                 }
                 copy(buttonsEnabled = false).push()
-                useCases.verifyUser(
+                verifyUser(
                     username = username,
                     confirmationCode = textCode
                 )
@@ -72,7 +74,7 @@ class VerifyEmailViewModel @Inject constructor(
     private fun onClickedResendCode() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
-                useCases.resendVerification(username)
+                resendVerification(username)
                     .doOnSuccess { }
                     .doOnFailure { }
             }
