@@ -13,18 +13,27 @@ import com.tlopez.authPresentation.register.RegisterScreen
 import com.tlopez.authPresentation.register.RegisterViewModel
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailScreen
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewModel
+import com.tlopez.feedPresentation.home.HomeScreen
+import com.tlopez.feedPresentation.home.HomeViewModel
 import com.tlopez.navigation.Screen.*
 import com.tlopez.navigation.router.AuthRouter
+import com.tlopez.navigation.router.FeedRouter
+import com.tlopez.navigation.router.SettingsRouter
+import com.tlopez.settingsPresentation.settings.SettingsScreen
+import com.tlopez.settingsPresentation.settings.SettingsViewModel
 
 @Composable
 fun TelloNavHost(navController: NavHostController) {
 
     val authRouter = AuthRouter(navController)
+    val feedRouter = FeedRouter(navController)
+    val settingsRouter = SettingsRouter(navController)
 
     NavHost(
         navController = navController,
         startDestination = Login.route
     ) {
+        /** Authorization navigation destinations **/
         composable(route = Login.route) {
             LoginScreen(viewModel = hiltViewModel<LoginViewModel>().also {
                 it.attachRouter(authRouter)
@@ -47,6 +56,18 @@ fun TelloNavHost(navController: NavHostController) {
         ) {
             VerifyEmailScreen(viewModel = hiltViewModel<VerifyEmailViewModel>().apply {
                 attachRouter(authRouter)
+            })
+        }
+        /** Feed navigation destinations **/
+        composable(route = Home.route) {
+            HomeScreen(viewModel = hiltViewModel<HomeViewModel>().apply {
+                attachRouter(feedRouter)
+            })
+        }
+        /** Settings navigation destinations **/
+        composable(route = Settings.route) {
+            SettingsScreen(viewModel = hiltViewModel<SettingsViewModel>().apply {
+                attachRouter(settingsRouter)
             })
         }
     }

@@ -9,6 +9,7 @@ import com.amplifyframework.core.Amplify
 import com.tlopez.authDomain.models.AuthenticatedUser
 import com.tlopez.authDomain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.InvalidClassException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

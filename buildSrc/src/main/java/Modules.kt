@@ -8,6 +8,7 @@ object Modules {
     const val authDomain = ":auth:authDomain"
     const val authPresentation = ":auth:authPresentation"
     const val feedPresentation = ":feed:feedPresentation"
+    const val settingsPresentation = ":settings:settingsPresentation"
 
     const val navigation = ":navigation"
 }

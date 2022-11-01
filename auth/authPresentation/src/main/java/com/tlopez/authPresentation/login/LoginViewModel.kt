@@ -27,15 +27,17 @@ class LoginViewModel @Inject constructor(
 ) : BaseRoutingViewModel<LoginViewState, LoginViewEvent, AuthDestination>() {
 
     init {
+        println("here init loginviewmodel")
         viewModelScope.launch(Dispatchers.IO) {
             getUser()
                 .doOnSuccess {
-                    LoginViewState().push()
-                }
-                .doOnFailure {
                     withContext(Dispatchers.Main) {
+                        println("woops here $it")
                         routeTo(NavigateFeed)
                     }
+                }
+                .doOnFailure {
+                    LoginViewState().push()
                 }
         }
     }

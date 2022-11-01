@@ -19,5 +19,10 @@ sealed interface Screen {
         override val route: String = "Home"
     }
 
+    /** Settings **/
+    object Settings : Screen {
+        override val route: String = "Settings"
+    }
+
     /** Flight **/
 }

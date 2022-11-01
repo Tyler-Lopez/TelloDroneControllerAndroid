@@ -1,0 +1,37 @@
+package com.tlopez.settingsPresentation.settings
+
+import androidx.lifecycle.viewModelScope
+import com.tlopez.authDomain.usecase.LogoutUser
+import com.tlopez.core.architecture.BaseRoutingViewModel
+import com.tlopez.core.ext.doOnSuccess
+import com.tlopez.settingsPresentation.SettingsDestination
+import com.tlopez.settingsPresentation.SettingsDestination.*
+import com.tlopez.settingsPresentation.settings.SettingsViewEvent.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val logoutUser: LogoutUser
+) : BaseRoutingViewModel<SettingsViewState, SettingsViewEvent, SettingsDestination>() {
+
+    override fun onEvent(event: SettingsViewEvent) {
+        when (event) {
+            is ClickedLogout -> onClickedLogout()
+        }
+    }
+
+    private fun onClickedLogout() {
+        viewModelScope.launch(Dispatchers.Main) {
+            logoutUser()
+                .doOnSuccess {
+                    withContext(Dispatchers.Main) {
+                        routeTo(NavigateLogout)
+                    }
+                }
+        }
+    }
+}

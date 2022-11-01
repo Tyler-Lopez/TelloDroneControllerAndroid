@@ -5,4 +5,5 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.corePresentation))
+    "implementation"(project(Modules.authDomain))
 }

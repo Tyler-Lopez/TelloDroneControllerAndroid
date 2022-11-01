@@ -1,4 +1,4 @@
-package com.tlopez.feedPresentation.home
+package com.tlopez.settingsPresentation.settings
 
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -6,11 +6,12 @@ import androidx.compose.runtime.Composable
 import com.tlopez.corePresentation.common.ScreenBackground
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun SettingsScreen(viewModel: SettingsViewModel) {
     ScreenBackground {
-        Text("Test")
-        Button(onClick = { viewModel.onEvent(HomeViewEvent.ClickedSettings) }) {
-            Text("Settings")
+        Button(onClick = {
+            viewModel.onEvent(SettingsViewEvent.ClickedLogout)
+        }) {
+            Text("Logout")
         }
     }
 }

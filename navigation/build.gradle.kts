@@ -7,4 +7,5 @@ dependencies {
     "implementation"(project(Modules.corePresentation))
     "implementation"(project(Modules.authPresentation))
     "implementation"(project(Modules.feedPresentation))
+    "implementation"(project(Modules.settingsPresentation))
 }
