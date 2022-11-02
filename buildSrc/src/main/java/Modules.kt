@@ -9,6 +9,8 @@ object Modules {
     const val authPresentation = ":auth:authPresentation"
     const val feedPresentation = ":feed:feedPresentation"
     const val settingsPresentation = ":settings:settingsPresentation"
+    const val controllerData = ":controller:controllerData"
+    const val controllerDomain = ":controller:controllerDomain"
     const val controllerPresentation = ":controller:controllerPresentation"
 
     const val navigation = ":navigation"
