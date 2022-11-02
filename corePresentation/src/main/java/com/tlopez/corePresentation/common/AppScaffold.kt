@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
 fun AppScaffold(
     text: String,
-    selectedBottomOrdinal: Int = 0,
     onNavigateUp: (() -> Unit)? = null,
+    bottomBar: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -37,33 +36,10 @@ fun AppScaffold(
                         }
                     }
                 },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Settings, null)
-                    }
-                }
+                actions = actions
             )
         },
+        bottomBar = bottomBar,
         content = content,
-        bottomBar = {
-            BottomNavigation {
-                NavigationItem.values().forEachIndexed { index, navItem ->
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                imageVector = navItem.icon,
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text(text = navItem.label) },
-                        selected = index == selectedBottomOrdinal,
-                        onClick = {
-
-                        }
-                    )
-                }
-            }
-        }
     )
-
 }

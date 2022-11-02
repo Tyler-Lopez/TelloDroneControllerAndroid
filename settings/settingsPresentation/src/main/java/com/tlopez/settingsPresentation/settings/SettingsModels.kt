@@ -5,6 +5,7 @@ import com.tlopez.core.architecture.ViewState
 
 sealed interface SettingsViewEvent : ViewEvent {
     object ClickedLogout : SettingsViewEvent
+    object ClickedNavigateUp : SettingsViewEvent
 }
 
 sealed interface SettingsViewState : ViewState {

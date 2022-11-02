@@ -9,8 +9,13 @@ import com.tlopez.navigation.Screen
 data class FeedRouter(private val navController: NavController) : Router<FeedDestination> {
     override fun routeTo(destination: FeedDestination) {
         when (destination) {
+            is NavigateFly -> onNavigateFly()
             is NavigateSettings -> onNavigateSettings()
         }
+    }
+
+    private fun onNavigateFly() {
+        navController.navigate(Screen.Controller.route)
     }
 
     private fun onNavigateSettings() {

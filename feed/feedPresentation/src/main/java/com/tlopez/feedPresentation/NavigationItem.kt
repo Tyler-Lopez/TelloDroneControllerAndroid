@@ -1,7 +1,8 @@
-package com.tlopez.corePresentation.common
+package com.tlopez.feedPresentation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -19,5 +20,10 @@ enum class NavigationItem(
         contentDescription = "Record Flight",
         icon = Icons.Default.RadioButtonChecked,
         label = "Fly"
+    ),
+    FLIGHTS(
+        contentDescription = "Your Flights",
+        icon = Icons.Default.Leaderboard,
+        label = "My Flights"
     )
 }

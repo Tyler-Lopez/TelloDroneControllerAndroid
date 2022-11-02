@@ -21,11 +21,12 @@ class SettingsViewModel @Inject constructor(
     override fun onEvent(event: SettingsViewEvent) {
         when (event) {
             is ClickedLogout -> onClickedLogout()
+            is ClickedNavigateUp -> onClickedNavigateUp()
         }
     }
 
     private fun onClickedLogout() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             logoutUser()
                 .doOnSuccess {
                     withContext(Dispatchers.Main) {
@@ -33,5 +34,9 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private fun onClickedNavigateUp() {
+        routeTo(NavigateUp)
     }
 }

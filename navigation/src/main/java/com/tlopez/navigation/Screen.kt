@@ -25,4 +25,7 @@ sealed interface Screen {
     }
 
     /** Flight **/
+    object Controller : Screen {
+        override val route: String = "Controller"
+    }
 }

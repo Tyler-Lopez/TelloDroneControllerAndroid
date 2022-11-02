@@ -11,10 +11,15 @@ data class SettingsRouter(private val navController: NavController) : Router<Set
     override fun routeTo(destination: SettingsDestination) {
         when (destination) {
             is NavigateLogout -> onNavigateLogout()
+            is NavigateUp -> onNavigateUp()
         }
     }
 
     private fun onNavigateLogout() {
         navController.navigateClearBackstack(Screen.Login.route)
+    }
+
+    private fun onNavigateUp() {
+        navController.navigateUp()
     }
 }
