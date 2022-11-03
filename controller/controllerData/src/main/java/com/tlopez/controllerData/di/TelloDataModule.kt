@@ -1,7 +1,9 @@
 package com.tlopez.controllerData.di
 
 import com.tlopez.controllerData.TelloRepositoryImpl
+import com.tlopez.controllerData.TelloStateUtil
 import com.tlopez.controllerDomain.TelloRepository
+import com.tlopez.controllerDomain.TelloState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +15,12 @@ import javax.inject.Singleton
 object TelloDataModule {
     @Provides
     @Singleton
-    fun provideTelloRepository(): TelloRepository {
-        return TelloRepositoryImpl()
+    fun provideTelloRepository(telloStateUtil: TelloStateUtil): TelloRepository {
+        return TelloRepositoryImpl(telloStateUtil)
+    }
+
+    @Provides
+    fun provideTelloStateUtil(): TelloStateUtil {
+        return TelloStateUtil()
     }
 }
