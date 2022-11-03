@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.tlopez.corePresentation.common.ScreenBackground
 
 @Composable
-fun ControllerScreen() {
+fun ControllerScreen(viewModel: ControllerViewModel) {
     ScreenBackground {
         Text("Test")
     }

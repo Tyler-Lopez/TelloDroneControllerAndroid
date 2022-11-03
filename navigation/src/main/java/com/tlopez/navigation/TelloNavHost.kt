@@ -14,10 +14,12 @@ import com.tlopez.authPresentation.register.RegisterViewModel
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailScreen
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewModel
 import com.tlopez.controllerPresentation.ControllerScreen
+import com.tlopez.controllerPresentation.ControllerViewModel
 import com.tlopez.feedPresentation.feed.FeedViewDelegate
 import com.tlopez.feedPresentation.feed.FeedViewModel
 import com.tlopez.navigation.Screen.*
 import com.tlopez.navigation.router.AuthRouter
+import com.tlopez.navigation.router.ControllerRouter
 import com.tlopez.navigation.router.FeedRouter
 import com.tlopez.navigation.router.SettingsRouter
 import com.tlopez.navigation.util.selectiveSwipingInOutComposable
@@ -30,6 +32,7 @@ import com.tlopez.settingsPresentation.settings.SettingsViewModel
 fun TelloNavHost(navController: NavHostController) {
 
     val authRouter = AuthRouter(navController)
+    val controllerRouter = ControllerRouter(navController)
     val feedRouter = FeedRouter(navController)
     val settingsRouter = SettingsRouter(navController)
 
@@ -77,7 +80,9 @@ fun TelloNavHost(navController: NavHostController) {
 
         /** Controller navigation destinations **/
         swipingInOutComposable(route = Controller.route) {
-            ControllerScreen()
+            ControllerScreen(viewModel = hiltViewModel<ControllerViewModel>().apply {
+                attachRouter(controllerRouter)
+            })
         }
     }
 }
