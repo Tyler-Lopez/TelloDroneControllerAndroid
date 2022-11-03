@@ -15,12 +15,11 @@ import javax.inject.Singleton
 object TelloDataModule {
     @Provides
     @Singleton
-    fun provideTelloRepository(telloStateUtil: TelloStateUtil): TelloRepository {
-        return TelloRepositoryImpl(telloStateUtil)
-    }
+    fun provideTelloStateUtil(): TelloStateUtil = TelloStateUtil()
 
     @Provides
-    fun provideTelloStateUtil(): TelloStateUtil {
-        return TelloStateUtil()
+    @Singleton
+    fun provideTelloRepository(telloStateUtil: TelloStateUtil): TelloRepository {
+        return TelloRepositoryImpl(telloStateUtil)
     }
 }

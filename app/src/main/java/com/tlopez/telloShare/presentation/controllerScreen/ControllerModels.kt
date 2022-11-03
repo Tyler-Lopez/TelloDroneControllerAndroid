@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.ui.geometry.Offset
 import com.tlopez.telloShare.architecture.ViewEvent
 import com.tlopez.telloShare.architecture.ViewState
-import com.tlopez.telloShare.domain.models.TelloState
+import com.tlopez.telloShare.domain.models.TelloStateLegacy
 import com.tlopez.telloShare.presentation.thumbstick.ThumbstickState
 
 sealed interface ControllerViewEvent : ViewEvent {
@@ -74,7 +74,7 @@ sealed interface ControllerViewState : ViewState {
             override val latestFrame: Bitmap?,
             override val videoOn: Boolean,
             val flightLengthMs: Long = 0L,
-            val telloState: TelloState? = null,
+            val telloState: TelloStateLegacy? = null,
             val throttleYawThumbstickState: ThumbstickState = ThumbstickState(),
             val rollPitchThumbstickState: ThumbstickState = ThumbstickState()
         ) : ConnectedViewState {

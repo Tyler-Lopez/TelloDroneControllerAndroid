@@ -1,6 +1,6 @@
 package com.tlopez.telloShare.domain.models
 
-data class TelloState(
+data class TelloStateLegacy(
     val missionPadId: Int,
     val missionPadX: Int,
     val missionPadY: Int,

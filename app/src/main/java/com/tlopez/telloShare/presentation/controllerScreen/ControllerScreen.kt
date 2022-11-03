@@ -18,7 +18,7 @@ import com.tlopez.telloShare.presentation.controllerScreen.ControllerViewState.C
 import com.tlopez.telloShare.presentation.controllerScreen.ControllerViewState.ConnectedViewState.*
 
 @Composable
-fun ControllerScreen(viewModel: ControllerViewModel = hiltViewModel()) {
+fun ControllerScreen(viewModel: ControllerViewModelLegacy = hiltViewModel()) {
     viewModel.viewState.collectAsState().value?.let {
         if (it is ConnectedViewState) {
             it.latestFrame?.let { bm ->

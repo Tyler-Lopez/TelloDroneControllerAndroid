@@ -5,8 +5,8 @@ import android.graphics.Bitmap
 import com.tlopez.telloShare.util.TelloCommand
 import com.tlopez.telloShare.util.TelloResponse
 
-interface TelloRepository {
-    fun receiveTelloState(onState: (TelloState) -> Unit)
+interface TelloRepositoryLegacy {
+    fun receiveTelloState(onState: (TelloStateLegacy) -> Unit)
     fun receiveVideoStream(onState: (Bitmap) -> Unit)
     val serviceConnection: ServiceConnection
     fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (TelloResponse) -> Unit)

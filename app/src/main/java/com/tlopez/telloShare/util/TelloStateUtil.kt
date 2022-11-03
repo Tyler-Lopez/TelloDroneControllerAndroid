@@ -1,6 +1,6 @@
 package com.tlopez.telloShare.util
 
-import com.tlopez.telloShare.domain.models.TelloState
+import com.tlopez.telloShare.domain.models.TelloStateLegacy
 
 class TelloStateUtil {
     companion object {
@@ -29,7 +29,7 @@ class TelloStateUtil {
         private const val SUB_DELIMITER_CHAR = ':'
     }
 
-    fun ByteArray.decodeToTelloState(): TelloState {
+    fun ByteArray.decodeToTelloState(): TelloStateLegacy {
         val string = decodeToString()
         val argumentArr = string.split(DELIMITER_CHAR)
         val telloStateMap = mutableMapOf<String, String>()
@@ -38,7 +38,7 @@ class TelloStateUtil {
                 telloStateMap[first()] = last()
             }
         }
-        return TelloState(
+        return TelloStateLegacy(
             missionPadId = telloStateMap[MISSION_PAD_ID]?.toInt()
                 ?: error("Error missing MissionPadId"),
             missionPadX = telloStateMap[MISSION_PAD_X]?.toInt()

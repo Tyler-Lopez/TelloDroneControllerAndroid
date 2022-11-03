@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
 
     /*
     @Inject
-    lateinit var socketServiceRepository: TelloRepository
+    lateinit var socketServiceRepository: TelloRepositoryLegacy
 
 
      */

@@ -8,29 +8,25 @@ import android.graphics.ImageFormat.NV21
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.media.Image
-import android.media.MediaCodec
 import android.os.IBinder
-import com.tlopez.telloShare.domain.models.TelloRepository
-import com.tlopez.telloShare.domain.models.TelloState
+import com.tlopez.telloShare.domain.models.TelloRepositoryLegacy
+import com.tlopez.telloShare.domain.models.TelloStateLegacy
 import com.tlopez.telloShare.domain.services.SocketService
-import com.tlopez.telloShare.util.MediaCodecH624
 import com.tlopez.telloShare.util.TelloCommand
 import com.tlopez.telloShare.util.TelloResponse
-import com.tlopez.telloShare.util.TelloStateUtil
 import java.io.ByteArrayOutputStream
-import java.lang.IllegalStateException
 import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class TelloRepositoryImpl @Inject constructor(
-    private val telloStateUtil: TelloStateUtil,
-    private val mediaCodecH624: MediaCodecH624
-) : TelloRepository {
+class TelloRepositoryLegacyImpl @Inject constructor(
+ //   private val telloStateUtil: TelloStateUtil,
+  //  private val mediaCodecH624: MediaCodecH624
+) : TelloRepositoryLegacy {
 
-    private val codec = mediaCodecH624.codec
+    private val codec = 5//mediaCodecH624.codec
     private val dataNew = ByteArray(600000)
     private val output = ByteArrayOutputStream()
     private var destPos = 0
@@ -63,15 +59,16 @@ class TelloRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun receiveTelloState(onState: (TelloState) -> Unit) {
+    override fun receiveTelloState(onState: (TelloStateLegacy) -> Unit) {
         socketService?.receiveTelloState {
-            telloStateUtil.run { it.decodeToTelloState() }?.let {
-                onState(it)
-            }
+            //telloStateUtil.run { it.decodeToTelloState() }?.let {
+           //     onState(it)
+           // }
         }
     }
 
     override fun receiveVideoStream(onState: (Bitmap) -> Unit) {
+       /*
         socketService?.receiveVideoStream {
             System.arraycopy(it.data, it.offset, dataNew, destPos, it.length)
             destPos += it.length
@@ -115,8 +112,10 @@ class TelloRepositoryImpl @Inject constructor(
                     codec.releaseOutputBuffer(outputIndex, false)
                 }
             }
-            this@TelloRepositoryImpl.receiveVideoStream(onState)
+            this@TelloRepositoryLegacyImpl.receiveVideoStream(onState)
         }
+
+        */
     }
 
     override fun sendTelloCommand(telloCommand: TelloCommand, onResponse: (TelloResponse) -> Unit) {

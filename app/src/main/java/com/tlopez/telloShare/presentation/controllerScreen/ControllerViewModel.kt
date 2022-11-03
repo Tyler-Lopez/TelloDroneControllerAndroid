@@ -2,7 +2,7 @@ package com.tlopez.telloShare.presentation.controllerScreen
 
 import androidx.lifecycle.viewModelScope
 import com.tlopez.telloShare.architecture.BaseViewModel
-import com.tlopez.telloShare.domain.models.TelloRepository
+import com.tlopez.telloShare.domain.models.TelloRepositoryLegacy
 import com.tlopez.telloShare.presentation.controllerScreen.ControllerViewEvent.*
 import com.tlopez.telloShare.presentation.controllerScreen.ControllerViewState.*
 import com.tlopez.telloShare.presentation.controllerScreen.ControllerViewState.ConnectedViewState.*
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ControllerViewModel @Inject constructor(
-    private val telloRepository: TelloRepository
+class ControllerViewModelLegacy @Inject constructor(
+   // private val telloRepository: TelloRepositoryLegacy
 ) : BaseViewModel<ControllerViewState, ControllerViewEvent>() {
 
     companion object {
@@ -28,8 +28,7 @@ class ControllerViewModel @Inject constructor(
     }
 
     private var flightStartedUnixMs: Long = 0
-    private var leverForce: LeverForce = LeverForce()
-    private var pollConnectionJob: Job? = null
+//    private var pollConnectionJob: Job? = null
     private var pollLeverForceJob: Job? = null
     private var pollFlightTimeJob: Job? = null
     private var pollTelloStateJob: Job? = null
@@ -39,7 +38,8 @@ class ControllerViewModel @Inject constructor(
     }
 
     override fun onEvent(event: ControllerViewEvent) {
-        when (event) {
+
+      /*  when (event) {
             is ClickedConnect -> onClickedConnect()
             is ClickedLand -> onClickedLand()
             is ClickedTakeoff -> onClickedTakeoff()
@@ -49,8 +49,11 @@ class ControllerViewModel @Inject constructor(
             is ResetRollPitchThumbstick -> onResetRollPitchThumbstick()
             is ToggleVideo -> onToggleVideo()
         }
+
+       */
     }
 
+    /*
     private fun onClickedConnect() {
         telloRepository.sendTelloCommand(Start) {
             if (it is TelloResponse.Ok) {
@@ -243,4 +246,6 @@ class ControllerViewModel @Inject constructor(
         val throttle: Int = 0,
         val yaw: Int = 0
     )
+
+     */
 }
