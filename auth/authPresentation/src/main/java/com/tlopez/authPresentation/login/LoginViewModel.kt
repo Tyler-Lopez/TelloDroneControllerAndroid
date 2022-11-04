@@ -28,17 +28,14 @@ class LoginViewModel @Inject constructor(
 ) : BaseRoutingViewModel<LoginViewState, LoginViewEvent, AuthDestination>() {
 
     init {
-        println("here init loginviewmodel")
         viewModelScope.launch(Dispatchers.IO) {
             getUser()
                 .doOnSuccess {
                     withContext(Dispatchers.Main) {
-                        println("woops here $it")
                         routeTo(NavigateFeed)
                     }
                 }
                 .doOnFailure {
-                    println("Failure was $it")
                     LoginViewState().push()
                 }
         }
@@ -83,27 +80,25 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                     .doOnFailure {
-                       when (it?.cause) {
-                            is UserNotFoundException ->
-                                copy(errorMessageUsername = "User does not exist").push()
-                            is NotAuthorizedException -> {
-                                copy(errorMessagePassword = "Invalid password").push()
-                            }
-                            is UserNotConfirmedException -> {
-                                withContext(Dispatchers.Main) {
-                                    routeTo(
-                                        NavigateVerifyEmail(
-                                            email = null,
-                                            password = textPassword,
-                                            username = textUsername
-                                        )
+                        when (it?.cause) {
+                            is UserNotFoundException -> copy(
+                                errorMessageUsername = "User does not exist"
+                            ).push()
+                            is NotAuthorizedException -> copy(
+                                errorMessagePassword = "Invalid password"
+                            ).push()
+                            is UserNotConfirmedException -> withContext(Dispatchers.Main) {
+                                routeTo(
+                                    NavigateVerifyEmail(
+                                        email = null,
+                                        password = textPassword,
+                                        username = textUsername
                                     )
-                                }
+                                )
                             }
-                            is AmazonClientException -> {
-                                copy(errorMessageGeneral = "Unable to connect to the internet").push()
-
-                            }
+                            is AmazonClientException -> copy(
+                                errorMessageGeneral = "Unable to connect to the internet"
+                            ).push()
                         }
                         lastPushedState?.copy(buttonsEnabled = true)?.push()
                     }
