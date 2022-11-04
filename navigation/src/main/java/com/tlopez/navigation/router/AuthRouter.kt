@@ -34,6 +34,7 @@ data class AuthRouter(private val navController: NavController) : Router<AuthDes
     private fun onNavigateVerifyEmail(destination: NavigateVerifyEmail) {
         val args = buildString {
             append("?username=${destination.username}")
+            append("&password=${destination.password}")
             if (destination.email != null) {
                 append("&email=${destination.email}")
             }

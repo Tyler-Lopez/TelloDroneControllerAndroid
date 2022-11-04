@@ -14,6 +14,9 @@ data class VerifyEmailViewState(
     val buttonsEnabled: Boolean = true,
     val email: String?,
     val errorMessageCode: String? = null,
+    val errorMessageGeneral: String? = null,
+    val errorMessageResend: String? = null,
+    val successMessageResend: String? = null,
     val textCode: String = String(),
     val username: String
 ) : ViewState

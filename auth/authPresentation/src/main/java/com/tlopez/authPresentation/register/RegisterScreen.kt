@@ -13,10 +13,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tlopez.corePresentation.common.ActionButton
-import com.tlopez.corePresentation.common.ScreenBackground
-import com.tlopez.corePresentation.common.SingleLineOutlinedTextField
-import com.tlopez.corePresentation.common.TextFieldType
+import com.tlopez.corePresentation.common.*
 import com.tlopez.corePresentation.theme.Typography
 
 @Composable
@@ -70,6 +67,9 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                     viewModel.onEvent(RegisterViewEvent.ToggledPassVisibility)
                 }
             )
+            errorMessageGeneral?.let {
+                TextError(it)
+            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally

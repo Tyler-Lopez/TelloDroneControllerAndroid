@@ -1,7 +1,8 @@
 package com.tlopez.authPresentation.login
 
 import androidx.lifecycle.viewModelScope
-import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
+import com.amazonaws.AmazonClientException
+import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.amazonaws.services.cognitoidentityprovider.model.UserNotConfirmedException
 import com.amazonaws.services.cognitoidentityprovider.model.UserNotFoundException
 import com.tlopez.authDomain.usecase.GetUser
@@ -37,6 +38,7 @@ class LoginViewModel @Inject constructor(
                     }
                 }
                 .doOnFailure {
+                    println("Failure was $it")
                     LoginViewState().push()
                 }
         }
@@ -58,7 +60,10 @@ class LoginViewModel @Inject constructor(
     private fun onClickedLogin() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
-                copy(buttonsEnabled = false).push()
+                copy(
+                    buttonsEnabled = false,
+                    errorMessageGeneral = null
+                ).push()
                 val errorMessagePassword = inputValidationUtil
                     .getPasswordValidationMessage(password = textPassword)
                 val errorMessageUsername = inputValidationUtil
@@ -78,23 +83,29 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                     .doOnFailure {
-                        when (it) {
+                       when (it?.cause) {
                             is UserNotFoundException ->
                                 copy(errorMessageUsername = "User does not exist").push()
-                            is NotAuthorizedException ->
+                            is NotAuthorizedException -> {
                                 copy(errorMessagePassword = "Invalid password").push()
+                            }
                             is UserNotConfirmedException -> {
-                                lastPushedState?.copy(buttonsEnabled = true)?.push()
                                 withContext(Dispatchers.Main) {
                                     routeTo(
                                         NavigateVerifyEmail(
                                             email = null,
+                                            password = textPassword,
                                             username = textUsername
                                         )
                                     )
                                 }
                             }
+                            is AmazonClientException -> {
+                                copy(errorMessageGeneral = "Unable to connect to the internet").push()
+
+                            }
                         }
+                        lastPushedState?.copy(buttonsEnabled = true)?.push()
                     }
             }
         }

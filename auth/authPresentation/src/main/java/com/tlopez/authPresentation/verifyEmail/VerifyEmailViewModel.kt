@@ -2,11 +2,13 @@ package com.tlopez.authPresentation.verifyEmail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.amazonaws.AmazonClientException
 import com.amazonaws.services.cognitoidentityprovider.model.CodeMismatchException
 import com.tlopez.authDomain.usecase.ResendVerification
+import com.tlopez.authDomain.usecase.SignInUser
 import com.tlopez.authDomain.usecase.VerifyUser
 import com.tlopez.authPresentation.AuthDestination
-import com.tlopez.authPresentation.AuthDestination.NavigateFeed
+import com.tlopez.authPresentation.AuthDestination.*
 import com.tlopez.authPresentation.verifyEmail.VerifyEmailViewEvent.*
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
@@ -19,10 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VerifyEmailViewModel @Inject constructor(
+    private val signInUser: SignInUser,
     private val verifyUser: VerifyUser,
     private val resendVerification: ResendVerification,
     savedStateHandle: SavedStateHandle
 ) : BaseRoutingViewModel<VerifyEmailViewState, VerifyEmailViewEvent, AuthDestination>() {
+
+    private val password: String = savedStateHandle["password"] ?: error("Missing password.")
 
     init {
         VerifyEmailViewState(
@@ -41,42 +46,63 @@ class VerifyEmailViewModel @Inject constructor(
     }
 
     private fun onClickedVerify() {
+        resetErrorGeneral()
+        toggleButtons()
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
                 if (textCode.isBlank()) {
                     copy(errorMessageCode = "Cannot be blank").push()
-                    return@launch
+                } else {
+                    verifyUser(
+                        username = username,
+                        confirmationCode = textCode
+                    )
+                        .doOnSuccess {
+                            signInUser(username, password)
+                                .doOnSuccess {
+                                    withContext(Dispatchers.Main) {
+                                        routeTo(NavigateFeed)
+                                    }
+                                }
+                                .doOnFailure {
+                                    withContext(Dispatchers.Main) {
+                                        routeTo(NavigateLogin)
+                                    }
+                                }
+
+                        }
+                        .doOnFailure {
+                            lastPushedState?.run {
+                                when (it?.cause) {
+                                    is CodeMismatchException -> copy(
+                                        errorMessageCode = "This is not the correct code"
+                                    )
+                                    is AmazonClientException -> copy(
+                                        errorMessageGeneral = "Unable to connect to the internet"
+                                    )
+                                    else -> copy(
+                                        errorMessageGeneral = "An unknown error (${it?.cause}) occurred."
+                                    )
+                                }
+                            }?.push()
+                        }
                 }
-                copy(buttonsEnabled = false).push()
-                verifyUser(
-                    username = username,
-                    confirmationCode = textCode
-                )
-                    .doOnSuccess {
-                        withContext(Dispatchers.Main) {
-                            routeTo(NavigateFeed)
-                        }
-                    }
-                    .doOnFailure {
-                        when (it) {
-                            is CodeMismatchException -> {
-                                lastPushedState
-                                    ?.copy(errorMessageCode = "This is not the correct code")
-                                    ?.push()
-                            }
-                        }
-                    }
+                toggleButtons()
             }
-            lastPushedState?.copy(buttonsEnabled = true)?.push()
         }
     }
 
     private fun onClickedResendCode() {
+        resetErrorGeneral()
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
                 resendVerification(username)
-                    .doOnSuccess { }
-                    .doOnFailure { }
+                    .doOnSuccess {
+                        copy(successMessageResend = "Resent verification email").push()
+                    }
+                    .doOnFailure {
+                        copy(errorMessageResend = "Unable to send verification email").push()
+                    }
             }
         }
     }
@@ -94,5 +120,17 @@ class VerifyEmailViewModel @Inject constructor(
             errorMessageCode = null,
             textCode = event.changedTo
         )?.push()
+    }
+
+    private fun resetErrorGeneral() {
+        lastPushedState?.copy(
+            errorMessageGeneral = null,
+            errorMessageResend = null,
+            successMessageResend = null
+        )?.push()
+    }
+
+    private fun toggleButtons() {
+        lastPushedState?.run { copy(buttonsEnabled = !buttonsEnabled) }?.push()
     }
 }

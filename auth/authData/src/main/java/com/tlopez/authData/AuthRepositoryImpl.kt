@@ -49,22 +49,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(): Result<AuthenticatedUser> {
         return try {
-            val email = getEmail()
             val username = Amplify.Auth.currentUser.username
-            suspendCoroutine { continuation ->
-                Amplify.Auth.fetchAuthSession({ auth ->
-                    (auth as AWSCognitoAuthSession)
-                        .run {
-                            awsCredentials.error?.also { continuation.resumeWithException(it) }
-                            continuation.resume(Result.success(
-                                object : AuthenticatedUser {
-                                    override val username = username
-                                    override val email = email
-                                }
-                            ))
-                        }
-                }, { continuation.resumeWithException(it) })
-            }
+            Result.success(
+                object : AuthenticatedUser {
+                    override val username = username
+                }
+            )
         } catch (e: Exception) {
             Result.failure(e)
         }

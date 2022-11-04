@@ -49,6 +49,9 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     viewModel.onEvent(ToggledPassVisibility)
                 }
             )
+            errorMessageGeneral?.let {
+                TextError(it)
+            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -57,6 +60,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     isLoading = !buttonsEnabled,
                     text = "Login",
                 ) { viewModel.onEventDebounced(ClickedLogin) }
+
                 TextButton(
                     enabled = buttonsEnabled,
                     modifier = Modifier.defaultMinSize(minWidth = 164.dp),

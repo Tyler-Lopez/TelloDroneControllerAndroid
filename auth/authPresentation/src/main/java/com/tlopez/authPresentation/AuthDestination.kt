@@ -7,6 +7,7 @@ sealed interface AuthDestination : Destination {
     object NavigateRegister : AuthDestination
     data class NavigateVerifyEmail(
         val email: String?,
+        val password: String,
         val username: String
     ) : AuthDestination
     object NavigateFeed : AuthDestination

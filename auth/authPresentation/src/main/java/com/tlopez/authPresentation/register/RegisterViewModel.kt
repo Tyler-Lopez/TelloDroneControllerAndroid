@@ -1,6 +1,7 @@
 package com.tlopez.authPresentation.register
 
 import androidx.lifecycle.viewModelScope
+import com.amazonaws.AmazonClientException
 import com.amazonaws.services.cognitoidentityprovider.model.UsernameExistsException
 import com.tlopez.authDomain.usecase.RegisterUser
 import com.tlopez.authPresentation.AuthDestination
@@ -48,6 +49,7 @@ class RegisterViewModel @Inject constructor(
     private fun onClickedRegister() {
         viewModelScope.launch(Dispatchers.IO) {
             toggleButtonsEnabled()
+            resetErrorMessageGeneral()
             lastPushedState?.apply {
                 inputValidationUtil.apply {
                     val errMsgEmail = getEmailValidationMessage(textEmail)
@@ -66,13 +68,21 @@ class RegisterViewModel @Inject constructor(
                 registerUser(textEmail, textUsername, textPassword)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
-                            routeTo(NavigateVerifyEmail(textEmail, textUsername))
+                            routeTo(
+                                NavigateVerifyEmail(
+                                    email = textEmail,
+                                    password = textPassword,
+                                    username = textUsername
+                                )
+                            )
                         }
                     }
                     .doOnFailure {
-                        when (it) {
+                        when (it?.cause) {
                             is UsernameExistsException ->
                                 copy(errorMessageUsername = "User already exists").push()
+                            is AmazonClientException ->
+                                copy(errorMessageGeneral = "Unable to connect to the internet").push()
                         }
                     }
             }
@@ -133,5 +143,9 @@ class RegisterViewModel @Inject constructor(
         lastPushedState?.run {
             copy(buttonsEnabled = !buttonsEnabled)
         }?.push()
+    }
+
+    private fun resetErrorMessageGeneral() {
+        lastPushedState?.copy(errorMessageGeneral = null)?.push()
     }
 }

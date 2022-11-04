@@ -1,19 +1,19 @@
 {
-  "staging": {
+  "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-amplify118d64c97ae04-staging-53053-authRole",
-      "UnauthRoleArn": "arn:aws:iam::870207625346:role/amplify-amplify118d64c97ae04-staging-53053-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::870207625346:role/amplify-amplify118d64c97ae04-staging-53053-authRole",
+      "AuthRoleName": "amplify-telloshare-dev-231305-authRole",
+      "UnauthRoleArn": "arn:aws:iam::870207625346:role/amplify-telloshare-dev-231305-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::870207625346:role/amplify-telloshare-dev-231305-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-amplify118d64c97ae04-staging-53053-deployment",
-      "UnauthRoleName": "amplify-amplify118d64c97ae04-staging-53053-unauthRole",
-      "StackName": "amplify-amplify118d64c97ae04-staging-53053",
-      "StackId": "arn:aws:cloudformation:us-east-1:870207625346:stack/amplify-amplify118d64c97ae04-staging-53053/318b3310-5426-11ed-ac5c-0e1aae4374db",
-      "AmplifyAppId": "d18tha1c6pcwek"
+      "DeploymentBucketName": "amplify-telloshare-dev-231305-deployment",
+      "UnauthRoleName": "amplify-telloshare-dev-231305-unauthRole",
+      "StackName": "amplify-telloshare-dev-231305",
+      "StackId": "arn:aws:cloudformation:us-east-1:870207625346:stack/amplify-telloshare-dev-231305/9a002c00-5bee-11ed-883f-0a533431ff97",
+      "AmplifyAppId": "d1vjzvmuc62joh"
     },
     "categories": {
       "auth": {
-        "telloce19e59e": {}
+        "tellosharedeb837ccdeb837cc": {}
       }
     }
   }

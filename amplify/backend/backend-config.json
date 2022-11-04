@@ -1,6 +1,6 @@
 {
   "auth": {
-    "telloce19e59e": {
+    "tellosharedeb837ccdeb837cc": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -12,7 +12,7 @@
           "EMAIL"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
+          "passwordPolicyMinLength": "6",
           "passwordPolicyCharacters": []
         },
         "mfaConfiguration": "OFF",

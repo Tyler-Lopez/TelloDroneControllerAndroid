@@ -69,7 +69,7 @@ class TelloRepositoryImpl @Inject constructor(
         throttle: Int,
         yaw: Int
     ): Result<Unit> {
-        return socketCommands.sendCommand(
+        return sendCommand(
             format(COMMAND_LEVER_FORCE, roll, pitch, throttle, yaw)
         )
     }
@@ -86,7 +86,7 @@ class TelloRepositoryImpl @Inject constructor(
         return socketCommands.sendCommandWithResponse(COMMAND_VIDEO_STOP)
     }
 
-    private fun DatagramSocket.sendCommand(command: String): Result<Unit> {
+    private fun sendCommand(command: String): Result<Unit> {
         return try {
             val commandArr = command.toByteArray()
             val packet = DatagramPacket(

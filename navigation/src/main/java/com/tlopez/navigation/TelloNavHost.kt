@@ -52,9 +52,10 @@ fun TelloNavHost(navController: NavHostController) {
             })
         }
         swipingInOutComposable(
-            route = VerifyEmail.route + "?username={username}&email={email}",
+            route = VerifyEmail.route + "?username={username}&password={password}&email={email}",
             arguments = listOf(
                 navArgument("username") { type = NavType.StringType },
+                navArgument("password") { type = NavType.StringType },
                 navArgument("email") {
                     nullable = true
                     type = NavType.StringType

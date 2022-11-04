@@ -40,11 +40,6 @@ fun SingleLineOutlinedTextField(
             ?: VisualTransformation.None,
     )
     errorMessage?.apply {
-        Text(
-            style = Typography.subtitle2,
-            color = Color(139, 0, 0),
-            textAlign = TextAlign.Center,
-            text = this
-        )
+        TextError(this)
     }
 }

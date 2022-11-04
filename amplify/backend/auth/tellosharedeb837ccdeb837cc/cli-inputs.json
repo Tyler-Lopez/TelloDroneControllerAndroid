@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "telloce19e59e_identitypool_ce19e59e",
+    "identityPoolName": "tellosharedeb837cc_identitypool_deb837cc",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "telloce19e59e",
-    "userPoolName": "telloce19e59e_userpool_ce19e59e",
+    "resourceNameTruncated": "tellosdeb837cc",
+    "userPoolName": "tellosharedeb837cc_userpool_deb837cc",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -16,8 +16,8 @@
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
-    "defaultPasswordPolicy": false,
-    "passwordPolicyMinLength": 8,
+    "defaultPasswordPolicy": true,
+    "passwordPolicyMinLength": "6",
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
       "email"
@@ -31,12 +31,17 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "tellocce19e59e_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "tellosdeb837cc_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "ce19e59e",
-    "resourceName": "telloce19e59e",
+    "sharedId": "deb837cc",
+    "resourceName": "tellosharedeb837ccdeb837cc",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": {},
+    "hostedUI": false,
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
