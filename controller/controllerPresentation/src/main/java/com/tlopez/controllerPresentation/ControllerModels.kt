@@ -1,5 +1,6 @@
 package com.tlopez.controllerPresentation
 
+import com.tlopez.controllerDomain.TelloState
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
 
@@ -8,11 +9,16 @@ sealed interface ControllerViewEvent : ViewEvent {
 }
 
 sealed interface ControllerViewState : ViewState {
-    object ConnectedIdle : ControllerViewState
-    object DisconnectedError : ControllerViewState
-    object DisconnectedIdle : ControllerViewState
-    sealed interface InFlight {
-        object TakingOff : InFlight
-        object Flying : InFlight
+    sealed interface Disconnected : ControllerViewState {
+        object DisconnectedError : Disconnected
+        object DisconnectedIdle : Disconnected
+    }
+
+    sealed interface Connected : ControllerViewState {
+        val telloState: TelloState?
+
+        data class ConnectedIdle(override val telloState: TelloState? = null) : Connected
+        data class TakingOff(override val telloState: TelloState? = null) : Connected
+        data class Flying(override val telloState: TelloState? = null) : Connected
     }
 }

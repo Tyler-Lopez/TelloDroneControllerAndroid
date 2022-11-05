@@ -2,8 +2,10 @@ package com.tlopez.controllerPresentation
 
 import androidx.lifecycle.viewModelScope
 import com.tlopez.controllerDomain.TelloRepository
-import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.controllerPresentation.ControllerViewState.*
+import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.*
+import com.tlopez.controllerPresentation.ControllerViewState.Connected.*
+import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,15 +50,19 @@ class ControllerViewModel @Inject constructor(
     }
 
     private suspend fun healthCheckAction() {
-        println("here health check action")
-        telloRepository.connect()
+        telloRepository
+            .connect()
             .doOnSuccess {
-                println("success $it")
-                ConnectedIdle.push()
+                if (lastPushedState is DisconnectedIdle) {
+                    ConnectedIdle().push()
+                }
             }
             .doOnFailure {
-                println("failure $it")
-                DisconnectedIdle.push()
+                if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
+                    DisconnectedError
+                } else {
+                    DisconnectedIdle
+                }.push()
             }
     }
 }
