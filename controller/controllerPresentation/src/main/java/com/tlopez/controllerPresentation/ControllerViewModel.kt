@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.tlopez.controllerDomain.TelloRepository
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.controllerPresentation.ControllerViewState.*
+import com.tlopez.core.ext.doOnFailure
+import com.tlopez.core.ext.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +25,7 @@ class ControllerViewModel @Inject constructor(
     private var healthCheckJob: Job? = null
 
     init {
-        Connecting.push()
+        DisconnectedIdle.push()
         healthCheckLoop()
     }
 
@@ -39,7 +41,6 @@ class ControllerViewModel @Inject constructor(
     private fun healthCheckLoop() {
         healthCheckJob?.cancel()
         healthCheckJob = viewModelScope.launch(Dispatchers.IO) {
-            println("here healthy check")
             healthCheckAction()
             delay(DELAY_MS_HEALTH_CHECK)
             healthCheckLoop()
@@ -47,7 +48,15 @@ class ControllerViewModel @Inject constructor(
     }
 
     private suspend fun healthCheckAction() {
-        val b = telloRepository.connect()
-        println(b)
+        println("here health check action")
+        telloRepository.connect()
+            .doOnSuccess {
+                println("success $it")
+                ConnectedIdle.push()
+            }
+            .doOnFailure {
+                println("failure $it")
+                DisconnectedIdle.push()
+            }
     }
 }

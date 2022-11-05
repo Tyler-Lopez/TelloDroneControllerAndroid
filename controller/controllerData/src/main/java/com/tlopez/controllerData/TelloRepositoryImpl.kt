@@ -105,9 +105,11 @@ class TelloRepositoryImpl @Inject constructor(
     private fun DatagramSocket.sendCommandWithResponse(command: String): Result<TelloResponse> {
         return try {
             sendCommand(command)
-            receiveResponse()
-            // todo actually parse
-            success(TelloResponse.OK)
+            val responseStr = receiveResponse()
+                .getOrThrow()
+                .decodeToStringRemoveTrailingZero()
+                .toTelloResponse()
+            success(responseStr)
         } catch (e: Exception) {
             failure(e)
         }
@@ -125,6 +127,19 @@ class TelloRepositoryImpl @Inject constructor(
             success(message)
         } catch (e: Exception) {
             failure(e)
+        }
+    }
+
+    private fun ByteArray.decodeToStringRemoveTrailingZero(): String {
+        val endIndex: Int = indexOf(0)
+        return decodeToString(0, endIndex)
+    }
+
+    private fun String.toTelloResponse(): TelloResponse {
+        return when (this) {
+            "ok" -> TelloResponse.OK
+            "error" -> TelloResponse.ERROR
+            else -> error("Unexpected response [$this]!")
         }
     }
 }

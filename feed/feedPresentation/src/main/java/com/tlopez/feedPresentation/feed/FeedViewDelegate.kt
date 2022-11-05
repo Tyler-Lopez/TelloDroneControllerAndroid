@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.tlopez.corePresentation.common.AppScaffold
 import com.tlopez.feedPresentation.feed.FeedViewEvent.ClickedSettings
+import com.tlopez.feedPresentation.feed.FeedViewState.*
 
 @Composable
 fun FeedViewDelegate(viewModel: FeedViewModel) {
@@ -26,6 +27,11 @@ fun FeedViewDelegate(viewModel: FeedViewModel) {
                 )
             }
         ) {
+            when (this) {
+                is HomeViewState -> HomeScreen()
+                is MyFlightsViewState -> MyFlightsScreen()
+            }
+
         }
     }
 }

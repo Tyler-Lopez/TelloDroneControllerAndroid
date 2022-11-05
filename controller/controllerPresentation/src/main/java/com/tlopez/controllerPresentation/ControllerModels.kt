@@ -8,6 +8,11 @@ sealed interface ControllerViewEvent : ViewEvent {
 }
 
 sealed interface ControllerViewState : ViewState {
-    object Connecting : ControllerViewState
-    object TakingOff : ControllerViewState
+    object ConnectedIdle : ControllerViewState
+    object DisconnectedError : ControllerViewState
+    object DisconnectedIdle : ControllerViewState
+    sealed interface InFlight {
+        object TakingOff : InFlight
+        object Flying : InFlight
+    }
 }
