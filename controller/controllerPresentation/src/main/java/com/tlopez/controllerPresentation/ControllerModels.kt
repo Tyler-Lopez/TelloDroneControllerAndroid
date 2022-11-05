@@ -25,7 +25,7 @@ sealed interface ControllerViewState : ViewState {
 
         data class ConnectedIdle(
             override val telloState: TelloState? = null,
-            override val videoOn: Boolean
+            override val videoOn: Boolean = false
         ) : Connected {
             override fun copyConnected(
                 telloState: TelloState?,

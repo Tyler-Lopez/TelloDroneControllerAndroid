@@ -1,19 +1,14 @@
 package com.tlopez.controllerPresentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.tlopez.controllerPresentation.ControllerViewEvent.*
-import com.tlopez.controllerPresentation.ControllerViewState.*
+import com.tlopez.controllerPresentation.ControllerViewEvent.ToggledVideo
+import com.tlopez.controllerPresentation.ControllerViewState.Connected
+import com.tlopez.controllerPresentation.ControllerViewState.Disconnected
+import com.tlopez.controllerPresentation.composable.BarRow
+import com.tlopez.controllerPresentation.composable.BatteryIconText
+import com.tlopez.controllerPresentation.composable.VideoIconButton
 import com.tlopez.controllerPresentation.subscreens.ConnectedIdleScreen
 import com.tlopez.controllerPresentation.subscreens.DisconnectedIdleScreen
 import com.tlopez.controllerPresentation.subscreens.FlyingScreen
@@ -38,33 +33,17 @@ private fun ConnectedStateHandler(
 ) {
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0.1f, 0.1f, 0.1f, 0.1f))
-            ) {
-                IconToggleButton(
-                    checked = state.videoOn,
-                    onCheckedChange = {
-                        eventReceiver.onEvent(ToggledVideo)
-                    }
-                ) {
-
+            BarRow {
+                VideoIconButton(videoOn = state.videoOn) {
+                    eventReceiver.onEvent(ToggledVideo)
                 }
-
             }
         },
         bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0.1f, 0.1f, 0.1f, 0.1f))
-            ) {
-
+            BarRow {
+                BatteryIconText(batteryPercentage = state.telloState?.batteryPercentage ?: 0)
             }
         }) {
-
-        Text(text = "${state.telloState}")
         when (state) {
             is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
             is Connected.Flying -> FlyingScreen()

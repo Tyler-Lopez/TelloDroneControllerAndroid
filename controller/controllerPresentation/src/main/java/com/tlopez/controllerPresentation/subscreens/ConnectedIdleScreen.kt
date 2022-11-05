@@ -5,10 +5,14 @@ import androidx.compose.runtime.Composable
 import com.tlopez.controllerDomain.TelloState
 import com.tlopez.controllerPresentation.ControllerViewEvent
 import com.tlopez.core.architecture.EventReceiver
+import com.tlopez.corePresentation.common.ScreenBackground
+import com.tlopez.corePresentation.common.Title
 
 @Composable
 fun ConnectedIdleScreen(
     eventReceiver: EventReceiver<ControllerViewEvent>
 ) {
-    Text("Connected")
+    ScreenBackground {
+        Title(text = "Connected")
+    }
 }

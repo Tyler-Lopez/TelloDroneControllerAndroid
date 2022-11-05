@@ -2,6 +2,7 @@ package com.tlopez.controllerPresentation
 
 import androidx.lifecycle.viewModelScope
 import com.tlopez.controllerDomain.TelloRepository
+import com.tlopez.controllerPresentation.ControllerViewEvent.*
 import com.tlopez.controllerPresentation.ControllerViewState.*
 import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.*
 import com.tlopez.controllerPresentation.ControllerViewState.Connected.*
@@ -34,12 +35,21 @@ class ControllerViewModel @Inject constructor(
     }
 
     override fun onEvent(event: ControllerViewEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            is ToggledVideo -> onToggledVideo()
+        }
+    }
+
+    private fun onToggledVideo() {
+        (lastPushedState as? Connected)?.run {
+            copyConnected(videoOn = !videoOn)
+        }?.push()
     }
 
     override fun onCleared() {
         super.onCleared()
         healthCheckJob?.cancel()
+        telloStateJob?.cancel()
     }
 
     private fun healthCheckLoop() {
@@ -82,7 +92,7 @@ class ControllerViewModel @Inject constructor(
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
             .doOnSuccess {
-                (lastPushedState as Connected).copyConnected(it).push()
+                (lastPushedState as Connected).copyConnected(telloState = it).push()
             }
             .doOnFailure {
                 // No-op
