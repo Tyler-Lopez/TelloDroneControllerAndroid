@@ -22,9 +22,11 @@ class ControllerViewModel @Inject constructor(
 
     companion object {
         private const val DELAY_MS_HEALTH_CHECK = 500L
+        private const val DELAY_MS_TELLO_STATE = 500L
     }
 
     private var healthCheckJob: Job? = null
+    private var telloStateJob: Job? = null
 
     init {
         DisconnectedIdle.push()
@@ -55,14 +57,35 @@ class ControllerViewModel @Inject constructor(
             .doOnSuccess {
                 if (lastPushedState is DisconnectedIdle) {
                     ConnectedIdle().push()
+                    telloStateLoop()
                 }
             }
             .doOnFailure {
+                telloStateJob?.cancel()
                 if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
                     DisconnectedError
                 } else {
                     DisconnectedIdle
                 }.push()
+            }
+    }
+
+    private fun telloStateLoop() {
+        telloStateJob?.cancel()
+        telloStateJob = viewModelScope.launch(Dispatchers.IO) {
+            telloStateAction()
+            delay(DELAY_MS_TELLO_STATE)
+            telloStateLoop()
+        }
+    }
+
+    private suspend fun telloStateAction() {
+        telloRepository.receiveTelloState()
+            .doOnSuccess {
+                (lastPushedState as Connected).copyConnected(it).push()
+            }
+            .doOnFailure {
+                // No-op
             }
     }
 }
