@@ -13,6 +13,7 @@ import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,7 @@ class ControllerViewModel @Inject constructor(
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
     }
 
+    private var flightStartedMs: Long? = null
     private var healthCheckJob: Job? = null
     private var telloStateJob: Job? = null
 
@@ -74,7 +76,7 @@ class ControllerViewModel @Inject constructor(
         telloRepository
             .land()
             .doOnSuccess {
-                (lastPushedState as? Connected)?.toConnectedIdle()?.push()
+                (lastPushedState as? Connected)?.toLanded()?.push()
             }
             .doOnFailure {
                 if (retryCount < MAX_RETRY_COUNT_LAND) {
@@ -88,6 +90,7 @@ class ControllerViewModel @Inject constructor(
             .takeOff()
             .doOnSuccess {
                 println("Successfully took off.")
+                flightStartedMs = currentTimeMillis()
                 (lastPushedState as? Connected)?.toFlying()?.push()
             }
             .doOnFailure {
@@ -119,6 +122,7 @@ class ControllerViewModel @Inject constructor(
             }
             .doOnFailure {
                 println("health check response bad")
+                flightStartedMs = null
                 telloStateJob?.cancel()
                 if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
                     DisconnectedError

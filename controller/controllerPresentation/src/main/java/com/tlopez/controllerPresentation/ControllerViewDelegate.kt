@@ -45,6 +45,7 @@ private fun ConnectedStateHandler(
             when (state) {
                 is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
                 is Connected.Flying -> FlyingScreen(eventReceiver)
+                is Connected.Landed -> LandedScreen()
                 is Connected.Landing -> LandingScreen()
                 is Connected.TakingOff -> TakingOffScreen()
             }
