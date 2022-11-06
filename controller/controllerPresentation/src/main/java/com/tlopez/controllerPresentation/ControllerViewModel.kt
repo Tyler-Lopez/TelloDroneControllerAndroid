@@ -28,8 +28,6 @@ class ControllerViewModel @Inject constructor(
     }
 
     private var healthCheckJob: Job? = null
-    private var landJob: Job? = null
-    private var takeOffJob: Job? = null
     private var telloStateJob: Job? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
