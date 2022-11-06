@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 import com.tlopez.corePresentation.common.Title
 
 @Composable
-fun TakingOffScreen() {
-    Title(text = "Taking off...")
+fun LandingScreen() {
+    Title(text = "Landing...")
 }

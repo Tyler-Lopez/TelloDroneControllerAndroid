@@ -1,5 +1,6 @@
 package com.tlopez.controllerData
 
+import android.text.TextUtils.indexOf
 import com.tlopez.controllerDomain.TelloState
 
 class TelloStateUtil {
@@ -29,7 +30,9 @@ class TelloStateUtil {
     }
 
     fun decodeToTelloState(byteArray: ByteArray): TelloState {
-        val string = byteArray.decodeToString()
+        val endIndex: Int = byteArray.indexOf(0)
+        val string = byteArray.decodeToString(0, endIndex)
+        println(string)
         val argumentArr = string.split(DELIMITER_CHAR)
         val telloStateMap = mutableMapOf<String, String>()
         argumentArr.forEach {

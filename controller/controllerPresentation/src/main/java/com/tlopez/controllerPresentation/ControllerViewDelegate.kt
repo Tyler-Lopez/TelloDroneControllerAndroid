@@ -9,10 +9,7 @@ import com.tlopez.controllerPresentation.ControllerViewState.Disconnected
 import com.tlopez.controllerPresentation.composable.BarRow
 import com.tlopez.controllerPresentation.composable.BatteryIconText
 import com.tlopez.controllerPresentation.composable.VideoIconButton
-import com.tlopez.controllerPresentation.subscreens.ConnectedIdleScreen
-import com.tlopez.controllerPresentation.subscreens.DisconnectedIdleScreen
-import com.tlopez.controllerPresentation.subscreens.FlyingScreen
-import com.tlopez.controllerPresentation.subscreens.TakingOffScreen
+import com.tlopez.controllerPresentation.subscreens.*
 import com.tlopez.core.architecture.EventReceiver
 import com.tlopez.corePresentation.common.ScreenBackground
 
@@ -44,10 +41,13 @@ private fun ConnectedStateHandler(
                 BatteryIconText(batteryPercentage = state.telloState?.batteryPercentage ?: 0)
             }
         }) {
-        when (state) {
-            is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
-            is Connected.Flying -> FlyingScreen()
-            is Connected.TakingOff -> TakingOffScreen()
+        ScreenBackground {
+            when (state) {
+                is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
+                is Connected.Flying -> FlyingScreen(eventReceiver)
+                is Connected.Landing -> LandingScreen()
+                is Connected.TakingOff -> TakingOffScreen()
+            }
         }
     }
 }
@@ -56,7 +56,7 @@ private fun ConnectedStateHandler(
 private fun DisconnectedStateHandler(state: Disconnected) {
     ScreenBackground {
         when (state) {
-            Disconnected.DisconnectedError -> {}
+            Disconnected.DisconnectedError -> DisconnectedErrorScreen()
             Disconnected.DisconnectedIdle -> DisconnectedIdleScreen()
         }
     }

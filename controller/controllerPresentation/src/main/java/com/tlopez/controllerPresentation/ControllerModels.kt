@@ -5,6 +5,8 @@ import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
 
 sealed interface ControllerViewEvent : ViewEvent {
+    object ClickedLand : ControllerViewEvent
+    object ClickedTakeOff : ControllerViewEvent
     object ToggledVideo : ControllerViewEvent
 }
 
@@ -31,6 +33,21 @@ sealed interface ControllerViewState : ViewState {
                 telloState: TelloState?,
                 videoOn: Boolean?
             ): ConnectedIdle {
+                return copy(
+                    telloState = telloState ?: this.telloState,
+                    videoOn = videoOn ?: this.videoOn
+                )
+            }
+        }
+
+        data class Landing(
+            override val telloState: TelloState? = null,
+            override val videoOn: Boolean
+        ) : Connected {
+            override fun copyConnected(
+                telloState: TelloState?,
+                videoOn: Boolean?
+            ): Landing {
                 return copy(
                     telloState = telloState ?: this.telloState,
                     videoOn = videoOn ?: this.videoOn
