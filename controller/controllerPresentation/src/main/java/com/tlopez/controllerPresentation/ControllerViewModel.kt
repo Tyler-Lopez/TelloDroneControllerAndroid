@@ -3,9 +3,11 @@ package com.tlopez.controllerPresentation
 import androidx.lifecycle.viewModelScope
 import com.tlopez.controllerDomain.TelloRepository
 import com.tlopez.controllerPresentation.ControllerViewEvent.*
-import com.tlopez.controllerPresentation.ControllerViewState.*
-import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.*
-import com.tlopez.controllerPresentation.ControllerViewState.Connected.*
+import com.tlopez.controllerPresentation.ControllerViewState.Connected
+import com.tlopez.controllerPresentation.ControllerViewState.Connected.ConnectedIdle
+import com.tlopez.controllerPresentation.ControllerViewState.Connected.Flying
+import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.DisconnectedError
+import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.DisconnectedIdle
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
@@ -21,7 +23,6 @@ class ControllerViewModel @Inject constructor(
     companion object {
         private const val DELAY_MS_HEALTH_CHECK = 500L
         private const val DELAY_MS_TELLO_STATE = 500L
-        private const val DELAY_MS_AUTO_TAKEOFF_LAND = 1000L
         private const val MAX_RETRY_COUNT_LAND = 3
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
     }
@@ -48,27 +49,21 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onClickedLand() {
-        (lastPushedState as? Connected)?.run {
-            Landing(telloState, videoOn)
-        }?.push()
+        (lastPushedState as? Connected)?.toLanding()?.push()
         viewModelScope.launch(commandsDispatcher) {
             attemptLand()
         }
     }
 
     private fun onClickedTakeOff() {
-        (lastPushedState as? Connected)?.run {
-            TakingOff(telloState, videoOn)
-        }?.push()
+        (lastPushedState as? Connected)?.toTakingOff()?.push()
         viewModelScope.launch(commandsDispatcher) {
-           attemptTakeOff()
+            attemptTakeOff()
         }
     }
 
     private fun onToggledVideo() {
-        (lastPushedState as? Connected)?.run {
-            copyConnected(videoOn = !videoOn)
-        }?.push()
+        (lastPushedState as? Connected)?.toggleVideo()?.push()
     }
 
     override fun onCleared() {
@@ -81,9 +76,7 @@ class ControllerViewModel @Inject constructor(
         telloRepository
             .land()
             .doOnSuccess {
-                (lastPushedState as Connected).run {
-                    ConnectedIdle(telloState, videoOn)
-                }.push()
+                (lastPushedState as? Connected)?.toConnectedIdle()?.push()
             }
             .doOnFailure {
                 if (retryCount < MAX_RETRY_COUNT_LAND) {
@@ -97,9 +90,7 @@ class ControllerViewModel @Inject constructor(
             .takeOff()
             .doOnSuccess {
                 println("Successfully took off.")
-                (lastPushedState as? Connected)?.run {
-                    Flying(telloState, videoOn)
-                }?.push()
+                (lastPushedState as? Connected)?.toFlying()?.push()
             }
             .doOnFailure {
                 println("Failed to take off.")
@@ -150,9 +141,7 @@ class ControllerViewModel @Inject constructor(
 
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
-            .doOnSuccess {
-                (lastPushedState as Connected).copyConnected(telloState = it).push()
-            }
+            .doOnSuccess { (lastPushedState as? Connected)?.updateTelloState(it)?.push() }
             .doOnFailure {
                 // No-op
             }

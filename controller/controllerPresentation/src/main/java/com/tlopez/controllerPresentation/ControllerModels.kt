@@ -19,70 +19,43 @@ sealed interface ControllerViewState : ViewState {
     sealed interface Connected : ControllerViewState {
         val telloState: TelloState?
         val videoOn: Boolean
-
-        fun copyConnected(
-            telloState: TelloState? = null,
-            videoOn: Boolean? = null
-        ): Connected
+        fun toConnectedIdle() = ConnectedIdle(telloState, videoOn)
+        fun toLanding() = Landing(telloState, videoOn)
+        fun toTakingOff() = TakingOff(telloState, videoOn)
+        fun toFlying() = Flying(telloState, videoOn)
+        fun toggleVideo(): Connected
+        fun updateTelloState(state: TelloState): Connected
 
         data class ConnectedIdle(
             override val telloState: TelloState? = null,
             override val videoOn: Boolean = false
         ) : Connected {
-            override fun copyConnected(
-                telloState: TelloState?,
-                videoOn: Boolean?
-            ): ConnectedIdle {
-                return copy(
-                    telloState = telloState ?: this.telloState,
-                    videoOn = videoOn ?: this.videoOn
-                )
-            }
+            override fun toggleVideo() = copy(videoOn = !videoOn)
+            override fun updateTelloState(state: TelloState) = copy(telloState = state)
         }
 
         data class Landing(
             override val telloState: TelloState? = null,
             override val videoOn: Boolean
         ) : Connected {
-            override fun copyConnected(
-                telloState: TelloState?,
-                videoOn: Boolean?
-            ): Landing {
-                return copy(
-                    telloState = telloState ?: this.telloState,
-                    videoOn = videoOn ?: this.videoOn
-                )
-            }
+            override fun toggleVideo() = copy(videoOn = !videoOn)
+            override fun updateTelloState(state: TelloState) = copy(telloState = state)
         }
 
         data class TakingOff(
             override val telloState: TelloState? = null,
             override val videoOn: Boolean
         ) : Connected {
-            override fun copyConnected(
-                telloState: TelloState?,
-                videoOn: Boolean?
-            ): TakingOff {
-                return copy(
-                    telloState = telloState ?: this.telloState,
-                    videoOn = videoOn ?: this.videoOn
-                )
-            }
+            override fun toggleVideo() = copy(videoOn = !videoOn)
+            override fun updateTelloState(state: TelloState) = copy(telloState = state)
         }
 
         data class Flying(
             override val telloState: TelloState? = null,
             override val videoOn: Boolean
         ) : Connected {
-            override fun copyConnected(
-                telloState: TelloState?,
-                videoOn: Boolean?
-            ): Flying {
-                return copy(
-                    telloState = telloState ?: this.telloState,
-                    videoOn = videoOn ?: this.videoOn
-                )
-            }
+            override fun toggleVideo() = copy(videoOn = !videoOn)
+            override fun updateTelloState(state: TelloState) = copy(telloState = state)
         }
     }
 }
