@@ -31,6 +31,7 @@ class TelloStateUtil {
 
     fun ByteArray.decodeToTelloState(): TelloStateLegacy {
         val string = decodeToString()
+
         val argumentArr = string.split(DELIMITER_CHAR)
         val telloStateMap = mutableMapOf<String, String>()
         argumentArr.forEach {

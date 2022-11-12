@@ -28,7 +28,7 @@ fun FeedViewDelegate(viewModel: FeedViewModel) {
             }
         ) {
             when (this) {
-                is HomeViewState -> HomeScreen()
+                is HomeViewState -> HomeScreen(viewModel)
                 is MyFlightsViewState -> MyFlightsScreen()
             }
 

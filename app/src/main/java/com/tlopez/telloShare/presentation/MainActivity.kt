@@ -5,26 +5,36 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavHostController
+import com.amplifyframework.api.aws.AWSApiPlugin
+import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
+import com.amplifyframework.core.Amplify
+import com.amplifyframework.datastore.AWSDataStorePlugin
+import com.amplifyframework.datastore.DataStoreConfiguration
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tlopez.corePresentation.theme.TelloShareTheme
+import com.tlopez.datastoreDomain.repository.models.AmplifyModelProvider
 import com.tlopez.navigation.TelloNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    /*
-    @Inject
-    lateinit var socketServiceRepository: TelloRepositoryLegacy
-
-
-     */
     private lateinit var navController: NavHostController
-
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Amplify.addPlugin(AWSApiPlugin())
+        Amplify.addPlugin(AWSCognitoAuthPlugin())
+        Amplify.addPlugin(
+            AWSDataStorePlugin
+                .builder()
+                .dataStoreConfiguration(DataStoreConfiguration.defaults())
+                .modelProvider(AmplifyModelProvider.getInstance())
+                .build()
+        )
+
+        Amplify.configure(applicationContext)
         setContent {
             //      val viewModel = hiltViewModel<MainViewModel>()
             TelloShareTheme {

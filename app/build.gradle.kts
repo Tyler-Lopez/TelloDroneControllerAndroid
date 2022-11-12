@@ -66,6 +66,8 @@ dependencies {
     implementation(project(Modules.authPresentation))
     implementation(project(Modules.controllerData))
     implementation(project(Modules.controllerDomain))
+    implementation(project(Modules.datastoreData))
+    implementation(project(Modules.datastoreDomain))
     implementation(project(Modules.navigation))
 
     implementation(AndroidX.coreKtx)

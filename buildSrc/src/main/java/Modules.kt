@@ -12,6 +12,8 @@ object Modules {
     const val controllerData = ":controller:controllerData"
     const val controllerDomain = ":controller:controllerDomain"
     const val controllerPresentation = ":controller:controllerPresentation"
+    const val datastoreData = ":datastore:datastoreData"
+    const val datastoreDomain = ":datastore:datastoreDomain"
 
     const val navigation = ":navigation"
 }

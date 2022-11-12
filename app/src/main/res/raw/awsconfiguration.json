@@ -39,5 +39,19 @@
                 "EMAIL"
             ]
         }
+    },
+    "AppSync": {
+        "Default": {
+            "ApiUrl": "https://txypbbnpuvdp7e6rcxmluyagcm.appsync-api.us-east-1.amazonaws.com/graphql",
+            "Region": "us-east-1",
+            "AuthMode": "AMAZON_COGNITO_USER_POOLS",
+            "ClientDatabasePrefix": "telloshare_AMAZON_COGNITO_USER_POOLS"
+        },
+        "telloshare_AWS_IAM": {
+            "ApiUrl": "https://txypbbnpuvdp7e6rcxmluyagcm.appsync-api.us-east-1.amazonaws.com/graphql",
+            "Region": "us-east-1",
+            "AuthMode": "AWS_IAM",
+            "ClientDatabasePrefix": "telloshare_AWS_IAM"
+        }
     }
 }

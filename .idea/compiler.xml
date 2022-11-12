@@ -6,6 +6,8 @@
       <module name="FlashcardsApp.core" target="11" />
       <module name="TelloShare.controller.main" target="1.7" />
       <module name="TelloShare.controller.test" target="1.7" />
+      <module name="TelloShare.datastore.main" target="1.7" />
+      <module name="TelloShare.datastore.test" target="1.7" />
       <module name="TelloShare.feed.main" target="1.7" />
       <module name="TelloShare.feed.test" target="1.7" />
       <module name="TelloShare.settings.main" target="1.7" />

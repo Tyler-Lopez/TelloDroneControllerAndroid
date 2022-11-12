@@ -19,11 +19,6 @@ class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : AuthRepository {
 
-    init {
-        Amplify.addPlugin(AWSCognitoAuthPlugin())
-        Amplify.configure(applicationContext)
-    }
-
     override suspend fun signIn(username: String, password: String): Result<Unit> {
         return try {
             suspendCoroutine { continuation ->

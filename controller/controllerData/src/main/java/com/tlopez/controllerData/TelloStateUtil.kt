@@ -32,6 +32,7 @@ class TelloStateUtil {
     fun decodeToTelloState(byteArray: ByteArray): TelloState {
         val endIndex: Int = byteArray.indexOf(0)
         val string = byteArray.decodeToString(0, endIndex)
+        println("state was $string")
         println(string)
         val argumentArr = string.split(DELIMITER_CHAR)
         val telloStateMap = mutableMapOf<String, String>()
