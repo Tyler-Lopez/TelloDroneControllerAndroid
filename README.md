@@ -1,18 +1,23 @@
 # Tello Drone Controller Android
 
-This is an application to control a Ryze Tech Tello EDU drone using an Android device with virtual joysticks written in Kotlin using the Jetpack Compose framework. The 3.0 SDK provided by Ryze Tech was used to create a wrapper class to interact with the robot over WIFI UDP. Video-streaming is functional.
+This multi-module Android application allows the user to control a Ryze Tech Tello EDU drone using an Android device with virtual joysticks and is written in Kotlin using the Jetpack Compose framework. The 3.0 SDK provided by Ryze Tech was used to create a wrapper class to interact with the robot over WIFI UDP.
+
+Using AWS Amplify tools, the app features additional functionality to share drone flights with other users. Registration and login are implemented utilizing AWS Cognito. With AWS AppSync, flights may be saved locally and later uploaded to a DynamoDB data store.
 
 ## Features
 
-* Live-stream video-feed from the front-facing camera.
+* Live-stream video-feed from the front-facing camera. 
 * Control roll, pitch, throttle, and yaw from virtual joysticks.
 * Track the time-of-flight, determined behind-the-scenes by the difference in the time of a successful landing and a successful takeoff.
-* Receive in-flight data (speed, height, position).
+* Record and share flight summaries and more detailed in-flight realtime data.
+* Register and login to an account.
+
+## Data Schema
+
+Three models exist in the GraphQL schema: Challenge, TelloFlight, TelloFlightData.
 
 ## Future Features
 
-* Output in-flight data, time-of-flight, to a DynamoDB database.
-* Add some sort of team / competition system.
 * Save videos taken during flight.
 * Upload saved videos to an S3 Bucket.
 
