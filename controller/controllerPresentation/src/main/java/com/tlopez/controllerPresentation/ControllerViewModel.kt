@@ -26,6 +26,8 @@ class ControllerViewModel @Inject constructor(
         private const val DELAY_MS_TELLO_STATE = 500L
         private const val MAX_RETRY_COUNT_LAND = 3
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
+
+        private const val CHALLENGE_ID_TEMP = "003ff51d-bbec-4ddc-be32-369fc8c8cfea"
     }
 
     private var flightStartedMs: Long? = null

@@ -33,7 +33,7 @@ public final class TelloFlight implements Model {
   public static final QueryField CHALLENGE_ID = field("TelloFlight", "challengeID");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String username;
-  private final @ModelField(targetType="Int") Integer started_ms;
+  private final @ModelField(targetType="AWSTimestamp") Temporal.Timestamp started_ms;
   private final @ModelField(targetType="Int") Integer length_ms;
   private final @ModelField(targetType="TelloFlightData") @HasMany(associatedWith = "telloflightID", type = TelloFlightData.class) List<TelloFlightData> TelloFlightTelloFlightData = null;
   private final @ModelField(targetType="ID", isRequired = true) String challengeID;
@@ -47,7 +47,7 @@ public final class TelloFlight implements Model {
       return username;
   }
   
-  public Integer getStartedMs() {
+  public Temporal.Timestamp getStartedMs() {
       return started_ms;
   }
   
@@ -71,7 +71,7 @@ public final class TelloFlight implements Model {
       return updatedAt;
   }
   
-  private TelloFlight(String id, String username, Integer started_ms, Integer length_ms, String challengeID) {
+  private TelloFlight(String id, String username, Temporal.Timestamp started_ms, Integer length_ms, String challengeID) {
     this.id = id;
     this.username = username;
     this.started_ms = started_ms;
@@ -168,7 +168,7 @@ public final class TelloFlight implements Model {
   public interface BuildStep {
     TelloFlight build();
     BuildStep id(String id);
-    BuildStep startedMs(Integer startedMs);
+    BuildStep startedMs(Temporal.Timestamp startedMs);
     BuildStep lengthMs(Integer lengthMs);
   }
   
@@ -177,7 +177,7 @@ public final class TelloFlight implements Model {
     private String id;
     private String username;
     private String challengeID;
-    private Integer started_ms;
+    private Temporal.Timestamp started_ms;
     private Integer length_ms;
     @Override
      public TelloFlight build() {
@@ -206,7 +206,7 @@ public final class TelloFlight implements Model {
     }
     
     @Override
-     public BuildStep startedMs(Integer startedMs) {
+     public BuildStep startedMs(Temporal.Timestamp startedMs) {
         this.started_ms = startedMs;
         return this;
     }
@@ -229,7 +229,7 @@ public final class TelloFlight implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String username, Integer startedMs, Integer lengthMs, String challengeId) {
+    private CopyOfBuilder(String id, String username, Temporal.Timestamp startedMs, Integer lengthMs, String challengeId) {
       super.id(id);
       super.username(username)
         .challengeId(challengeId)
@@ -248,7 +248,7 @@ public final class TelloFlight implements Model {
     }
     
     @Override
-     public CopyOfBuilder startedMs(Integer startedMs) {
+     public CopyOfBuilder startedMs(Temporal.Timestamp startedMs) {
       return (CopyOfBuilder) super.startedMs(startedMs);
     }
     

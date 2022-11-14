@@ -7,7 +7,7 @@ type Challenge @model @auth(rules: [{allow: private}]) {
 type TelloFlight @model @auth(rules: [{allow: private}]) {
   id: ID!
   username: String!
-  started_ms: Int
+  started_ms: AWSTimestamp
   length_ms: Int
   TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
   challengeID: ID! @index(name: "byChallenge")
@@ -17,5 +17,22 @@ type TelloFlightData @model @auth(rules: [{allow: private}]) {
   id: ID!
   received_at_ms: Int
   telloflightID: ID! @index(name: "byTelloFlight")
+  mpry: Int
+  pitch: Int
+  roll: Int
+  yaw: Int
+  vgx: Int
+  vgy: Int
+  vgz: Int
+  templ: Int
+  temph: Int
+  tof: Int
+  h: Int
+  bat: Int
+  baro: Float
+  time: Int
+  agx: Int
+  agy: Int
+  agz: Int
 }
  
