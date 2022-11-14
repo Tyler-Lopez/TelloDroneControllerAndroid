@@ -4,7 +4,7 @@ This multi-module Android application allows the user to control a Ryze Tech Tel
 
 Using AWS Amplify tools, the app features additional functionality to share drone flights with other users. Registration and login are implemented utilizing AWS Cognito. With AWS AppSync, flights may be saved locally and later uploaded to a DynamoDB data store.
 
-## Features
+## Feature Overview
 
 * Live-stream video-feed from the front-facing camera. 
 * Control roll, pitch, throttle, and yaw from virtual joysticks.
@@ -12,14 +12,14 @@ Using AWS Amplify tools, the app features additional functionality to share dron
 * Record and share flight summaries and more detailed in-flight realtime data.
 * Register and login to an account.
 
-## Data Schema
-
-Three models exist in the GraphQL schema: Challenge, TelloFlight, TelloFlightData.
-
-## Future Features
+## Features Todo
 
 * Save videos taken during flight.
 * Upload saved videos to an S3 Bucket.
+
+## Data Schema
+
+Three models exist in the GraphQL schema: Challenge, TelloFlight, TelloFlightData.
 
 ## Running This Application
 
