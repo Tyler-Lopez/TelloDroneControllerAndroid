@@ -30,6 +30,7 @@ class FeedViewModel @Inject constructor(
             is ClickedMyFlights -> onClickedMyFlights()
             is ClickedSettings -> onClickedSettings()
             is TempClickedInsertChallenge -> onClickedInsertChallenge()
+            is TempClickedTemp -> onTempClickedTemp()
         }
     }
 
@@ -58,6 +59,12 @@ class FeedViewModel @Inject constructor(
                 .doOnFailure {
                     println("failure")
                 }
+        }
+    }
+
+    private fun onTempClickedTemp() {
+        viewModelScope.launch(Dispatchers.IO) {
+            datastoreRepository.tempQueryAll()
         }
     }
 }

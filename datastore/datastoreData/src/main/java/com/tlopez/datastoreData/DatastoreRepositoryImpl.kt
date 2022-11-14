@@ -18,6 +18,30 @@ import kotlin.coroutines.suspendCoroutine
 class DatastoreRepositoryImpl @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : DatastoreRepository {
+    override suspend fun tempQueryAll() {
+        try {
+            suspendCoroutine {
+                Amplify.DataStore.query(
+                    TelloFlight::class.java,
+                    {
+                        println("succ")
+                    }
+                ) {
+                    println("Fail :(")
+                }
+                Amplify.DataStore.query(
+                    TelloFlightData::class.java,
+                    {
+                        println("succ")
+                    }
+                ) {
+                    println("Fail :(")
+                }
+            }
+        } catch (e: Exception) {
+            println("fail sad")
+        }
+    }
 
     override suspend fun insertChallenge(name: String): Result<Unit> {
         return try {

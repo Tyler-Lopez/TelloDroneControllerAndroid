@@ -10,6 +10,7 @@ sealed interface FeedViewEvent : ViewEvent {
     object ClickedMyFlights : FeedViewEvent
     object ClickedSettings : FeedViewEvent
     object TempClickedInsertChallenge : FeedViewEvent
+    object TempClickedTemp : FeedViewEvent
 }
 
 sealed interface FeedViewState : ViewState {

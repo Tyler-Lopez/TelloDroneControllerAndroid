@@ -4,6 +4,7 @@ import com.tlopez.datastoreDomain.repository.models.TelloFlight
 import com.tlopez.datastoreDomain.repository.models.TelloFlightData
 
 interface DatastoreRepository {
+    suspend fun tempQueryAll()
     suspend fun insertChallenge(name: String): Result<Unit>
     suspend fun insertFlight(
         username: String,

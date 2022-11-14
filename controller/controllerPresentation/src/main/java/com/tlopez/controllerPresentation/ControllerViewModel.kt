@@ -11,6 +11,8 @@ import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.Discon
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
+import com.tlopez.datastoreDomain.repository.DatastoreRepository
+import com.tlopez.datastoreDomain.repository.models.TelloFlight
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.lang.System.currentTimeMillis
@@ -18,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ControllerViewModel @Inject constructor(
-    private val telloRepository: TelloRepository
+    private val telloRepository: TelloRepository,
+    private val datastoreRepository: DatastoreRepository
 ) : BaseRoutingViewModel<ControllerViewState, ControllerViewEvent, ControllerDestination>() {
 
     companion object {
@@ -33,6 +36,8 @@ class ControllerViewModel @Inject constructor(
     private var flightStartedMs: Long? = null
     private var healthCheckJob: Job? = null
     private var telloStateJob: Job? = null
+
+    private var pendingFlight: TelloFlight? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val commandsDispatcher = Dispatchers.IO.limitedParallelism(1)
@@ -79,6 +84,17 @@ class ControllerViewModel @Inject constructor(
             .land()
             .doOnSuccess {
                 (lastPushedState as? Connected)?.toLanded()?.push()
+                // todo make some function to move all logic following land, success or fail
+                pendingFlight?.let {
+                    datastoreRepository.updateFlight(
+                        it,
+                        currentTimeMillis() - (it.startedMs.secondsSinceEpoch * 1000)
+                    ).doOnSuccess {
+                        println("successfully updated flight")
+                    }.doOnFailure {
+                        println("failured to update flight")
+                    }
+                }
             }
             .doOnFailure {
                 if (retryCount < MAX_RETRY_COUNT_LAND) {
@@ -94,6 +110,17 @@ class ControllerViewModel @Inject constructor(
                 println("Successfully took off.")
                 flightStartedMs = currentTimeMillis()
                 (lastPushedState as? Connected)?.toFlying()?.push()
+                datastoreRepository.insertFlight(
+                    username = "temp",
+                    startedMs = currentTimeMillis(),
+                    lengthMs = 0L,
+                    challengeId = CHALLENGE_ID_TEMP
+                ).doOnSuccess {
+                    println("success")
+                    pendingFlight = it
+                }.doOnFailure {
+                    println("failure to add flight")
+                }
             }
             .doOnFailure {
                 println("Failed to take off.")
@@ -145,7 +172,38 @@ class ControllerViewModel @Inject constructor(
 
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
-            .doOnSuccess { (lastPushedState as? Connected)?.updateTelloState(it)?.push() }
+            .doOnSuccess {
+                (lastPushedState as? Connected)?.updateTelloState(it)?.push()
+
+                pendingFlight?.let { flight ->
+                    datastoreRepository.insertFlightData(
+                        telloFlightId = flight.id,
+                        receivedAtMs = currentTimeMillis() - (flight.startedMs.secondsSinceEpoch * 1000),
+                        mpry = 0,
+                        pitch = 0,
+                        roll = 0,
+                        yaw = 0,
+                        vgx = 0,
+                        vgy = 0,
+                        vgz = 0,
+                        templ = 0,
+                        temph = 0,
+                        tof = 0,
+                        h = 0,
+                        bat = 0,
+                        baro = 0f,
+                        time = 0,
+                        agx = 0,
+                        agy = 0,
+                        agz = 0
+                    ).doOnSuccess {
+                        println("success inserting telloflightdata")
+                    }.doOnFailure {
+                        println("failed to insert telloflightdata")
+                    }
+                }
+
+            }
             .doOnFailure {
                 // No-op
             }
