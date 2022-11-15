@@ -13,7 +13,7 @@ type TelloFlight @model @auth(rules: [{allow: private, operations: [create, read
   length_ms: Int
   TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
   challengeID: ID! @index(name: "byChallenge")
-  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["started_ms"], queryField: "telloFlightByOwnerAndStartedMs)
+  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["started_ms"], queryField: "telloFlightByOwnerAndStartedMs")
 }
 
 type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
