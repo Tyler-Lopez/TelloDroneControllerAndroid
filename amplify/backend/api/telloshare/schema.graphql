@@ -4,15 +4,19 @@ type Challenge @model @auth(rules: [{allow: private}]) {
   ChallengeTelloFlight: [TelloFlight] @hasMany(indexName: "byChallenge", fields: ["id"])
 }
 
-type TelloFlight @model @auth(rules: [{allow: private}]) {
+"""
+See docs.amplify.aws/cli/graphql/data-modeling/#configure-a-secondary-index
+"""
+type TelloFlight @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
   id: ID!
   started_ms: AWSTimestamp!
   length_ms: Int
   TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
   challengeID: ID! @index(name: "byChallenge")
+  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["started_ms"], queryField: "telloFlightByOwnerAndStartedMs)
 }
 
-type TelloFlightData @model @auth(rules: [{allow: private}]) {
+type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
   id: ID!
   received_at_ms: Int!
   telloflightID: ID! @index(name: "byTelloFlight")

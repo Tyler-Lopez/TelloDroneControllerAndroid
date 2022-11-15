@@ -25,7 +25,7 @@ class DatastoreRepositoryImpl @Inject constructor(
                 Amplify.DataStore.query(
                     TelloFlight::class.java,
                     Where.matches(
-                        TelloFlight.CHALLENGE_ID.eq("fuk")
+                        
                     ),
                     {
                         println("succ")
