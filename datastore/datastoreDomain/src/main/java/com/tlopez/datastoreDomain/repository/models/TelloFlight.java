@@ -27,13 +27,11 @@ import java.util.UUID;
 @Index(name = "byChallenge", fields = {"challengeID"})
 public final class TelloFlight implements Model {
   public static final QueryField ID = field("TelloFlight", "id");
-  public static final QueryField USERNAME = field("TelloFlight", "username");
   public static final QueryField STARTED_MS = field("TelloFlight", "started_ms");
   public static final QueryField LENGTH_MS = field("TelloFlight", "length_ms");
   public static final QueryField CHALLENGE_ID = field("TelloFlight", "challengeID");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="String", isRequired = true) String username;
-  private final @ModelField(targetType="AWSTimestamp") Temporal.Timestamp started_ms;
+  private final @ModelField(targetType="AWSTimestamp", isRequired = true) Temporal.Timestamp started_ms;
   private final @ModelField(targetType="Int") Integer length_ms;
   private final @ModelField(targetType="TelloFlightData") @HasMany(associatedWith = "telloflightID", type = TelloFlightData.class) List<TelloFlightData> TelloFlightTelloFlightData = null;
   private final @ModelField(targetType="ID", isRequired = true) String challengeID;
@@ -41,10 +39,6 @@ public final class TelloFlight implements Model {
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
       return id;
-  }
-  
-  public String getUsername() {
-      return username;
   }
   
   public Temporal.Timestamp getStartedMs() {
@@ -71,9 +65,8 @@ public final class TelloFlight implements Model {
       return updatedAt;
   }
   
-  private TelloFlight(String id, String username, Temporal.Timestamp started_ms, Integer length_ms, String challengeID) {
+  private TelloFlight(String id, Temporal.Timestamp started_ms, Integer length_ms, String challengeID) {
     this.id = id;
-    this.username = username;
     this.started_ms = started_ms;
     this.length_ms = length_ms;
     this.challengeID = challengeID;
@@ -88,7 +81,6 @@ public final class TelloFlight implements Model {
       } else {
       TelloFlight telloFlight = (TelloFlight) obj;
       return ObjectsCompat.equals(getId(), telloFlight.getId()) &&
-              ObjectsCompat.equals(getUsername(), telloFlight.getUsername()) &&
               ObjectsCompat.equals(getStartedMs(), telloFlight.getStartedMs()) &&
               ObjectsCompat.equals(getLengthMs(), telloFlight.getLengthMs()) &&
               ObjectsCompat.equals(getChallengeId(), telloFlight.getChallengeId()) &&
@@ -101,7 +93,6 @@ public final class TelloFlight implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
-      .append(getUsername())
       .append(getStartedMs())
       .append(getLengthMs())
       .append(getChallengeId())
@@ -116,7 +107,6 @@ public final class TelloFlight implements Model {
     return new StringBuilder()
       .append("TelloFlight {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("username=" + String.valueOf(getUsername()) + ", ")
       .append("started_ms=" + String.valueOf(getStartedMs()) + ", ")
       .append("length_ms=" + String.valueOf(getLengthMs()) + ", ")
       .append("challengeID=" + String.valueOf(getChallengeId()) + ", ")
@@ -126,7 +116,7 @@ public final class TelloFlight implements Model {
       .toString();
   }
   
-  public static UsernameStep builder() {
+  public static StartedMsStep builder() {
       return new Builder();
   }
   
@@ -143,20 +133,18 @@ public final class TelloFlight implements Model {
       id,
       null,
       null,
-      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      username,
       started_ms,
       length_ms,
       challengeID);
   }
-  public interface UsernameStep {
-    ChallengeIdStep username(String username);
+  public interface StartedMsStep {
+    ChallengeIdStep startedMs(Temporal.Timestamp startedMs);
   }
   
 
@@ -168,16 +156,14 @@ public final class TelloFlight implements Model {
   public interface BuildStep {
     TelloFlight build();
     BuildStep id(String id);
-    BuildStep startedMs(Temporal.Timestamp startedMs);
     BuildStep lengthMs(Integer lengthMs);
   }
   
 
-  public static class Builder implements UsernameStep, ChallengeIdStep, BuildStep {
+  public static class Builder implements StartedMsStep, ChallengeIdStep, BuildStep {
     private String id;
-    private String username;
-    private String challengeID;
     private Temporal.Timestamp started_ms;
+    private String challengeID;
     private Integer length_ms;
     @Override
      public TelloFlight build() {
@@ -185,16 +171,15 @@ public final class TelloFlight implements Model {
         
         return new TelloFlight(
           id,
-          username,
           started_ms,
           length_ms,
           challengeID);
     }
     
     @Override
-     public ChallengeIdStep username(String username) {
-        Objects.requireNonNull(username);
-        this.username = username;
+     public ChallengeIdStep startedMs(Temporal.Timestamp startedMs) {
+        Objects.requireNonNull(startedMs);
+        this.started_ms = startedMs;
         return this;
     }
     
@@ -202,12 +187,6 @@ public final class TelloFlight implements Model {
      public BuildStep challengeId(String challengeId) {
         Objects.requireNonNull(challengeId);
         this.challengeID = challengeId;
-        return this;
-    }
-    
-    @Override
-     public BuildStep startedMs(Temporal.Timestamp startedMs) {
-        this.started_ms = startedMs;
         return this;
     }
     
@@ -229,27 +208,21 @@ public final class TelloFlight implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String username, Temporal.Timestamp startedMs, Integer lengthMs, String challengeId) {
+    private CopyOfBuilder(String id, Temporal.Timestamp startedMs, Integer lengthMs, String challengeId) {
       super.id(id);
-      super.username(username)
+      super.startedMs(startedMs)
         .challengeId(challengeId)
-        .startedMs(startedMs)
         .lengthMs(lengthMs);
-    }
-    
-    @Override
-     public CopyOfBuilder username(String username) {
-      return (CopyOfBuilder) super.username(username);
-    }
-    
-    @Override
-     public CopyOfBuilder challengeId(String challengeId) {
-      return (CopyOfBuilder) super.challengeId(challengeId);
     }
     
     @Override
      public CopyOfBuilder startedMs(Temporal.Timestamp startedMs) {
       return (CopyOfBuilder) super.startedMs(startedMs);
+    }
+    
+    @Override
+     public CopyOfBuilder challengeId(String challengeId) {
+      return (CopyOfBuilder) super.challengeId(challengeId);
     }
     
     @Override

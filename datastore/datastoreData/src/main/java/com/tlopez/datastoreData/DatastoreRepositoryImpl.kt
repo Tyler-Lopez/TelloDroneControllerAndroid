@@ -3,6 +3,7 @@ package com.tlopez.datastoreData
 import android.content.Context
 import android.util.Log
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.core.model.query.Where
 import com.amplifyframework.core.model.temporal.Temporal
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
 import com.tlopez.datastoreDomain.repository.models.Challenge
@@ -23,6 +24,9 @@ class DatastoreRepositoryImpl @Inject constructor(
             suspendCoroutine {
                 Amplify.DataStore.query(
                     TelloFlight::class.java,
+                    Where.matches(
+                        TelloFlight.CHALLENGE_ID.eq("fuk")
+                    ),
                     {
                         println("succ")
                     }

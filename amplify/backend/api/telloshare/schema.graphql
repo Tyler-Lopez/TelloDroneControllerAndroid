@@ -1,13 +1,12 @@
 type Challenge @model @auth(rules: [{allow: private}]) {
   id: ID!
-  name: String
+  name: String!
   ChallengeTelloFlight: [TelloFlight] @hasMany(indexName: "byChallenge", fields: ["id"])
 }
 
 type TelloFlight @model @auth(rules: [{allow: private}]) {
   id: ID!
-  username: String!
-  started_ms: AWSTimestamp
+  started_ms: AWSTimestamp!
   length_ms: Int
   TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
   challengeID: ID! @index(name: "byChallenge")
@@ -15,7 +14,7 @@ type TelloFlight @model @auth(rules: [{allow: private}]) {
 
 type TelloFlightData @model @auth(rules: [{allow: private}]) {
   id: ID!
-  received_at_ms: Int
+  received_at_ms: Int!
   telloflightID: ID! @index(name: "byTelloFlight")
   mpry: Int
   pitch: Int

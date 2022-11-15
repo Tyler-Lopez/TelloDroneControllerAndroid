@@ -15,6 +15,7 @@ import com.amplifyframework.core.model.query.predicate.QueryField;
 import com.amplifyframework.core.model.temporal.Temporal;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /** This is an auto generated class representing the Challenge type in your schema. */
@@ -26,7 +27,7 @@ public final class Challenge implements Model {
   public static final QueryField ID = field("Challenge", "id");
   public static final QueryField NAME = field("Challenge", "name");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="String") String name;
+  private final @ModelField(targetType="String", isRequired = true) String name;
   private final @ModelField(targetType="TelloFlight") @HasMany(associatedWith = "challengeID", type = TelloFlight.class) List<TelloFlight> ChallengeTelloFlight = null;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
@@ -93,7 +94,7 @@ public final class Challenge implements Model {
       .toString();
   }
   
-  public static BuildStep builder() {
+  public static NameStep builder() {
       return new Builder();
   }
   
@@ -116,14 +117,18 @@ public final class Challenge implements Model {
     return new CopyOfBuilder(id,
       name);
   }
-  public interface BuildStep {
-    Challenge build();
-    BuildStep id(String id);
+  public interface NameStep {
     BuildStep name(String name);
   }
   
 
-  public static class Builder implements BuildStep {
+  public interface BuildStep {
+    Challenge build();
+    BuildStep id(String id);
+  }
+  
+
+  public static class Builder implements NameStep, BuildStep {
     private String id;
     private String name;
     @Override
@@ -137,6 +142,7 @@ public final class Challenge implements Model {
     
     @Override
      public BuildStep name(String name) {
+        Objects.requireNonNull(name);
         this.name = name;
         return this;
     }

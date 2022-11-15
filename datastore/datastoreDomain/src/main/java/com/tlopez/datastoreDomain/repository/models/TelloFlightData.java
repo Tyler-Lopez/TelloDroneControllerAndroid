@@ -45,7 +45,7 @@ public final class TelloFlightData implements Model {
   public static final QueryField AGY = field("TelloFlightData", "agy");
   public static final QueryField AGZ = field("TelloFlightData", "agz");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="Int") Integer received_at_ms;
+  private final @ModelField(targetType="Int", isRequired = true) Integer received_at_ms;
   private final @ModelField(targetType="ID", isRequired = true) String telloflightID;
   private final @ModelField(targetType="Int") Integer mpry;
   private final @ModelField(targetType="Int") Integer pitch;
@@ -269,7 +269,7 @@ public final class TelloFlightData implements Model {
       .toString();
   }
   
-  public static TelloflightIdStep builder() {
+  public static ReceivedAtMsStep builder() {
       return new Builder();
   }
   
@@ -328,6 +328,11 @@ public final class TelloFlightData implements Model {
       agy,
       agz);
   }
+  public interface ReceivedAtMsStep {
+    TelloflightIdStep receivedAtMs(Integer receivedAtMs);
+  }
+  
+
   public interface TelloflightIdStep {
     BuildStep telloflightId(String telloflightId);
   }
@@ -336,7 +341,6 @@ public final class TelloFlightData implements Model {
   public interface BuildStep {
     TelloFlightData build();
     BuildStep id(String id);
-    BuildStep receivedAtMs(Integer receivedAtMs);
     BuildStep mpry(Integer mpry);
     BuildStep pitch(Integer pitch);
     BuildStep roll(Integer roll);
@@ -357,10 +361,10 @@ public final class TelloFlightData implements Model {
   }
   
 
-  public static class Builder implements TelloflightIdStep, BuildStep {
+  public static class Builder implements ReceivedAtMsStep, TelloflightIdStep, BuildStep {
     private String id;
-    private String telloflightID;
     private Integer received_at_ms;
+    private String telloflightID;
     private Integer mpry;
     private Integer pitch;
     private Integer roll;
@@ -406,15 +410,16 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public BuildStep telloflightId(String telloflightId) {
-        Objects.requireNonNull(telloflightId);
-        this.telloflightID = telloflightId;
+     public TelloflightIdStep receivedAtMs(Integer receivedAtMs) {
+        Objects.requireNonNull(receivedAtMs);
+        this.received_at_ms = receivedAtMs;
         return this;
     }
     
     @Override
-     public BuildStep receivedAtMs(Integer receivedAtMs) {
-        this.received_at_ms = receivedAtMs;
+     public BuildStep telloflightId(String telloflightId) {
+        Objects.requireNonNull(telloflightId);
+        this.telloflightID = telloflightId;
         return this;
     }
     
@@ -534,8 +539,8 @@ public final class TelloFlightData implements Model {
   public final class CopyOfBuilder extends Builder {
     private CopyOfBuilder(String id, Integer receivedAtMs, String telloflightId, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
       super.id(id);
-      super.telloflightId(telloflightId)
-        .receivedAtMs(receivedAtMs)
+      super.receivedAtMs(receivedAtMs)
+        .telloflightId(telloflightId)
         .mpry(mpry)
         .pitch(pitch)
         .roll(roll)
@@ -556,13 +561,13 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public CopyOfBuilder telloflightId(String telloflightId) {
-      return (CopyOfBuilder) super.telloflightId(telloflightId);
+     public CopyOfBuilder receivedAtMs(Integer receivedAtMs) {
+      return (CopyOfBuilder) super.receivedAtMs(receivedAtMs);
     }
     
     @Override
-     public CopyOfBuilder receivedAtMs(Integer receivedAtMs) {
-      return (CopyOfBuilder) super.receivedAtMs(receivedAtMs);
+     public CopyOfBuilder telloflightId(String telloflightId) {
+      return (CopyOfBuilder) super.telloflightId(telloflightId);
     }
     
     @Override
