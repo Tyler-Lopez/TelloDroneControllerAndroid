@@ -24,9 +24,6 @@ class DatastoreRepositoryImpl @Inject constructor(
             suspendCoroutine {
                 Amplify.DataStore.query(
                     TelloFlight::class.java,
-                    Where.matches(
-                        
-                    ),
                     {
                         println("succ")
                     }
@@ -83,10 +80,10 @@ class DatastoreRepositoryImpl @Inject constructor(
         return try {
             suspendCoroutine { continuation ->
                 val item: TelloFlight = TelloFlight.builder()
-                    .username(username)
-                    .challengeId(challengeId)
-                    .lengthMs(lengthMs.toInt())
                     .startedMs(Temporal.Timestamp(startedMs, TimeUnit.MILLISECONDS))
+                    .challengeId(challengeId)
+                    .owner(username)
+                    .lengthMs(lengthMs.toInt())
                     .build()
 
                 Amplify.DataStore.save(
@@ -133,6 +130,7 @@ class DatastoreRepositoryImpl @Inject constructor(
         return try {
             suspendCoroutine { continuation ->
                 val item: TelloFlightData = TelloFlightData.builder()
+                    .receivedAtMs(receivedAtMs.toInt())
                     .telloflightId(telloFlightId)
                     .mpry(mpry)
                     .pitch(pitch)

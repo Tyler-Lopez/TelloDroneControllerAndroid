@@ -1,0 +1,328 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateChallenge($filter: ModelSubscriptionChallengeFilterInput) {
+  onCreateChallenge(filter: $filter) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateChallenge($filter: ModelSubscriptionChallengeFilterInput) {
+  onUpdateChallenge(filter: $filter) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteChallenge($filter: ModelSubscriptionChallengeFilterInput) {
+  onDeleteChallenge(filter: $filter) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnCreateTelloFlight(
+  $filter: ModelSubscriptionTelloFlightFilterInput
+  $owner: String
+) {
+  onCreateTelloFlight(filter: $filter, owner: $owner) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateTelloFlight(
+  $filter: ModelSubscriptionTelloFlightFilterInput
+  $owner: String
+) {
+  onUpdateTelloFlight(filter: $filter, owner: $owner) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteTelloFlight(
+  $filter: ModelSubscriptionTelloFlightFilterInput
+  $owner: String
+) {
+  onDeleteTelloFlight(filter: $filter, owner: $owner) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnCreateTelloFlightData(
+  $filter: ModelSubscriptionTelloFlightDataFilterInput
+  $owner: String
+) {
+  onCreateTelloFlightData(filter: $filter, owner: $owner) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+subscription OnUpdateTelloFlightData(
+  $filter: ModelSubscriptionTelloFlightDataFilterInput
+  $owner: String
+) {
+  onUpdateTelloFlightData(filter: $filter, owner: $owner) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+subscription OnDeleteTelloFlightData(
+  $filter: ModelSubscriptionTelloFlightDataFilterInput
+  $owner: String
+) {
+  onDeleteTelloFlightData(filter: $filter, owner: $owner) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}

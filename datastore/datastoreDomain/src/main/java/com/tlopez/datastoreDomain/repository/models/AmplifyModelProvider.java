@@ -13,7 +13,7 @@ import java.util.Set;
  */
 
 public final class AmplifyModelProvider implements ModelProvider {
-  private static final String AMPLIFY_MODEL_VERSION = "2a7ae13d85e30b3770839af7572daffa";
+  private static final String AMPLIFY_MODEL_VERSION = "08a95c49b40e45364b6d8263e22212c0";
   private static AmplifyModelProvider amplifyGeneratedModelInstance;
   private AmplifyModelProvider() {
     
@@ -34,7 +34,7 @@ public final class AmplifyModelProvider implements ModelProvider {
   @Override
    public Set<Class<? extends Model>> models() {
     final Set<Class<? extends Model>> modifiableSet = new HashSet<>(
-          Arrays.asList(Challenge.class, TelloFlight.class, TelloFlightData.class)
+          Arrays.<Class<? extends Model>>asList(Challenge.class, TelloFlight.class, TelloFlightData.class)
         );
     
         return Immutable.of(modifiableSet);

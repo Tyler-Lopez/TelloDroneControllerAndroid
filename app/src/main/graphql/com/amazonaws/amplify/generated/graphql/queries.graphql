@@ -1,0 +1,380 @@
+# this is an auto generated file. This will be overwritten
+query GetChallenge($id: ID!) {
+  getChallenge(id: $id) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+query ListChallenges(
+  $filter: ModelChallengeFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listChallenges(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      ChallengeTelloFlight {
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query SyncChallenges(
+  $filter: ModelChallengeFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncChallenges(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      name
+      ChallengeTelloFlight {
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query GetTelloFlight($id: ID!) {
+  getTelloFlight(id: $id) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+query ListTelloFlights(
+  $filter: ModelTelloFlightFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTelloFlights(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      started_ms
+      length_ms
+      TelloFlightTelloFlightData {
+        nextToken
+        startedAt
+      }
+      challengeID
+      owner
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query SyncTelloFlights(
+  $filter: ModelTelloFlightFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncTelloFlights(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      started_ms
+      length_ms
+      TelloFlightTelloFlightData {
+        nextToken
+        startedAt
+      }
+      challengeID
+      owner
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query GetTelloFlightData($id: ID!) {
+  getTelloFlightData(id: $id) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+query ListTelloFlightData(
+  $filter: ModelTelloFlightDataFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTelloFlightData(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      received_at_ms
+      telloflightID
+      mpry
+      pitch
+      roll
+      yaw
+      vgx
+      vgy
+      vgz
+      templ
+      temph
+      tof
+      h
+      bat
+      baro
+      time
+      agx
+      agy
+      agz
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    nextToken
+    startedAt
+  }
+}
+query SyncTelloFlightData(
+  $filter: ModelTelloFlightDataFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncTelloFlightData(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      received_at_ms
+      telloflightID
+      mpry
+      pitch
+      roll
+      yaw
+      vgx
+      vgy
+      vgz
+      templ
+      temph
+      tof
+      h
+      bat
+      baro
+      time
+      agx
+      agy
+      agz
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    nextToken
+    startedAt
+  }
+}
+query TelloFlightByOwnerAndStartedMs(
+  $owner: String!
+  $started_ms: ModelIntKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelTelloFlightFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  telloFlightByOwnerAndStartedMs(
+    owner: $owner
+    started_ms: $started_ms
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      started_ms
+      length_ms
+      TelloFlightTelloFlightData {
+        nextToken
+        startedAt
+      }
+      challengeID
+      owner
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query TelloFlightDataByTelloFlightIdAndReceivedAtMs(
+  $telloflightID: ID!
+  $received_at_ms: ModelIntKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelTelloFlightDataFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  telloFlightDataByTelloFlightIdAndReceivedAtMs(
+    telloflightID: $telloflightID
+    received_at_ms: $received_at_ms
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      received_at_ms
+      telloflightID
+      mpry
+      pitch
+      roll
+      yaw
+      vgx
+      vgy
+      vgz
+      templ
+      temph
+      tof
+      h
+      bat
+      baro
+      time
+      agx
+      agy
+      agz
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    nextToken
+    startedAt
+  }
+}

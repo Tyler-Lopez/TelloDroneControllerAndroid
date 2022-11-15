@@ -7,10 +7,10 @@ import com.tlopez.core.architecture.EventReceiver
 
 @Composable
 fun HomeScreen(viewModel: EventReceiver<FeedViewEvent>) {
-   // Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedInsertChallenge)}) {
-   //     Text("Click me")
-  //  }
-    Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedTemp)}) {
-        Text("temp button")
+    Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedInsertChallenge) }) {
+        Text("Click me")
     }
+    //  Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedTemp)}) {
+    //       Text("temp button")
+    //  }
 }

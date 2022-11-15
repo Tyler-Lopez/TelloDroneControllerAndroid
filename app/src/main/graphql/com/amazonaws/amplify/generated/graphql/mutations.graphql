@@ -1,0 +1,337 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateChallenge(
+  $input: CreateChallengeInput!
+  $condition: ModelChallengeConditionInput
+) {
+  createChallenge(input: $input, condition: $condition) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation UpdateChallenge(
+  $input: UpdateChallengeInput!
+  $condition: ModelChallengeConditionInput
+) {
+  updateChallenge(input: $input, condition: $condition) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation DeleteChallenge(
+  $input: DeleteChallengeInput!
+  $condition: ModelChallengeConditionInput
+) {
+  deleteChallenge(input: $input, condition: $condition) {
+    id
+    name
+    ChallengeTelloFlight {
+      items {
+        id
+        started_ms
+        length_ms
+        challengeID
+        owner
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation CreateTelloFlight(
+  $input: CreateTelloFlightInput!
+  $condition: ModelTelloFlightConditionInput
+) {
+  createTelloFlight(input: $input, condition: $condition) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation UpdateTelloFlight(
+  $input: UpdateTelloFlightInput!
+  $condition: ModelTelloFlightConditionInput
+) {
+  updateTelloFlight(input: $input, condition: $condition) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation DeleteTelloFlight(
+  $input: DeleteTelloFlightInput!
+  $condition: ModelTelloFlightConditionInput
+) {
+  deleteTelloFlight(input: $input, condition: $condition) {
+    id
+    started_ms
+    length_ms
+    TelloFlightTelloFlightData {
+      items {
+        id
+        received_at_ms
+        telloflightID
+        mpry
+        pitch
+        roll
+        yaw
+        vgx
+        vgy
+        vgz
+        templ
+        temph
+        tof
+        h
+        bat
+        baro
+        time
+        agx
+        agy
+        agz
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    challengeID
+    owner
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation CreateTelloFlightData(
+  $input: CreateTelloFlightDataInput!
+  $condition: ModelTelloFlightDataConditionInput
+) {
+  createTelloFlightData(input: $input, condition: $condition) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+mutation UpdateTelloFlightData(
+  $input: UpdateTelloFlightDataInput!
+  $condition: ModelTelloFlightDataConditionInput
+) {
+  updateTelloFlightData(input: $input, condition: $condition) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+mutation DeleteTelloFlightData(
+  $input: DeleteTelloFlightDataInput!
+  $condition: ModelTelloFlightDataConditionInput
+) {
+  deleteTelloFlightData(input: $input, condition: $condition) {
+    id
+    received_at_ms
+    telloflightID
+    mpry
+    pitch
+    roll
+    yaw
+    vgx
+    vgy
+    vgz
+    templ
+    temph
+    tof
+    h
+    bat
+    baro
+    time
+    agx
+    agy
+    agz
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
