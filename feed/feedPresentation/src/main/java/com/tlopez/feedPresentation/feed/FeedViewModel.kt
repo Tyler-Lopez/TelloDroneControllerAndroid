@@ -64,7 +64,7 @@ class FeedViewModel @Inject constructor(
 
     private fun onTempClickedTemp() {
         viewModelScope.launch(Dispatchers.IO) {
-            datastoreRepository.tempQueryAll()
+       //     datastoreRepository.tempQueryAll()
         }
     }
 }
