@@ -6,17 +6,18 @@ type Challenge @model @auth(rules: [{allow: private}]) {
 
 type TelloFlight @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
   id: ID!
-  started_ms: AWSTimestamp!
-  length_ms: Int
-  TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
+  startedMs: AWSTimestamp!
+  lengthMs: Int
+  TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlightAndTimeSinceStartMs", fields: ["id"])
   challengeID: ID! @index(name: "byChallenge")
-  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["started_ms"], queryField: "telloFlightByOwnerAndStartedMs")
+  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["startedMs"], queryField: "telloFlightByOwnerAndStartedMs")
+  successfulLand: Boolean 
 }
 
 type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
   id: ID!
-  received_at_ms: Int!
-  telloflightID: ID! @index(name: "byTelloFlight", sortKeyFields: ["received_at_ms"], queryField: "telloFlightDataByTelloFlightIdAndReceivedAtMs")
+  timeSinceStartMs: Int!
+  telloflightID: ID! @index(name: "byTelloFlightAndTimeSinceStartMs", sortKeyFields: ["timeSinceStartMs"], queryField: "telloFlightDataByTelloFlightIdAndTimeSinceStartMs")
   mpry: Int
   pitch: Int
   roll: Int

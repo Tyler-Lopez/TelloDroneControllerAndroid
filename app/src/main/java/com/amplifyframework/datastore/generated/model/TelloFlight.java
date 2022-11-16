@@ -27,19 +27,21 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
   @AuthRule(allow = AuthStrategy.OWNER, ownerField = "owner", identityClaim = "cognito:username", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
 @Index(name = "byChallenge", fields = {"challengeID"})
-@Index(name = "byOwnerAndStartedMs", fields = {"owner","started_ms"})
+@Index(name = "byOwnerAndStartedMs", fields = {"owner","startedMs"})
 public final class TelloFlight implements Model {
   public static final QueryField ID = field("TelloFlight", "id");
-  public static final QueryField STARTED_MS = field("TelloFlight", "started_ms");
-  public static final QueryField LENGTH_MS = field("TelloFlight", "length_ms");
+  public static final QueryField STARTED_MS = field("TelloFlight", "startedMs");
+  public static final QueryField LENGTH_MS = field("TelloFlight", "lengthMs");
   public static final QueryField CHALLENGE_ID = field("TelloFlight", "challengeID");
   public static final QueryField OWNER = field("TelloFlight", "owner");
+  public static final QueryField SUCCESSFUL_LAND = field("TelloFlight", "successfulLand");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="AWSTimestamp", isRequired = true) Temporal.Timestamp started_ms;
-  private final @ModelField(targetType="Int") Integer length_ms;
+  private final @ModelField(targetType="AWSTimestamp", isRequired = true) Temporal.Timestamp startedMs;
+  private final @ModelField(targetType="Int") Integer lengthMs;
   private final @ModelField(targetType="TelloFlightData") @HasMany(associatedWith = "telloflightID", type = TelloFlightData.class) List<TelloFlightData> TelloFlightTelloFlightData = null;
   private final @ModelField(targetType="ID", isRequired = true) String challengeID;
   private final @ModelField(targetType="String", isRequired = true) String owner;
+  private final @ModelField(targetType="Boolean") Boolean successfulLand;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -47,11 +49,11 @@ public final class TelloFlight implements Model {
   }
   
   public Temporal.Timestamp getStartedMs() {
-      return started_ms;
+      return startedMs;
   }
   
   public Integer getLengthMs() {
-      return length_ms;
+      return lengthMs;
   }
   
   public List<TelloFlightData> getTelloFlightTelloFlightData() {
@@ -66,6 +68,10 @@ public final class TelloFlight implements Model {
       return owner;
   }
   
+  public Boolean getSuccessfulLand() {
+      return successfulLand;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -74,12 +80,13 @@ public final class TelloFlight implements Model {
       return updatedAt;
   }
   
-  private TelloFlight(String id, Temporal.Timestamp started_ms, Integer length_ms, String challengeID, String owner) {
+  private TelloFlight(String id, Temporal.Timestamp startedMs, Integer lengthMs, String challengeID, String owner, Boolean successfulLand) {
     this.id = id;
-    this.started_ms = started_ms;
-    this.length_ms = length_ms;
+    this.startedMs = startedMs;
+    this.lengthMs = lengthMs;
     this.challengeID = challengeID;
     this.owner = owner;
+    this.successfulLand = successfulLand;
   }
   
   @Override
@@ -95,6 +102,7 @@ public final class TelloFlight implements Model {
               ObjectsCompat.equals(getLengthMs(), telloFlight.getLengthMs()) &&
               ObjectsCompat.equals(getChallengeId(), telloFlight.getChallengeId()) &&
               ObjectsCompat.equals(getOwner(), telloFlight.getOwner()) &&
+              ObjectsCompat.equals(getSuccessfulLand(), telloFlight.getSuccessfulLand()) &&
               ObjectsCompat.equals(getCreatedAt(), telloFlight.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), telloFlight.getUpdatedAt());
       }
@@ -108,6 +116,7 @@ public final class TelloFlight implements Model {
       .append(getLengthMs())
       .append(getChallengeId())
       .append(getOwner())
+      .append(getSuccessfulLand())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -119,10 +128,11 @@ public final class TelloFlight implements Model {
     return new StringBuilder()
       .append("TelloFlight {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("started_ms=" + String.valueOf(getStartedMs()) + ", ")
-      .append("length_ms=" + String.valueOf(getLengthMs()) + ", ")
+      .append("startedMs=" + String.valueOf(getStartedMs()) + ", ")
+      .append("lengthMs=" + String.valueOf(getLengthMs()) + ", ")
       .append("challengeID=" + String.valueOf(getChallengeId()) + ", ")
       .append("owner=" + String.valueOf(getOwner()) + ", ")
+      .append("successfulLand=" + String.valueOf(getSuccessfulLand()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -147,16 +157,18 @@ public final class TelloFlight implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      started_ms,
-      length_ms,
+      startedMs,
+      lengthMs,
       challengeID,
-      owner);
+      owner,
+      successfulLand);
   }
   public interface StartedMsStep {
     ChallengeIdStep startedMs(Temporal.Timestamp startedMs);
@@ -177,31 +189,34 @@ public final class TelloFlight implements Model {
     TelloFlight build();
     BuildStep id(String id);
     BuildStep lengthMs(Integer lengthMs);
+    BuildStep successfulLand(Boolean successfulLand);
   }
   
 
   public static class Builder implements StartedMsStep, ChallengeIdStep, OwnerStep, BuildStep {
     private String id;
-    private Temporal.Timestamp started_ms;
+    private Temporal.Timestamp startedMs;
     private String challengeID;
     private String owner;
-    private Integer length_ms;
+    private Integer lengthMs;
+    private Boolean successfulLand;
     @Override
      public TelloFlight build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
         
         return new TelloFlight(
           id,
-          started_ms,
-          length_ms,
+          startedMs,
+          lengthMs,
           challengeID,
-          owner);
+          owner,
+          successfulLand);
     }
     
     @Override
      public ChallengeIdStep startedMs(Temporal.Timestamp startedMs) {
         Objects.requireNonNull(startedMs);
-        this.started_ms = startedMs;
+        this.startedMs = startedMs;
         return this;
     }
     
@@ -221,7 +236,13 @@ public final class TelloFlight implements Model {
     
     @Override
      public BuildStep lengthMs(Integer lengthMs) {
-        this.length_ms = lengthMs;
+        this.lengthMs = lengthMs;
+        return this;
+    }
+    
+    @Override
+     public BuildStep successfulLand(Boolean successfulLand) {
+        this.successfulLand = successfulLand;
         return this;
     }
     
@@ -237,12 +258,13 @@ public final class TelloFlight implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Temporal.Timestamp startedMs, Integer lengthMs, String challengeId, String owner) {
+    private CopyOfBuilder(String id, Temporal.Timestamp startedMs, Integer lengthMs, String challengeId, String owner, Boolean successfulLand) {
       super.id(id);
       super.startedMs(startedMs)
         .challengeId(challengeId)
         .owner(owner)
-        .lengthMs(lengthMs);
+        .lengthMs(lengthMs)
+        .successfulLand(successfulLand);
     }
     
     @Override
@@ -263,6 +285,11 @@ public final class TelloFlight implements Model {
     @Override
      public CopyOfBuilder lengthMs(Integer lengthMs) {
       return (CopyOfBuilder) super.lengthMs(lengthMs);
+    }
+    
+    @Override
+     public CopyOfBuilder successfulLand(Boolean successfulLand) {
+      return (CopyOfBuilder) super.successfulLand(successfulLand);
     }
   }
   

@@ -6,10 +6,11 @@ subscription OnCreateChallenge($filter: ModelSubscriptionChallengeFilterInput) {
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -33,10 +34,11 @@ subscription OnUpdateChallenge($filter: ModelSubscriptionChallengeFilterInput) {
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -60,10 +62,11 @@ subscription OnDeleteChallenge($filter: ModelSubscriptionChallengeFilterInput) {
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -86,12 +89,12 @@ subscription OnCreateTelloFlight(
 ) {
   onCreateTelloFlight(filter: $filter, owner: $owner) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -122,6 +125,7 @@ subscription OnCreateTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -135,12 +139,12 @@ subscription OnUpdateTelloFlight(
 ) {
   onUpdateTelloFlight(filter: $filter, owner: $owner) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -171,6 +175,7 @@ subscription OnUpdateTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -184,12 +189,12 @@ subscription OnDeleteTelloFlight(
 ) {
   onDeleteTelloFlight(filter: $filter, owner: $owner) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -220,6 +225,7 @@ subscription OnDeleteTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -233,7 +239,7 @@ subscription OnCreateTelloFlightData(
 ) {
   onCreateTelloFlightData(filter: $filter, owner: $owner) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch
@@ -266,7 +272,7 @@ subscription OnUpdateTelloFlightData(
 ) {
   onUpdateTelloFlightData(filter: $filter, owner: $owner) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch
@@ -299,7 +305,7 @@ subscription OnDeleteTelloFlightData(
 ) {
   onDeleteTelloFlightData(filter: $filter, owner: $owner) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch

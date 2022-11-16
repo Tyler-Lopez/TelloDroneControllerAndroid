@@ -9,10 +9,11 @@ mutation CreateChallenge(
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -39,10 +40,11 @@ mutation UpdateChallenge(
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -69,10 +71,11 @@ mutation DeleteChallenge(
     ChallengeTelloFlight {
       items {
         id
-        started_ms
-        length_ms
+        startedMs
+        lengthMs
         challengeID
         owner
+        successfulLand
         createdAt
         updatedAt
         _version
@@ -95,12 +98,12 @@ mutation CreateTelloFlight(
 ) {
   createTelloFlight(input: $input, condition: $condition) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -131,6 +134,7 @@ mutation CreateTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -144,12 +148,12 @@ mutation UpdateTelloFlight(
 ) {
   updateTelloFlight(input: $input, condition: $condition) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -180,6 +184,7 @@ mutation UpdateTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -193,12 +198,12 @@ mutation DeleteTelloFlight(
 ) {
   deleteTelloFlight(input: $input, condition: $condition) {
     id
-    started_ms
-    length_ms
+    startedMs
+    lengthMs
     TelloFlightTelloFlightData {
       items {
         id
-        received_at_ms
+        timeSinceStartMs
         telloflightID
         mpry
         pitch
@@ -229,6 +234,7 @@ mutation DeleteTelloFlight(
     }
     challengeID
     owner
+    successfulLand
     createdAt
     updatedAt
     _version
@@ -242,7 +248,7 @@ mutation CreateTelloFlightData(
 ) {
   createTelloFlightData(input: $input, condition: $condition) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch
@@ -275,7 +281,7 @@ mutation UpdateTelloFlightData(
 ) {
   updateTelloFlightData(input: $input, condition: $condition) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch
@@ -308,7 +314,7 @@ mutation DeleteTelloFlightData(
 ) {
   deleteTelloFlightData(input: $input, condition: $condition) {
     id
-    received_at_ms
+    timeSinceStartMs
     telloflightID
     mpry
     pitch

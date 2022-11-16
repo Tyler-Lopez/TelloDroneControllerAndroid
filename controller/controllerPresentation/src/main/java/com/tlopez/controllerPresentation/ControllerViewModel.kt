@@ -111,7 +111,7 @@ class ControllerViewModel @Inject constructor(
                 flightStartedMs = currentTimeMillis()
                 (lastPushedState as? Connected)?.toFlying()?.push()
                 datastoreRepository.insertFlight(
-                    username = "temp",
+                    owner = "temp",
                     startedMs = currentTimeMillis(),
                     lengthMs = 0L,
                     challengeId = CHALLENGE_ID_TEMP

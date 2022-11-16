@@ -3,7 +3,6 @@ package com.tlopez.datastoreData
 import android.content.Context
 import android.util.Log
 import com.amplifyframework.core.Amplify
-import com.amplifyframework.core.model.query.Where
 import com.amplifyframework.core.model.temporal.Temporal
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
 import com.tlopez.datastoreDomain.repository.models.Challenge
@@ -19,29 +18,13 @@ import kotlin.coroutines.suspendCoroutine
 class DatastoreRepositoryImpl @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : DatastoreRepository {
-    override suspend fun tempQueryAll() {
-        try {
-            suspendCoroutine {
-                Amplify.DataStore.query(
-                    TelloFlight::class.java,
-                    {
-                        println("succ")
-                    }
-                ) {
-                    println("Fail :(")
-                }
-                Amplify.DataStore.query(
-                    TelloFlightData::class.java,
-                    {
-                        println("succ")
-                    }
-                ) {
-                    println("Fail :(")
-                }
-            }
-        } catch (e: Exception) {
-            println("fail sad")
-        }
+
+    override suspend fun queryTelloFlightsByOwner(): Result<List<TelloFlight>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun queryTelloFlightDataByTelloFlightId(id: String): Result<List<TelloFlightData>> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun insertChallenge(name: String): Result<Unit> {
@@ -72,7 +55,7 @@ class DatastoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertFlight(
-        username: String,
+        owner: String,
         startedMs: Long,
         lengthMs: Long,
         challengeId: String
@@ -82,7 +65,7 @@ class DatastoreRepositoryImpl @Inject constructor(
                 val item: TelloFlight = TelloFlight.builder()
                     .startedMs(Temporal.Timestamp(startedMs, TimeUnit.MILLISECONDS))
                     .challengeId(challengeId)
-                    .owner(username)
+                    .owner(owner)
                     .lengthMs(lengthMs.toInt())
                     .build()
 
@@ -108,7 +91,7 @@ class DatastoreRepositoryImpl @Inject constructor(
 
     override suspend fun insertFlightData(
         telloFlightId: String,
-        receivedAtMs: Long,
+        timeSinceStartMs: Long,
         mpry: Int,
         pitch: Int,
         roll: Int,
@@ -130,7 +113,7 @@ class DatastoreRepositoryImpl @Inject constructor(
         return try {
             suspendCoroutine { continuation ->
                 val item: TelloFlightData = TelloFlightData.builder()
-                    .receivedAtMs(receivedAtMs.toInt())
+                    .timeSinceStartMs(timeSinceStartMs.toInt())
                     .telloflightId(telloFlightId)
                     .mpry(mpry)
                     .pitch(pitch)

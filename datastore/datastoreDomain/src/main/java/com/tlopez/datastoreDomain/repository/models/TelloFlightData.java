@@ -23,10 +23,10 @@ import java.util.UUID;
   @AuthRule(allow = AuthStrategy.PRIVATE, operations = { ModelOperation.CREATE, ModelOperation.READ }),
   @AuthRule(allow = AuthStrategy.OWNER, ownerField = "owner", identityClaim = "cognito:username", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
-@Index(name = "byTelloFlight", fields = {"telloflightID","received_at_ms"})
+@Index(name = "byTelloFlightAndTimeSinceStartMs", fields = {"telloflightID","timeSinceStartMs"})
 public final class TelloFlightData implements Model {
   public static final QueryField ID = field("TelloFlightData", "id");
-  public static final QueryField RECEIVED_AT_MS = field("TelloFlightData", "received_at_ms");
+  public static final QueryField TIME_SINCE_START_MS = field("TelloFlightData", "timeSinceStartMs");
   public static final QueryField TELLOFLIGHT_ID = field("TelloFlightData", "telloflightID");
   public static final QueryField MPRY = field("TelloFlightData", "mpry");
   public static final QueryField PITCH = field("TelloFlightData", "pitch");
@@ -46,7 +46,7 @@ public final class TelloFlightData implements Model {
   public static final QueryField AGY = field("TelloFlightData", "agy");
   public static final QueryField AGZ = field("TelloFlightData", "agz");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="Int", isRequired = true) Integer received_at_ms;
+  private final @ModelField(targetType="Int", isRequired = true) Integer timeSinceStartMs;
   private final @ModelField(targetType="ID", isRequired = true) String telloflightID;
   private final @ModelField(targetType="Int") Integer mpry;
   private final @ModelField(targetType="Int") Integer pitch;
@@ -71,8 +71,8 @@ public final class TelloFlightData implements Model {
       return id;
   }
   
-  public Integer getReceivedAtMs() {
-      return received_at_ms;
+  public Integer getTimeSinceStartMs() {
+      return timeSinceStartMs;
   }
   
   public String getTelloflightId() {
@@ -155,9 +155,9 @@ public final class TelloFlightData implements Model {
       return updatedAt;
   }
   
-  private TelloFlightData(String id, Integer received_at_ms, String telloflightID, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
+  private TelloFlightData(String id, Integer timeSinceStartMs, String telloflightID, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
     this.id = id;
-    this.received_at_ms = received_at_ms;
+    this.timeSinceStartMs = timeSinceStartMs;
     this.telloflightID = telloflightID;
     this.mpry = mpry;
     this.pitch = pitch;
@@ -187,7 +187,7 @@ public final class TelloFlightData implements Model {
       } else {
       TelloFlightData telloFlightData = (TelloFlightData) obj;
       return ObjectsCompat.equals(getId(), telloFlightData.getId()) &&
-              ObjectsCompat.equals(getReceivedAtMs(), telloFlightData.getReceivedAtMs()) &&
+              ObjectsCompat.equals(getTimeSinceStartMs(), telloFlightData.getTimeSinceStartMs()) &&
               ObjectsCompat.equals(getTelloflightId(), telloFlightData.getTelloflightId()) &&
               ObjectsCompat.equals(getMpry(), telloFlightData.getMpry()) &&
               ObjectsCompat.equals(getPitch(), telloFlightData.getPitch()) &&
@@ -215,7 +215,7 @@ public final class TelloFlightData implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
-      .append(getReceivedAtMs())
+      .append(getTimeSinceStartMs())
       .append(getTelloflightId())
       .append(getMpry())
       .append(getPitch())
@@ -245,7 +245,7 @@ public final class TelloFlightData implements Model {
     return new StringBuilder()
       .append("TelloFlightData {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("received_at_ms=" + String.valueOf(getReceivedAtMs()) + ", ")
+      .append("timeSinceStartMs=" + String.valueOf(getTimeSinceStartMs()) + ", ")
       .append("telloflightID=" + String.valueOf(getTelloflightId()) + ", ")
       .append("mpry=" + String.valueOf(getMpry()) + ", ")
       .append("pitch=" + String.valueOf(getPitch()) + ", ")
@@ -270,7 +270,7 @@ public final class TelloFlightData implements Model {
       .toString();
   }
   
-  public static ReceivedAtMsStep builder() {
+  public static TimeSinceStartMsStep builder() {
       return new Builder();
   }
   
@@ -309,7 +309,7 @@ public final class TelloFlightData implements Model {
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      received_at_ms,
+      timeSinceStartMs,
       telloflightID,
       mpry,
       pitch,
@@ -329,8 +329,8 @@ public final class TelloFlightData implements Model {
       agy,
       agz);
   }
-  public interface ReceivedAtMsStep {
-    TelloflightIdStep receivedAtMs(Integer receivedAtMs);
+  public interface TimeSinceStartMsStep {
+    TelloflightIdStep timeSinceStartMs(Integer timeSinceStartMs);
   }
   
 
@@ -362,9 +362,9 @@ public final class TelloFlightData implements Model {
   }
   
 
-  public static class Builder implements ReceivedAtMsStep, TelloflightIdStep, BuildStep {
+  public static class Builder implements TimeSinceStartMsStep, TelloflightIdStep, BuildStep {
     private String id;
-    private Integer received_at_ms;
+    private Integer timeSinceStartMs;
     private String telloflightID;
     private Integer mpry;
     private Integer pitch;
@@ -389,7 +389,7 @@ public final class TelloFlightData implements Model {
         
         return new TelloFlightData(
           id,
-          received_at_ms,
+          timeSinceStartMs,
           telloflightID,
           mpry,
           pitch,
@@ -411,9 +411,9 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public TelloflightIdStep receivedAtMs(Integer receivedAtMs) {
-        Objects.requireNonNull(receivedAtMs);
-        this.received_at_ms = receivedAtMs;
+     public TelloflightIdStep timeSinceStartMs(Integer timeSinceStartMs) {
+        Objects.requireNonNull(timeSinceStartMs);
+        this.timeSinceStartMs = timeSinceStartMs;
         return this;
     }
     
@@ -538,9 +538,9 @@ public final class TelloFlightData implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Integer receivedAtMs, String telloflightId, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
+    private CopyOfBuilder(String id, Integer timeSinceStartMs, String telloflightId, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
       super.id(id);
-      super.receivedAtMs(receivedAtMs)
+      super.timeSinceStartMs(timeSinceStartMs)
         .telloflightId(telloflightId)
         .mpry(mpry)
         .pitch(pitch)
@@ -562,8 +562,8 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public CopyOfBuilder receivedAtMs(Integer receivedAtMs) {
-      return (CopyOfBuilder) super.receivedAtMs(receivedAtMs);
+     public CopyOfBuilder timeSinceStartMs(Integer timeSinceStartMs) {
+      return (CopyOfBuilder) super.timeSinceStartMs(timeSinceStartMs);
     }
     
     @Override
