@@ -2,7 +2,7 @@
 
 This multi-module Android application allows the user to control a Ryze Tech Tello EDU drone using an Android device with virtual joysticks and is written in Kotlin using the Jetpack Compose framework. The 3.0 SDK provided by Ryze Tech was used to create a wrapper class to interact with the robot over WIFI UDP.
 
-Using AWS Amplify tools, the app features additional functionality to share drone flights with other users. Registration and login are implemented utilizing AWS Cognito. With AWS AppSync, flights may be saved locally and later uploaded to a DynamoDB data store.
+Utilizing AWS Amplify tools, the app features additional functionality to share drone flights with other users. Registration and login are implemented utilizing AWS Cognito. With AWS AppSync, flights may be saved locally and later uploaded to a DynamoDB data store.
 
 ## Feature Overview
 
