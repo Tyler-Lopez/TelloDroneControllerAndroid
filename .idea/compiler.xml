@@ -12,6 +12,8 @@
       <module name="TelloShare.feed.test" target="1.7" />
       <module name="TelloShare.settings.main" target="1.7" />
       <module name="TelloShare.settings.test" target="1.7" />
+      <module name="TelloShare.storage.main" target="1.7" />
+      <module name="TelloShare.storage.test" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
