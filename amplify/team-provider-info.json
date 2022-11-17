@@ -17,6 +17,9 @@
       },
       "api": {
         "telloshare": {}
+      },
+      "storage": {
+        "s3tellosharestorageb70dd92b": {}
       }
     }
   }

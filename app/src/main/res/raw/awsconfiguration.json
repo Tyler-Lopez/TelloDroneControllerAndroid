@@ -40,6 +40,12 @@
             ]
         }
     },
+    "S3TransferUtility": {
+        "Default": {
+            "Bucket": "telloshare-storage-b70dd92b231305-dev",
+            "Region": "us-east-1"
+        }
+    },
     "AppSync": {
         "Default": {
             "ApiUrl": "https://nauspaed2zaklbqxwz2yomnvlq.appsync-api.us-east-1.amazonaws.com/graphql",

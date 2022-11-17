@@ -10,6 +10,12 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientID": "string"
         }
     },
+    "storage": {
+        "s3tellosharestorageb70dd92b": {
+            "BucketName": "string",
+            "Region": "string"
+        }
+    },
     "api": {
         "telloshare": {
             "GraphQLAPIIdOutput": "string",
