@@ -9,7 +9,8 @@ object Amazon {
         "com.amplifyframework:core:$AMPLIFY_VERSION",
         "com.amplifyframework:aws-api:$AMPLIFY_VERSION",
         "com.amplifyframework:aws-auth-cognito:$AMPLIFY_VERSION",
-        "com.amplifyframework:aws-datastore:$AMPLIFY_VERSION"
+        "com.amplifyframework:aws-datastore:$AMPLIFY_VERSION",
+        "com.amplifyframework:aws-storage-s3:$AMPLIFY_VERSION"
     )
 
     val awsDependencies = listOf(
