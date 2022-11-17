@@ -6,6 +6,7 @@ import com.tlopez.storageDomain.repository.StorageRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
+import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -17,16 +18,29 @@ class StorageRepositoryImpl @Inject constructor(
 
     override suspend fun getFile(fileName: String): Result<File> {
         return try {
+            Amplify.Storage.list(
+                "",
+                {
+                    println("success list $it")
+                    it.items.forEach {
+                        println("herrree key is ${it.key}")
+                    }
+                },
+                {
+                    println("error list $it")
+                }
+            )
+            println("hi here, filename is $fileName")
             suspendCoroutine { continuation ->
                 Amplify.Storage.downloadFile(
                     fileName,
-                    context.cacheDir,
+                    File("${context.cacheDir.absolutePath}/$fileName"),
                     { continuation.resume(success(it.file)) },
                     { continuation.resumeWithException(it) }
                 )
             }
         } catch (e: Exception) {
-            error(e)
+            failure(e)
         }
     }
 }

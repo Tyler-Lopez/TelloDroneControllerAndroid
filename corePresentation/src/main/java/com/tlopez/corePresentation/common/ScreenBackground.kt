@@ -11,7 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ScreenBackground(content: @Composable ColumnScope.() -> Unit) {
+fun ScreenBackground(
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    content: @Composable ColumnScope.() -> Unit
+) {
     Column(
         content = content,
         modifier = Modifier
@@ -19,7 +23,7 @@ fun ScreenBackground(content: @Composable ColumnScope.() -> Unit) {
             .background(MaterialTheme.colors.background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+        horizontalAlignment = horizontalAlignment,
+        verticalArrangement = Arrangement.spacedBy(16.dp, verticalAlignment)
     )
 }

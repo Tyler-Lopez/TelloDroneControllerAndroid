@@ -20,9 +20,14 @@ class SettingsViewModel @Inject constructor(
 
     override fun onEvent(event: SettingsViewEvent) {
         when (event) {
+            is CLickedEditProfilePicture -> onClickedEditProfilePicture()
             is ClickedLogout -> onClickedLogout()
             is ClickedNavigateUp -> onClickedNavigateUp()
         }
+    }
+
+    private fun onClickedEditProfilePicture() {
+        routeTo(NavigateEditProfile)
     }
 
     private fun onClickedLogout() {

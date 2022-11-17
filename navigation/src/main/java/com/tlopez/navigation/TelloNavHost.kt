@@ -24,6 +24,8 @@ import com.tlopez.navigation.router.FeedRouter
 import com.tlopez.navigation.router.SettingsRouter
 import com.tlopez.navigation.util.selectiveSwipingInOutComposable
 import com.tlopez.navigation.util.swipingInOutComposable
+import com.tlopez.settingsPresentation.editProfilePicture.EditProfilePictureScreen
+import com.tlopez.settingsPresentation.editProfilePicture.EditProfilePictureViewModel
 import com.tlopez.settingsPresentation.settings.SettingsScreen
 import com.tlopez.settingsPresentation.settings.SettingsViewModel
 
@@ -75,6 +77,11 @@ fun TelloNavHost(navController: NavHostController) {
         /** Settings navigation destinations **/
         swipingInOutComposable(route = Settings.route) {
             SettingsScreen(viewModel = hiltViewModel<SettingsViewModel>().apply {
+                attachRouter(settingsRouter)
+            })
+        }
+        swipingInOutComposable(route = EditProfilePicture.route) {
+            EditProfilePictureScreen(viewModel = hiltViewModel<EditProfilePictureViewModel>().apply {
                 attachRouter(settingsRouter)
             })
         }

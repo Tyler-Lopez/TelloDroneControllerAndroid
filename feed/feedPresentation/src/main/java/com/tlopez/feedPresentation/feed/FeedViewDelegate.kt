@@ -28,10 +28,9 @@ fun FeedViewDelegate(viewModel: FeedViewModel) {
             }
         ) {
             when (this) {
-                is HomeViewState -> HomeScreen(viewModel)
+                is HomeViewState -> HomeScreen(file = this.testFile, viewModel)
                 is MyFlightsViewState -> MyFlightsScreen()
             }
-
         }
     }
 }

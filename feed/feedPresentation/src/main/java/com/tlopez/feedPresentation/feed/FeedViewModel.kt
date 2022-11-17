@@ -9,6 +9,7 @@ import com.tlopez.feedPresentation.FeedDestination
 import com.tlopez.feedPresentation.FeedDestination.*
 import com.tlopez.feedPresentation.feed.FeedViewEvent.*
 import com.tlopez.feedPresentation.feed.FeedViewState.*
+import com.tlopez.storageDomain.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,11 +17,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val datastoreRepository: DatastoreRepository
+    private val datastoreRepository: DatastoreRepository,
+    private val storageRepository: StorageRepository
 ) : BaseRoutingViewModel<FeedViewState, FeedViewEvent, FeedDestination>() {
 
     init {
-        HomeViewState.push()
+        HomeViewState().push()
+        viewModelScope.launch(Dispatchers.IO) {
+            storageRepository.getFile("beaker.jpg")
+                .doOnSuccess {
+                    println("here, success")
+                    HomeViewState(it).push()
+                }
+                .doOnFailure {
+                    println("here, failure")
+                    println("$it")
+                }
+        }
+
     }
 
     override fun onEvent(event: FeedViewEvent) {
@@ -39,7 +53,7 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun onClickedHome() {
-        HomeViewState.push()
+        HomeViewState().push()
     }
 
     private fun onClickedMyFlights() {
@@ -64,7 +78,7 @@ class FeedViewModel @Inject constructor(
 
     private fun onTempClickedTemp() {
         viewModelScope.launch(Dispatchers.IO) {
-       //     datastoreRepository.tempQueryAll()
+            //     datastoreRepository.tempQueryAll()
         }
     }
 }

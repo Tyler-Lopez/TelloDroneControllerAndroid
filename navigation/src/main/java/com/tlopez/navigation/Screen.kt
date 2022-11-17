@@ -7,9 +7,11 @@ sealed interface Screen {
     object Login : Screen {
         override val route: String = "Login"
     }
+
     object Register : Screen {
         override val route: String = "Register"
     }
+
     object VerifyEmail : Screen {
         override val route: String = "VerifyEmail"
     }
@@ -22,6 +24,10 @@ sealed interface Screen {
     /** Settings **/
     object Settings : Screen {
         override val route: String = "Settings"
+    }
+
+    object EditProfilePicture : Screen {
+        override val route: String = "EditProfilePicture"
     }
 
     /** Flight **/

@@ -11,7 +11,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "s3tellosharestorageb70dd92b": {
+        "s31468b555": {
             "BucketName": "string",
             "Region": "string"
         }

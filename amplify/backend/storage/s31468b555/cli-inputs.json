@@ -1,0 +1,13 @@
+{
+  "resourceName": "s31468b555",
+  "policyUUID": "1468b555",
+  "bucketName": "telloshare44af616297374cd6b766386e6abc2b8a",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "groupAccess": {}
+}

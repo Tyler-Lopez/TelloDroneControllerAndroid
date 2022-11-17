@@ -3,6 +3,7 @@ package com.tlopez.feedPresentation.feed
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
 import com.tlopez.feedPresentation.NavigationItem
+import java.io.File
 
 sealed interface FeedViewEvent : ViewEvent {
     object ClickedFly : FeedViewEvent
@@ -16,7 +17,7 @@ sealed interface FeedViewEvent : ViewEvent {
 sealed interface FeedViewState : ViewState {
     val selectedNavigationItem: NavigationItem
 
-    object HomeViewState : FeedViewState {
+    data class HomeViewState(val testFile: File? = null) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME
     }
 

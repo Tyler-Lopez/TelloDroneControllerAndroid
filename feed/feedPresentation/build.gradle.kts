@@ -7,6 +7,7 @@ dependencies {
     "implementation"(project(Modules.corePresentation))
     "implementation"(project(Modules.datastoreDomain))
     "implementation"(project(Modules.storageDomain))
+    "implementation"(Coil.coilCompose)
     Accompanist.accompanistDependencies.forEach {
         "implementation"(it)
     }

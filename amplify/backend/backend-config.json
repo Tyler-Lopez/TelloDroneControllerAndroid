@@ -26,7 +26,7 @@
     }
   },
   "storage": {
-    "s3tellosharestorageb70dd92b": {
+    "s31468b555": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

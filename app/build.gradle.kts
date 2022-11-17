@@ -68,6 +68,8 @@ dependencies {
     implementation(project(Modules.controllerDomain))
     implementation(project(Modules.datastoreData))
     implementation(project(Modules.datastoreDomain))
+    implementation(project(Modules.storageData))
+    implementation(project(Modules.storageDomain))
     implementation(project(Modules.navigation))
 
     implementation(AndroidX.coreKtx)
