@@ -10,7 +10,7 @@ import com.tlopez.settingsPresentation.SettingsDestination.*
 data class SettingsRouter(private val navController: NavController) : Router<SettingsDestination> {
     override fun routeTo(destination: SettingsDestination) {
         when (destination) {
-            is NavigateEditProfile -> onNavigateEditProfile()
+            is NavigateEditProfilePicture -> onNavigateEditProfile()
             is NavigateLogout -> onNavigateLogout()
             is NavigateUp -> onNavigateUp()
         }

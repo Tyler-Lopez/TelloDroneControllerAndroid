@@ -14,6 +14,10 @@ import javax.inject.Inject
 class EditProfilePictureViewModel @Inject constructor(
 ) : BaseRoutingViewModel<EditProfilePictureViewState, EditProfilePictureViewEvent, SettingsDestination>() {
 
+    init {
+
+    }
+
     override fun onEvent(event: EditProfilePictureViewEvent) {
         when (event) {
             is ClickedNavigateUp -> onClickedNavigateUp()
