@@ -27,7 +27,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun onClickedEditProfilePicture() {
-        routeTo(NavigateEditProfilePicture)
+        routeTo(NavigateEditProfilePicture())
     }
 
     private fun onClickedLogout() {
