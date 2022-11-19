@@ -24,7 +24,7 @@ class FeedViewModel @Inject constructor(
     init {
         HomeViewState().push()
         viewModelScope.launch(Dispatchers.IO) {
-            storageRepository.getFile("beaker.jpg")
+            storageRepository.downloadFile("beaker.jpg")
                 .doOnSuccess {
                     println("here, success")
                     HomeViewState(it).push()

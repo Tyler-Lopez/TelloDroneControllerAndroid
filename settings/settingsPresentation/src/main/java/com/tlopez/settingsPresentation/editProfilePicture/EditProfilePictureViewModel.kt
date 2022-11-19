@@ -15,16 +15,25 @@ class EditProfilePictureViewModel @Inject constructor(
 ) : BaseRoutingViewModel<EditProfilePictureViewState, EditProfilePictureViewEvent, SettingsDestination>() {
 
     init {
-
+        EditProfilePictureViewState().push()
     }
 
     override fun onEvent(event: EditProfilePictureViewEvent) {
         when (event) {
             is ClickedNavigateUp -> onClickedNavigateUp()
+            is ClickedSelectPicture -> onClickedSelectPicture()
+            is SelectedGalleryPicture -> onSelectedGalleryPicture(event)
         }
     }
 
     private fun onClickedNavigateUp() {
         routeTo(NavigateUp)
+    }
+
+    private fun onClickedSelectPicture() {
+    }
+
+    private fun onSelectedGalleryPicture(event: SelectedGalleryPicture) {
+        lastPushedState?.copy(imageUrl = event.uri)?.push()
     }
 }

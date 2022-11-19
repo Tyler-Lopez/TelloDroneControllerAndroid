@@ -5,8 +5,11 @@ import com.tlopez.core.architecture.ViewState
 
 sealed interface EditProfilePictureViewEvent : ViewEvent {
     object ClickedNavigateUp : EditProfilePictureViewEvent
+    object ClickedSelectPicture : EditProfilePictureViewEvent
+    data class SelectedGalleryPicture(val uri: String) : EditProfilePictureViewEvent
 }
 
-sealed interface EditProfilePictureViewState : ViewState {
-
+data class EditProfilePictureViewState(
+    val imageUrl: String? = null,
+) : ViewState {
 }

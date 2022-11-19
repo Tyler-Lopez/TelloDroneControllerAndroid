@@ -17,7 +17,7 @@ sealed interface FeedViewEvent : ViewEvent {
 sealed interface FeedViewState : ViewState {
     val selectedNavigationItem: NavigationItem
 
-    data class HomeViewState(val testFile: File? = null) : FeedViewState {
+    data class HomeViewState(val fileUrl: String? = null) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME
     }
 

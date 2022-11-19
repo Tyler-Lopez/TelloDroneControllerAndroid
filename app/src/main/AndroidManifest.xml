@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tlopez.telloShare">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:name="com.tlopez.telloShare.TelloShareApplication"
         android:allowBackup="true"
@@ -24,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.tlopez.authDomain.services.SocketService" />
     </application>
 
 </manifest>
