@@ -20,19 +20,6 @@ class StorageRepositoryImpl @Inject constructor(
 
     override suspend fun downloadFile(fileName: String): Result<String> {
         return try {
-            Amplify.Storage.list(
-                "",
-                {
-                    println("success list $it")
-                    it.items.forEach {
-                        println("herrree key is ${it.key}")
-                    }
-                },
-                {
-                    println("error list $it")
-                }
-            )
-            println("hi here, filename is $fileName")
             suspendCoroutine { continuation ->
                 Amplify.Storage.downloadFile(
                     fileName,
