@@ -21,6 +21,7 @@ class EditProfilePictureViewModel @Inject constructor(
     override fun onEvent(event: EditProfilePictureViewEvent) {
         when (event) {
             is ClickedNavigateUp -> onClickedNavigateUp()
+            is ClickedSave -> onClickedSave()
             is ClickedSelectPicture -> onClickedSelectPicture()
             is SelectedGalleryPicture -> onSelectedGalleryPicture(event)
         }
@@ -30,10 +31,20 @@ class EditProfilePictureViewModel @Inject constructor(
         routeTo(NavigateUp)
     }
 
+    private fun onClickedSave() {
+        lastPushedState?.copy(
+            saveButtonState = SaveButtonState.UPLOADING
+        )?.push()
+    }
+
     private fun onClickedSelectPicture() {
+        // No-op
     }
 
     private fun onSelectedGalleryPicture(event: SelectedGalleryPicture) {
-        lastPushedState?.copy(imageUrl = event.uri)?.push()
+        lastPushedState?.copy(
+            imageUrl = event.uri,
+            saveButtonState = SaveButtonState.CHANGED
+        )?.push()
     }
 }

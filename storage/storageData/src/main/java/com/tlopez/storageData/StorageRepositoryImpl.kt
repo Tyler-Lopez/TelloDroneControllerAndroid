@@ -1,7 +1,6 @@
 package com.tlopez.storageData
 
 import android.content.Context
-import android.net.Uri
 import androidx.core.net.toUri
 import com.amplifyframework.core.Amplify
 import com.tlopez.storageDomain.repository.StorageRepository
@@ -18,12 +17,12 @@ class StorageRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : StorageRepository {
 
-    override suspend fun downloadFile(fileName: String): Result<String> {
+    override suspend fun downloadFile(fileKey: String): Result<String> {
         return try {
             suspendCoroutine { continuation ->
                 Amplify.Storage.downloadFile(
-                    fileName,
-                    File("${context.cacheDir.absolutePath}/$fileName"),
+                    fileKey,
+                    File("${context.cacheDir.absolutePath}/$fileKey"),
                     { continuation.resume(success(it.file.toUri().toString())) },
                     { continuation.resumeWithException(it) }
                 )

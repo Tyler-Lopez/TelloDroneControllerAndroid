@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
 import com.tlopez.corePresentation.common.AppScaffold
 import com.tlopez.corePresentation.common.ProfilePicture
 import com.tlopez.corePresentation.common.ScreenBackground
@@ -40,28 +41,24 @@ fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
         }) {
         ScreenBackground {
             viewModel.viewState.collectAsState().value?.apply {
-                imageUrl?.let {
-                    println("here, $it")
-                    val painter = rememberImagePainter(it)
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.size(200.dp)
-                    )
-                }
-            }
-            ProfilePicture()
-            Column {
-                HighEmphasisButton(
-                    text = "Select New Photo",
-                    size = ButtonSize.MEDIUM
-                ) { launcher.launch("image/*") }
-                MediumEmphasisButton(
-                    text = "Save",
-                    enabled = false,
-                    size = ButtonSize.MEDIUM
-                ) {
-
+                ProfilePicture(
+                    pictureUrl = imageUrl
+                )
+                Column {
+                    HighEmphasisButton(
+                        text = "Select New Photo",
+                        size = ButtonSize.MEDIUM
+                    ) {
+                        viewModel.onEvent(ClickedSelectPicture)
+                        launcher.launch("image/*")
+                    }
+                    MediumEmphasisButton(
+                        text = "Save",
+                        enabled = saveButtonState == CHANGED,
+                        size = ButtonSize.MEDIUM
+                    ) {
+                        viewModel.onEvent(ClickedSave)
+                    }
                 }
             }
         }

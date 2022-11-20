@@ -8,26 +8,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.ContentScale.Companion.Fit
+import androidx.compose.ui.layout.ContentScale.Companion.Inside
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.tlopez.corePresentation.R
-import java.io.File
 
 @Composable
 fun ProfilePicture(
     contentDescription: String = "Profile Picture",
-    file: File? = null,
+    pictureUrl: String? = null,
 ) {
     Image(
-        painter = file?.let {
-            rememberImagePainter(file)
+        painter = pictureUrl?.let {
+            rememberImagePainter(it)
         } ?: run {
             painterResource(id = R.drawable.ic_avatar_profile)
         },
         contentDescription = contentDescription,
-        contentScale = FillBounds,
+        contentScale = Crop,
         modifier = Modifier
             .size(128.dp)
             .clip(CircleShape)
