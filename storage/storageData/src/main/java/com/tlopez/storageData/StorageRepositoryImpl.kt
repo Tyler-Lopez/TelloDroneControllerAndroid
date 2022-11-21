@@ -54,7 +54,7 @@ class StorageRepositoryImpl @Inject constructor(
                 runCatching {
                     val stream = context.contentResolver.openInputStream(fileUri)
                     Amplify.Storage.uploadInputStream(
-                        "to-be-resized/$username.$FILE_EXTENSION_JPG",
+                        "profile_picture/$username.$FILE_EXTENSION_JPG",
                         stream!!,
                         StorageUploadInputStreamOptions.defaultInstance(),
                         { onProgressFraction(it.fractionCompleted) },

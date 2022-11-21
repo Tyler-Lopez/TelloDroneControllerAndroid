@@ -18,9 +18,14 @@ def handler(event, context):
   for record in event['Records']:
     bucket = record['s3']['bucket']['name']
     key = unquote_plus(record['s3']['object']['key'])
+    file_key = key.split('/')[-1] # Get last string element in the list
     tmpkey = key.replace('/', '')
     download_path = '/tmp/{}{}'.format(uuid.uuid4(), tmpkey)
-    upload_path = 'test.jpg' #'/tmp/resized-{}'.format(tmpkey)
+    upload_path = '/tmp/resized-{}'.format(tmpkey)
     s3_client.download_file(bucket, key, download_path)
+    print(download_path)
+    print(upload_path)
     resize_image(download_path, upload_path)
-    s3_client.upload_file(upload_path, bucket, 'resized-{}'.format(key))
+    print('resized-{}'.format(key))
+    print(bucket)
+    s3_client.upload_file(upload_path, bucket, 'public/profile_picture/{}'.format(file_key))
