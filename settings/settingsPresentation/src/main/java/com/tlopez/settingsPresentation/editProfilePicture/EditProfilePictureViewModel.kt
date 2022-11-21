@@ -1,17 +1,19 @@
 package com.tlopez.settingsPresentation.editProfilePicture
 
-import com.tlopez.authDomain.usecase.LogoutUser
+import androidx.lifecycle.viewModelScope
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.settingsPresentation.SettingsDestination
 import com.tlopez.settingsPresentation.SettingsDestination.*
 import com.tlopez.settingsPresentation.editProfilePicture.EditProfilePictureViewEvent.*
-import com.tlopez.settingsPresentation.settings.SettingsViewEvent
-import com.tlopez.settingsPresentation.settings.SettingsViewState
+import com.tlopez.storageDomain.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EditProfilePictureViewModel @Inject constructor(
+    private val storageRepository: StorageRepository
 ) : BaseRoutingViewModel<EditProfilePictureViewState, EditProfilePictureViewEvent, SettingsDestination>() {
 
     init {
@@ -32,9 +34,16 @@ class EditProfilePictureViewModel @Inject constructor(
     }
 
     private fun onClickedSave() {
-        lastPushedState?.copy(
-            saveButtonState = SaveButtonState.UPLOADING
-        )?.push()
+        lastPushedState?.apply {
+            copy(saveButtonState = SaveButtonState.UPLOADING).push()
+            viewModelScope.launch(Dispatchers.IO) {
+                storageRepository.uploadFile(
+                    "TEST",
+                    fileUri!!,
+                    {}
+                )
+            }
+        }
     }
 
     private fun onClickedSelectPicture() {
@@ -43,7 +52,7 @@ class EditProfilePictureViewModel @Inject constructor(
 
     private fun onSelectedGalleryPicture(event: SelectedGalleryPicture) {
         lastPushedState?.copy(
-            imageUrl = event.uri,
+            fileUri = event.uri,
             saveButtonState = SaveButtonState.CHANGED
         )?.push()
     }
