@@ -57,5 +57,21 @@
         }
       }
     }
+  },
+  "function": {
+    "telloshareresizephoto": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "s31468b555",
+          "attributes": [
+            "BucketName"
+          ]
+        }
+      ]
+    }
   }
 }

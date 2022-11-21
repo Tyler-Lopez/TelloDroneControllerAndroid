@@ -15,11 +15,14 @@
       "auth": {
         "tellosharedeb837ccdeb837cc": {}
       },
-      "api": {
-        "telloshare": {}
-      },
       "storage": {
         "s31468b555": {}
+      },
+      "function": {
+        "telloshareresizephoto": {
+          "deploymentBucketName": "amplify-telloshare-dev-231305-deployment",
+          "s3Key": "amplify-builds/telloshareresizephoto-62424a44354b64444442-build.zip"
+        }
       }
     }
   }
