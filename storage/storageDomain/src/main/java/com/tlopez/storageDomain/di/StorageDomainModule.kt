@@ -2,6 +2,7 @@ package com.tlopez.storageDomain.di
 
 import com.tlopez.authDomain.usecase.GetUser
 import com.tlopez.storageDomain.repository.StorageRepository
+import com.tlopez.storageDomain.usecase.GetUserProfilePicture
 import com.tlopez.storageDomain.usecase.UpdateUserProfilePicture
 import dagger.Module
 import dagger.Provides
@@ -20,5 +21,14 @@ object StorageDomainModule {
         storageRepository: StorageRepository
     ): UpdateUserProfilePicture {
         return UpdateUserProfilePicture(getUser, storageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserProfilePicture(
+        getUser: GetUser,
+        storageRepository: StorageRepository
+    ): GetUserProfilePicture {
+        return GetUserProfilePicture(getUser, storageRepository)
     }
 }

@@ -27,7 +27,7 @@ class FeedViewModel @Inject constructor(
             storageRepository.downloadFile("beaker.jpg")
                 .doOnSuccess {
                     println("here, success")
-                    HomeViewState(it).push()
+                    HomeViewState(it.toString()).push()
                 }
                 .doOnFailure {
                     println("here, failure")

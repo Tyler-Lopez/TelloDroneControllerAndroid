@@ -3,7 +3,7 @@ package com.tlopez.storageDomain.repository
 import android.net.Uri
 
 interface StorageRepository {
-    suspend fun downloadFile(fileKey: String): Result<String>
+    suspend fun downloadFile(fileKey: String): Result<Uri>
     suspend fun uploadFile(
         username: String,
         fileUri: Uri,

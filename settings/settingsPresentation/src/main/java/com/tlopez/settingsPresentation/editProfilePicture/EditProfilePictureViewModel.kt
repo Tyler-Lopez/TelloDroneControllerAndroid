@@ -1,15 +1,14 @@
 package com.tlopez.settingsPresentation.editProfilePicture
 
 import androidx.lifecycle.viewModelScope
-import com.tlopez.authDomain.usecase.GetUser
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
 import com.tlopez.settingsPresentation.SettingsDestination
-import com.tlopez.settingsPresentation.SettingsDestination.*
-import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
+import com.tlopez.settingsPresentation.SettingsDestination.NavigateUp
 import com.tlopez.settingsPresentation.editProfilePicture.EditProfilePictureViewEvent.*
-import com.tlopez.storageDomain.repository.StorageRepository
+import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
+import com.tlopez.storageDomain.usecase.GetUserProfilePicture
 import com.tlopez.storageDomain.usecase.UpdateUserProfilePicture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +17,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfilePictureViewModel @Inject constructor(
+    private val getUserProfilePicture: GetUserProfilePicture,
     private val updateUserProfilePicture: UpdateUserProfilePicture
 ) : BaseRoutingViewModel<EditProfilePictureViewState, EditProfilePictureViewEvent, SettingsDestination>() {
 
     init {
         EditProfilePictureViewState().push()
+        viewModelScope.launch(Dispatchers.IO) {
+            getUserProfilePicture()
+                .doOnSuccess {
+                    lastPushedState?.copy(fileUri = it)?.push()
+                }
+        }
     }
 
     override fun onEvent(event: EditProfilePictureViewEvent) {

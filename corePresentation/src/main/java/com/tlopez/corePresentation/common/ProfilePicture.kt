@@ -24,7 +24,13 @@ fun ProfilePicture(
 ) {
     Image(
         painter = pictureUrl?.let {
-            rememberImagePainter(it)
+            rememberImagePainter(
+                data = it,
+                builder = {
+                    placeholder(R.drawable.ic_avatar_profile)
+                    error(R.drawable.ic_avatar_profile)
+                }
+            )
         } ?: run {
             painterResource(id = R.drawable.ic_avatar_profile)
         },

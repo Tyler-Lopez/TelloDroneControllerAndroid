@@ -26,13 +26,13 @@ class StorageRepositoryImpl @Inject constructor(
         private const val FILE_EXTENSION_JPG = "jpg"
     }
 
-    override suspend fun downloadFile(fileKey: String): Result<String> {
+    override suspend fun downloadFile(fileKey: String): Result<Uri> {
         return try {
             suspendCoroutine { continuation ->
                 Amplify.Storage.downloadFile(
                     fileKey,
                     File("${context.cacheDir.absolutePath}/$fileKey"),
-                    { continuation.resume(success(it.file.toUri().toString())) },
+                    { continuation.resume(success(it.file.toUri())) },
                     { continuation.resumeWithException(it) }
                 )
             }
@@ -54,7 +54,7 @@ class StorageRepositoryImpl @Inject constructor(
                 runCatching {
                     val stream = context.contentResolver.openInputStream(fileUri)
                     Amplify.Storage.uploadInputStream(
-                        "$username.$FILE_EXTENSION_JPG",
+                        "to-be-resized/$username.$FILE_EXTENSION_JPG",
                         stream!!,
                         StorageUploadInputStreamOptions.defaultInstance(),
                         { onProgressFraction(it.fractionCompleted) },
