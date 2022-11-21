@@ -31,19 +31,25 @@ fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
         }) {
         ScreenBackground {
             viewModel.viewState.collectAsState().value?.apply {
-                ProfilePicture(pictureUrl = fileUri.toString())
+                ProfilePicture(pictureUrl = fileUri?.toString())
                 Column {
                     HighEmphasisButton(
                         text = "Select New Photo",
+                        enabled = saveButtonState !is Uploading,
                         size = ButtonSize.MEDIUM
                     ) {
                         viewModel.onEvent(ClickedSelectPicture)
                         launcher.launch("image/*")
                     }
                     MediumEmphasisButton(
-                        text = "Save",
-                        enabled = saveButtonState == CHANGED,
-                        size = ButtonSize.MEDIUM
+                        text = when (saveButtonState) {
+                            is Uploading -> String()
+                            is Saved -> "Saved"
+                            else -> "Save"
+                        },
+                        enabled = saveButtonState is Changed || saveButtonState is Error,
+                        size = ButtonSize.MEDIUM,
+                        isLoading = saveButtonState is Uploading
                     ) {
                         viewModel.onEvent(ClickedSave)
                     }

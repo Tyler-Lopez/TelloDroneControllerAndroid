@@ -3,8 +3,10 @@ package com.tlopez.corePresentation.common.button
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.tlopez.corePresentation.R
 
 @Composable
@@ -21,6 +24,7 @@ fun HighEmphasisButton(
     size: ButtonSize,
     modifier: Modifier = Modifier
         .defaultMinSize(minWidth = dimensionResource(id = R.dimen.button_min_width)),
+    loadingProgressFraction: Double? = null,
     text: String? = null,
     enabled: Boolean = true,
     onClick: () -> Unit,
@@ -45,6 +49,14 @@ fun HighEmphasisButton(
             Text(
                 text = it,
                 style = MaterialTheme.typography.button
+            )
+        }
+        loadingProgressFraction?.let {
+            CircularProgressIndicator(
+                color = Color.Gray,
+                progress = it.toFloat(),
+                modifier = Modifier.size(16.dp),
+                strokeWidth = 2.dp
             )
         }
     }

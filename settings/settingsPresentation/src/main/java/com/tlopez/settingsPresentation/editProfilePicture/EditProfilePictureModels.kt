@@ -13,11 +13,13 @@ sealed interface EditProfilePictureViewEvent : ViewEvent {
 
 data class EditProfilePictureViewState(
     val fileUri: Uri? = null,
-    val saveButtonState: SaveButtonState = SaveButtonState.UNCHANGED
+    val saveButtonState: SaveButtonState = SaveButtonState.Unchanged
 ) : ViewState
 
-enum class SaveButtonState {
-    UNCHANGED,
-    CHANGED,
-    UPLOADING
+sealed interface SaveButtonState {
+    object Changed : SaveButtonState
+    data class Error(val reason: String) : SaveButtonState
+    object Saved : SaveButtonState
+    object Unchanged : SaveButtonState
+    data class Uploading(val progressFraction: Double = 0.0) : SaveButtonState
 }
