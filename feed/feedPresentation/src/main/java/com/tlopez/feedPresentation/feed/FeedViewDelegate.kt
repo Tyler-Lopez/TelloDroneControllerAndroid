@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.tlopez.corePresentation.common.AppScaffold
+import com.tlopez.corePresentation.common.PullRefreshSpecification
+import com.tlopez.corePresentation.common.ScreenBackground
 import com.tlopez.feedPresentation.feed.FeedViewEvent.ClickedSettings
 import com.tlopez.feedPresentation.feed.FeedViewState.*
 
@@ -27,12 +29,18 @@ fun FeedViewDelegate(viewModel: FeedViewModel) {
                 )
             }
         ) {
-            when (this) {
-                is HomeViewState -> {
-                    println("here fileurl is $fileUrl")
-                    HomeScreen(fileUrl = this.fileUrl, viewModel)
+            ScreenBackground(
+                pullRefreshSpecification = PullRefreshSpecification(
+                    isRefreshing
+                ) { viewModel.onEvent(FeedViewEvent.PulledRefresh) }
+            ) {
+                when (this@apply) {
+                    is HomeViewState -> {
+                        println("here fileurl is $fileUrl")
+                        HomeScreen(fileUrl = this@apply.fileUrl, viewModel)
+                    }
+                    is MyFlightsViewState -> MyFlightsScreen()
                 }
-                is MyFlightsViewState -> MyFlightsScreen()
             }
         }
     }

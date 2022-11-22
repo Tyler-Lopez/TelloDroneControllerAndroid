@@ -12,6 +12,7 @@ import com.tlopez.feedPresentation.feed.FeedViewState.*
 import com.tlopez.storageDomain.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,6 +44,7 @@ class FeedViewModel @Inject constructor(
             is ClickedHome -> onClickedHome()
             is ClickedMyFlights -> onClickedMyFlights()
             is ClickedSettings -> onClickedSettings()
+            is PulledRefresh -> onPulledRefresh()
             is TempClickedInsertChallenge -> onClickedInsertChallenge()
             is TempClickedTemp -> onTempClickedTemp()
         }
@@ -57,7 +59,7 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun onClickedMyFlights() {
-        MyFlightsViewState.push()
+        MyFlightsViewState().push()
     }
 
     private fun onClickedSettings() {
@@ -73,6 +75,16 @@ class FeedViewModel @Inject constructor(
                 .doOnFailure {
                     println("failure")
                 }
+        }
+    }
+
+    private fun onPulledRefresh() {
+        viewModelScope.launch {
+            (lastPushedState as? HomeViewState)?.run {
+                copy(isRefreshing = true).push()
+                delay(2000)
+                copy(isRefreshing = false).push()
+            }
         }
     }
 

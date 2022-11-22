@@ -10,18 +10,23 @@ sealed interface FeedViewEvent : ViewEvent {
     object ClickedHome : FeedViewEvent
     object ClickedMyFlights : FeedViewEvent
     object ClickedSettings : FeedViewEvent
+    object PulledRefresh : FeedViewEvent
     object TempClickedInsertChallenge : FeedViewEvent
     object TempClickedTemp : FeedViewEvent
 }
 
 sealed interface FeedViewState : ViewState {
+    val isRefreshing: Boolean
     val selectedNavigationItem: NavigationItem
 
-    data class HomeViewState(val fileUrl: String? = null) : FeedViewState {
+    data class HomeViewState(
+        val fileUrl: String? = null,
+        override val isRefreshing: Boolean = false
+    ) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME
     }
 
-    object MyFlightsViewState: FeedViewState {
+    data class MyFlightsViewState(override val isRefreshing: Boolean = false): FeedViewState {
         override val selectedNavigationItem = NavigationItem.FLIGHTS
     }
 }
