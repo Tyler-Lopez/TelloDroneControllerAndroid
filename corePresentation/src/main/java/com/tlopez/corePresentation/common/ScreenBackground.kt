@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 fun ScreenBackground(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(

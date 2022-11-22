@@ -1,5 +1,5 @@
 object Compose {
-    const val composeVersion = "1.2.1"
+    const val composeVersion = "1.3.1"
     const val composeCompilerVersion = "1.3.1"
     const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
 
