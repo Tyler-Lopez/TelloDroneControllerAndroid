@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
 import com.tlopez.corePresentation.common.AppScaffold
 import com.tlopez.corePresentation.common.ProfilePicture
@@ -31,7 +32,10 @@ fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
         }) {
         ScreenBackground {
             viewModel.viewState.collectAsState().value?.apply {
-                ProfilePicture(pictureUrl = fileUri?.toString())
+                ProfilePicture(
+                    context = LocalContext.current,
+                    pictureUrl = fileUri?.toString()
+                )
                 Column {
                     HighEmphasisButton(
                         text = "Select New Photo",

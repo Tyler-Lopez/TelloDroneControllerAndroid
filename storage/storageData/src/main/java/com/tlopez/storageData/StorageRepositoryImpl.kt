@@ -24,6 +24,8 @@ class StorageRepositoryImpl @Inject constructor(
 
     companion object {
         private const val FILE_EXTENSION_JPG = "jpg"
+        private const val FOLDER_PATH_PROFILE_PICTURE_RESIZED = "profile_picture/"
+        private const val FOLDER_PATH_PROFILE_PICTURE_RAW = "to-be-resized/"
     }
 
     override suspend fun downloadFile(fileKey: String): Result<Uri> {
@@ -54,7 +56,7 @@ class StorageRepositoryImpl @Inject constructor(
                 runCatching {
                     val stream = context.contentResolver.openInputStream(fileUri)
                     Amplify.Storage.uploadInputStream(
-                        "profile_picture/$username.$FILE_EXTENSION_JPG",
+                        "$FOLDER_PATH_PROFILE_PICTURE_RAW$username.$FILE_EXTENSION_JPG",
                         stream!!,
                         StorageUploadInputStreamOptions.defaultInstance(),
                         { onProgressFraction(it.fractionCompleted) },
