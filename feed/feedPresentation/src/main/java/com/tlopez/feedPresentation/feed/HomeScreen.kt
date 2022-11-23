@@ -9,14 +9,10 @@ import com.tlopez.core.architecture.EventReceiver
 import java.io.File
 
 @Composable
-fun HomeScreen(fileUrl: String? = null, viewModel: EventReceiver<FeedViewEvent>) {
+fun HomeScreen(viewModel: EventReceiver<FeedViewEvent>) {
     Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedInsertChallenge) }) {
         Text("Click me")
     }
-    Image(
-        painter = rememberImagePainter(fileUrl),
-        contentDescription = null
-    )
     //  Button(onClick = { viewModel.onEvent(FeedViewEvent.TempClickedTemp)}) {
     //       Text("temp button")
     //  }

@@ -35,10 +35,7 @@ fun FeedViewDelegate(viewModel: FeedViewModel) {
                 ) { viewModel.onEvent(FeedViewEvent.PulledRefresh) }
             ) {
                 when (this@apply) {
-                    is HomeViewState -> {
-                        println("here fileurl is $fileUrl")
-                        HomeScreen(fileUrl = this@apply.fileUrl, viewModel)
-                    }
+                    is HomeViewState -> HomeScreen(viewModel)
                     is MyFlightsViewState -> MyFlightsScreen()
                 }
             }

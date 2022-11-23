@@ -12,6 +12,7 @@ import com.tlopez.feedPresentation.feed.FeedViewState.*
 import com.tlopez.storageDomain.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,20 +23,12 @@ class FeedViewModel @Inject constructor(
     private val storageRepository: StorageRepository
 ) : BaseRoutingViewModel<FeedViewState, FeedViewEvent, FeedDestination>() {
 
+    private var fetchDataJob: Job? = null
+
     init {
         HomeViewState().push()
-        viewModelScope.launch(Dispatchers.IO) {
-            storageRepository.downloadFile("beaker.jpg")
-                .doOnSuccess {
-                    println("here, success")
-                    HomeViewState(it.toString()).push()
-                }
-                .doOnFailure {
-                    println("here, failure")
-                    println("$it")
-                }
+        fetchDataJob = viewModelScope.launch(Dispatchers.IO) {
         }
-
     }
 
     override fun onEvent(event: FeedViewEvent) {
@@ -55,11 +48,17 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun onClickedHome() {
-        HomeViewState().push()
+        fetchDataJob?.cancel()
+        lastPushedState?.toHomeViewState(
+            isRefreshing = false
+        )?.push()
     }
 
     private fun onClickedMyFlights() {
-        MyFlightsViewState().push()
+        fetchDataJob?.cancel()
+        lastPushedState?.toMyFlightsViewState(
+            isRefreshing = false
+        )?.push()
     }
 
     private fun onClickedSettings() {
@@ -79,12 +78,11 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun onPulledRefresh() {
-        viewModelScope.launch {
-            (lastPushedState as? HomeViewState)?.run {
-                copy(isRefreshing = true).push()
-                delay(2000)
-                copy(isRefreshing = false).push()
-            }
+        fetchDataJob?.cancel()
+        fetchDataJob = viewModelScope.launch {
+            lastPushedState?.copyToggleIsRefreshing()?.push()
+            delay(2000)
+            lastPushedState?.copyToggleIsRefreshing()?.push()
         }
     }
 

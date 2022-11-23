@@ -19,14 +19,52 @@ sealed interface FeedViewState : ViewState {
     val isRefreshing: Boolean
     val selectedNavigationItem: NavigationItem
 
+    fun copyToggleIsRefreshing(): FeedViewState
+    fun toHomeViewState(
+        isRefreshing: Boolean
+    ): HomeViewState
+
+    fun toMyFlightsViewState(
+        isRefreshing: Boolean
+    ): MyFlightsViewState
+
     data class HomeViewState(
-        val fileUrl: String? = null,
         override val isRefreshing: Boolean = false
     ) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME
+        override fun copyToggleIsRefreshing(): HomeViewState =
+            copy(isRefreshing = !isRefreshing)
+
+        override fun toHomeViewState(
+            isRefreshing: Boolean
+        ): HomeViewState = copy(
+            isRefreshing = isRefreshing
+        )
+
+        override fun toMyFlightsViewState(
+            isRefreshing: Boolean
+        ): MyFlightsViewState = MyFlightsViewState(
+            isRefreshing = isRefreshing
+        )
     }
 
-    data class MyFlightsViewState(override val isRefreshing: Boolean = false): FeedViewState {
+    data class MyFlightsViewState(
+        override val isRefreshing: Boolean = false
+    ) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.FLIGHTS
+        override fun copyToggleIsRefreshing(): MyFlightsViewState =
+            copy(isRefreshing = !isRefreshing)
+
+        override fun toHomeViewState(
+            isRefreshing: Boolean
+        ): HomeViewState = HomeViewState(
+            isRefreshing = isRefreshing
+        )
+
+        override fun toMyFlightsViewState(
+            isRefreshing: Boolean
+        ): MyFlightsViewState = copy(
+            isRefreshing = isRefreshing
+        )
     }
 }
