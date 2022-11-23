@@ -5,6 +5,7 @@ interface TelloState {
     val missionPadX: Int
     val missionPadY: Int
     val missionPadZ: Int
+    val mpry: Int
     val pitch: Int
     val roll: Int
     val yaw: Int

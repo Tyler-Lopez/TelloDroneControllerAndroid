@@ -3,6 +3,7 @@ package com.tlopez.settingsPresentation.editProfilePicture
 import android.net.Uri
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
+import com.tlopez.corePresentation.common.FileSpecification
 
 sealed interface EditProfilePictureViewEvent : ViewEvent {
     object ClickedNavigateUp : EditProfilePictureViewEvent
@@ -12,8 +13,8 @@ sealed interface EditProfilePictureViewEvent : ViewEvent {
 }
 
 data class EditProfilePictureViewState(
-    val fileUri: Uri? = null,
-    val saveButtonState: SaveButtonState = SaveButtonState.Unchanged
+    val fileSpecification: FileSpecification? = null,
+    val saveButtonState: SaveButtonState = SaveButtonState.Unchanged,
 ) : ViewState
 
 sealed interface SaveButtonState {

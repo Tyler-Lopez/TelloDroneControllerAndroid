@@ -2,33 +2,30 @@ package com.tlopez.storageDomain.di
 
 import com.tlopez.authDomain.usecase.GetUser
 import com.tlopez.storageDomain.repository.StorageRepository
-import com.tlopez.storageDomain.usecase.GetUserProfilePicture
-import com.tlopez.storageDomain.usecase.UpdateUserProfilePicture
+import com.tlopez.storageDomain.usecase.GetUserProfilePictureUrl
+import com.tlopez.storageDomain.usecase.UpdateAuthenticatedUserProfilePicture
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object StorageDomainModule {
 
     @Provides
-    @Singleton
-    fun provideUpdateUserProfilePicture(
+    @ViewModelScoped
+    fun provideUpdateAuthenticatedUserProfilePicture(
         getUser: GetUser,
         storageRepository: StorageRepository
-    ): UpdateUserProfilePicture {
-        return UpdateUserProfilePicture(getUser, storageRepository)
+    ): UpdateAuthenticatedUserProfilePicture {
+        return UpdateAuthenticatedUserProfilePicture(getUser, storageRepository)
     }
 
     @Provides
-    @Singleton
-    fun provideGetUserProfilePicture(
-        getUser: GetUser,
-        storageRepository: StorageRepository
-    ): GetUserProfilePicture {
-        return GetUserProfilePicture(getUser, storageRepository)
+    @ViewModelScoped
+    fun provideGetUserProfilePictureUrl(storageRepository: StorageRepository): GetUserProfilePictureUrl {
+        return GetUserProfilePictureUrl(storageRepository)
     }
 }

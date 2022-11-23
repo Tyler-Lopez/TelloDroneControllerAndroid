@@ -1,4 +1,4 @@
-package com.tlopez.datastoreDomain.repository.models;
+package com.tlopez.datastoreDomain.models;
 
 import com.amplifyframework.core.model.Model;
 import com.amplifyframework.core.model.ModelProvider;
@@ -13,7 +13,7 @@ import java.util.Set;
  */
 
 public final class AmplifyModelProvider implements ModelProvider {
-  private static final String AMPLIFY_MODEL_VERSION = "ee63ab16f08f440baa0605cdb04928f7";
+  private static final String AMPLIFY_MODEL_VERSION = "857df46e6104a0bb5e308fd1f8f04978";
   private static AmplifyModelProvider amplifyGeneratedModelInstance;
   private AmplifyModelProvider() {
     

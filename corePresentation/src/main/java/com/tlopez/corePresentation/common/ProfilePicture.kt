@@ -28,7 +28,7 @@ import com.tlopez.corePresentation.R
 fun ProfilePicture(
     context: Context,
     contentDescription: String = "Profile Picture",
-    pictureUrl: String? = null,
+    fileSpecification: FileSpecification?
 ) {
     Box {
         Image(
@@ -45,8 +45,8 @@ fun ProfilePicture(
         )
         AsyncImage(
             model = ImageRequest.Builder(context)
-                .data(pictureUrl)
-                .memoryCacheKey(pictureUrl)
+                .data(fileSpecification?.fileUrl)
+                .memoryCacheKey(fileSpecification?.fileKey ?: fileSpecification?.fileUrl)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .build(),

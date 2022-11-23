@@ -81,7 +81,7 @@ class FeedViewModel @Inject constructor(
         fetchDataJob?.cancel()
         fetchDataJob = viewModelScope.launch {
             lastPushedState?.copyToggleIsRefreshing()?.push()
-            delay(2000)
+            loadFlightsByChallenge()
             lastPushedState?.copyToggleIsRefreshing()?.push()
         }
     }
@@ -90,6 +90,13 @@ class FeedViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             //     datastoreRepository.tempQueryAll()
         }
+    }
+
+    private suspend fun loadFlightsByChallenge() {
+        datastoreRepository
+            .queryTelloFlightsByChallengeOrderedByLength("test")
+            .doOnSuccess { println("Success") }
+            .doOnFailure { println("Failure") }
     }
 }
 

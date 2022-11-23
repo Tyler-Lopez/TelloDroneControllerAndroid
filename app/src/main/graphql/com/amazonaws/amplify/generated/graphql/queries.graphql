@@ -89,6 +89,10 @@ query GetTelloFlight($id: ID!) {
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -191,6 +195,10 @@ query GetTelloFlightData($id: ID!) {
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll
@@ -226,6 +234,10 @@ query ListTelloFlightData(
       id
       timeSinceStartMs
       telloflightID
+      mid
+      x
+      y
+      z
       mpry
       pitch
       roll
@@ -270,6 +282,10 @@ query SyncTelloFlightData(
       id
       timeSinceStartMs
       telloflightID
+      mid
+      x
+      y
+      z
       mpry
       pitch
       roll
@@ -298,7 +314,44 @@ query SyncTelloFlightData(
     startedAt
   }
 }
-query TelloFlightByOwnerAndStartedMs(
+query TelloFlightsByChallengeAndLengthMs(
+  $challengeID: ID!
+  $lengthMs: ModelIntKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelTelloFlightFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  telloFlightsByChallengeAndLengthMs(
+    challengeID: $challengeID
+    lengthMs: $lengthMs
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      startedMs
+      lengthMs
+      TelloFlightTelloFlightData {
+        nextToken
+        startedAt
+      }
+      challengeID
+      owner
+      successfulLand
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query TelloFlightsByOwnerAndStartedMs(
   $owner: String!
   $startedMs: ModelIntKeyConditionInput
   $sortDirection: ModelSortDirection
@@ -306,7 +359,7 @@ query TelloFlightByOwnerAndStartedMs(
   $limit: Int
   $nextToken: String
 ) {
-  telloFlightByOwnerAndStartedMs(
+  telloFlightsByOwnerAndStartedMs(
     owner: $owner
     startedMs: $startedMs
     sortDirection: $sortDirection
@@ -355,6 +408,10 @@ query TelloFlightDataByTelloFlightIdAndTimeSinceStartMs(
       id
       timeSinceStartMs
       telloflightID
+      mid
+      x
+      y
+      z
       mpry
       pitch
       roll

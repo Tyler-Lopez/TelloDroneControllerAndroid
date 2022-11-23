@@ -1,4 +1,4 @@
-package com.tlopez.datastoreDomain.repository.models;
+package com.tlopez.datastoreDomain.models;
 
 import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 

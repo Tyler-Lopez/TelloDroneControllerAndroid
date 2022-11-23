@@ -8,16 +8,20 @@ type TelloFlight @model @auth(rules: [{allow: private, operations: [create, read
   id: ID!
   startedMs: AWSTimestamp!
   lengthMs: Int
-  TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlightAndTimeSinceStartMs", fields: ["id"])
-  challengeID: ID! @index(name: "byChallenge")
-  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["startedMs"], queryField: "telloFlightByOwnerAndStartedMs")
+  TelloFlightTelloFlightData: [TelloFlightData] @hasMany(indexName: "byTelloFlight", fields: ["id"])
+  challengeID: ID! @index(name: "byChallenge") @index(name: "byChallengeAndLengthMs", sortKeyFields: ["lengthMs"], queryField: "telloFlightsByChallengeAndLengthMs")
+  owner: String! @index(name: "byOwnerAndStartedMs", sortKeyFields: ["startedMs"], queryField: "telloFlightsByOwnerAndStartedMs")
   successfulLand: Boolean 
 }
 
 type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner}]) {
   id: ID!
   timeSinceStartMs: Int!
-  telloflightID: ID! @index(name: "byTelloFlightAndTimeSinceStartMs", sortKeyFields: ["timeSinceStartMs"], queryField: "telloFlightDataByTelloFlightIdAndTimeSinceStartMs")
+  telloflightID: ID! @index(name: "byTelloFlight") @index(name: "byTelloFlightAndTimeSinceStartMs", sortKeyFields: ["timeSinceStartMs"], queryField: "telloFlightDataByTelloFlightIdAndTimeSinceStartMs")
+  mid: Int
+  x: Int
+  y: Int
+  z: Int
   mpry: Int
   pitch: Int
   roll: Int
@@ -32,8 +36,8 @@ type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, 
   bat: Int
   baro: Float
   time: Int
-  agx: Int
-  agy: Int
-  agz: Int
+  agx: Float
+  agy: Float
+  agz: Float
 }
  

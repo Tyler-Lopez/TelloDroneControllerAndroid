@@ -43,6 +43,20 @@ class StorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUrl(fileKey: String): Result<String> {
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.Storage.getUrl(
+                    fileKey,
+                    { continuation.resume(success(it.url.toString())) },
+                    { continuation.resumeWithException(it) }
+                )
+            }
+        } catch (e: Exception) {
+            failure(e)
+        }
+    }
+
     override suspend fun uploadFile(
         username: String,
         fileUri: Uri,

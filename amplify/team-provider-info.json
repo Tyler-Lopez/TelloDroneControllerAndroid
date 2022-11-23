@@ -21,7 +21,7 @@
       "function": {
         "telloshareresizephoto": {
           "deploymentBucketName": "amplify-telloshare-dev-231305-deployment",
-          "s3Key": "amplify-builds/telloshareresizephoto-386e707a733932364443-build.zip"
+          "s3Key": "amplify-builds/telloshareresizephoto-59616e56334d30335637-build.zip"
         }
       },
       "api": {

@@ -105,6 +105,10 @@ mutation CreateTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -155,6 +159,10 @@ mutation UpdateTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -205,6 +213,10 @@ mutation DeleteTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -250,6 +262,10 @@ mutation CreateTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll
@@ -283,6 +299,10 @@ mutation UpdateTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll
@@ -316,6 +336,10 @@ mutation DeleteTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll

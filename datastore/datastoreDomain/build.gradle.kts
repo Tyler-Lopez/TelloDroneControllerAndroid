@@ -4,6 +4,7 @@ apply {
 
 dependencies {
     "implementation"(project(Modules.core))
+    "implementation"(project(Modules.authDomain))
     Amazon.amplifyDependencies.forEach {
         "implementation"(it)
     }

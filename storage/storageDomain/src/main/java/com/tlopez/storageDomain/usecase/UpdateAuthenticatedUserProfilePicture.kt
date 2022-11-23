@@ -6,7 +6,7 @@ import com.tlopez.storageDomain.repository.StorageRepository
 import javax.inject.Inject
 import kotlin.Result.Companion.failure
 
-class UpdateUserProfilePicture @Inject constructor(
+class UpdateAuthenticatedUserProfilePicture @Inject constructor(
     private val getUser: GetUser,
     private val storageRepository: StorageRepository
 ) {

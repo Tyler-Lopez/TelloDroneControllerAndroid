@@ -1,22 +1,24 @@
 package com.tlopez.datastoreDomain.repository
 
-import com.tlopez.datastoreDomain.repository.models.TelloFlight
-import com.tlopez.datastoreDomain.repository.models.TelloFlightData
+import com.tlopez.datastoreDomain.models.Challenge
+import com.tlopez.datastoreDomain.models.TelloFlight
+import com.tlopez.datastoreDomain.models.TelloFlightData
 
 interface DatastoreRepository {
-    suspend fun queryTelloFlightsByOwner(): Result<List<TelloFlight>>
-    suspend fun queryTelloFlightDataByTelloFlightId(id: String): Result<List<TelloFlightData>>
-    suspend fun insertChallenge(name: String): Result<Unit>
+    suspend fun insertChallenge(name: String): Result<Challenge>
     suspend fun insertFlight(
         owner: String,
         startedMs: Long,
-        lengthMs: Long,
-        challengeId: String
+        challengeId: String?
     ): Result<TelloFlight>
 
     suspend fun insertFlightData(
         telloFlightId: String,
-        receivedAtMs: Long,
+        timeSinceStartMs: Long,
+        mid: Int,
+        x: Int,
+        y: Int,
+        z: Int,
         mpry: Int,
         pitch: Int,
         roll: Int,
@@ -31,13 +33,16 @@ interface DatastoreRepository {
         bat: Int,
         baro: Float,
         time: Int,
-        agx: Int,
-        agy: Int,
-        agz: Int
+        agx: Float,
+        agy: Float,
+        agz: Float
     ): Result<TelloFlightData>
 
+    suspend fun queryTelloFlightsByChallengeOrderedByLength(challengeId: String): Result<List<TelloFlight>>
+
     suspend fun updateFlight(
-        telloFlight: TelloFlight,
-        lengthMs: Long?
+        hasSuccessfullyLanded: Boolean,
+        lengthMs: Long,
+        telloFlight: TelloFlight
     ): Result<TelloFlight>
 }

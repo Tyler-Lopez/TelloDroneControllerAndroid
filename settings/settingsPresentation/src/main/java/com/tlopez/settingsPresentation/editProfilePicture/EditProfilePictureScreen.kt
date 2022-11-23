@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
 import com.tlopez.corePresentation.common.AppScaffold
 import com.tlopez.corePresentation.common.ProfilePicture
 import com.tlopez.corePresentation.common.ScreenBackground
@@ -15,6 +14,7 @@ import com.tlopez.corePresentation.common.button.ButtonSize
 import com.tlopez.corePresentation.common.button.HighEmphasisButton
 import com.tlopez.corePresentation.common.button.MediumEmphasisButton
 import com.tlopez.settingsPresentation.editProfilePicture.EditProfilePictureViewEvent.*
+import com.tlopez.settingsPresentation.editProfilePicture.SaveButtonState.*
 
 @Composable
 fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
@@ -34,7 +34,7 @@ fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
             viewModel.viewState.collectAsState().value?.apply {
                 ProfilePicture(
                     context = LocalContext.current,
-                    pictureUrl = fileUri?.toString()
+                    fileSpecification = fileSpecification
                 )
                 Column {
                     HighEmphasisButton(

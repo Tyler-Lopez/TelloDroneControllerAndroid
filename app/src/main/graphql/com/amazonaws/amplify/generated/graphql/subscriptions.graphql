@@ -96,6 +96,10 @@ subscription OnCreateTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -146,6 +150,10 @@ subscription OnUpdateTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -196,6 +204,10 @@ subscription OnDeleteTelloFlight(
         id
         timeSinceStartMs
         telloflightID
+        mid
+        x
+        y
+        z
         mpry
         pitch
         roll
@@ -241,6 +253,10 @@ subscription OnCreateTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll
@@ -274,6 +290,10 @@ subscription OnUpdateTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll
@@ -307,6 +327,10 @@ subscription OnDeleteTelloFlightData(
     id
     timeSinceStartMs
     telloflightID
+    mid
+    x
+    y
+    z
     mpry
     pitch
     roll

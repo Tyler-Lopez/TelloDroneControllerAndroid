@@ -12,28 +12,29 @@ import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
-import com.tlopez.datastoreDomain.repository.models.TelloFlight
+import com.tlopez.datastoreDomain.models.TelloFlight
+import com.tlopez.datastoreDomain.usecase.InitializeFlight
+import com.tlopez.datastoreDomain.usecase.InsertFlightData
+import com.tlopez.datastoreDomain.usecase.TerminateFlight
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 
 @HiltViewModel
 class ControllerViewModel @Inject constructor(
     private val telloRepository: TelloRepository,
-    private val datastoreRepository: DatastoreRepository
+    private val datastoreInitializeFlight: InitializeFlight,
+    private val datastoreInsertFlightData: InsertFlightData,
+    private val datastoreTerminateFlight: TerminateFlight
 ) : BaseRoutingViewModel<ControllerViewState, ControllerViewEvent, ControllerDestination>() {
 
     companion object {
         private const val DELAY_MS_HEALTH_CHECK = 500L
-        private const val DELAY_MS_TELLO_STATE = 500L
+        private const val DELAY_MS_TELLO_STATE = 1000L
         private const val MAX_RETRY_COUNT_LAND = 3
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
-
-        private const val CHALLENGE_ID_TEMP = "003ff51d-bbec-4ddc-be32-369fc8c8cfea"
     }
 
-    private var flightStartedMs: Long? = null
     private var healthCheckJob: Job? = null
     private var telloStateJob: Job? = null
 
@@ -84,21 +85,13 @@ class ControllerViewModel @Inject constructor(
             .land()
             .doOnSuccess {
                 (lastPushedState as? Connected)?.toLanded()?.push()
-                // todo make some function to move all logic following land, success or fail
-                pendingFlight?.let {
-                    datastoreRepository.updateFlight(
-                        it,
-                        currentTimeMillis() - (it.startedMs.secondsSinceEpoch * 1000)
-                    ).doOnSuccess {
-                        println("successfully updated flight")
-                    }.doOnFailure {
-                        println("failured to update flight")
-                    }
-                }
+                terminatePendingFlight(asSuccess = true)
             }
             .doOnFailure {
                 if (retryCount < MAX_RETRY_COUNT_LAND) {
                     attemptLand(retryCount = retryCount + 1)
+                } else {
+                    terminatePendingFlight(asSuccess = false)
                 }
             }
     }
@@ -108,18 +101,12 @@ class ControllerViewModel @Inject constructor(
             .takeOff()
             .doOnSuccess {
                 println("Successfully took off.")
-                flightStartedMs = currentTimeMillis()
                 (lastPushedState as? Connected)?.toFlying()?.push()
-                datastoreRepository.insertFlight(
-                    owner = "temp",
-                    startedMs = currentTimeMillis(),
-                    lengthMs = 0L,
-                    challengeId = CHALLENGE_ID_TEMP
-                ).doOnSuccess {
-                    println("success")
+                datastoreInitializeFlight().doOnSuccess {
+                    println("Successfully initialized flight.")
                     pendingFlight = it
                 }.doOnFailure {
-                    println("failure to add flight")
+                    println("Failed to initialize flight.")
                 }
             }
             .doOnFailure {
@@ -143,16 +130,16 @@ class ControllerViewModel @Inject constructor(
         telloRepository
             .connect()
             .doOnSuccess {
-                println("health check response good")
+                println("HEALTH CHECK: Success")
                 if (lastPushedState is DisconnectedIdle) {
                     ConnectedIdle().push()
                     telloStateLoop()
                 }
             }
             .doOnFailure {
-                println("health check response bad")
-                flightStartedMs = null
                 telloStateJob?.cancel()
+                println("HEALTH CHECK: Failure")
+                terminatePendingFlight(asSuccess = false)
                 if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
                     DisconnectedError
                 } else {
@@ -172,40 +159,53 @@ class ControllerViewModel @Inject constructor(
 
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
-            .doOnSuccess {
-                (lastPushedState as? Connected)?.updateTelloState(it)?.push()
-
+            .doOnSuccess { data ->
+                (lastPushedState as? Connected)?.updateTelloState(data)?.push()
                 pendingFlight?.let { flight ->
-                    datastoreRepository.insertFlightData(
-                        telloFlightId = flight.id,
-                        receivedAtMs = currentTimeMillis() - (flight.startedMs.secondsSinceEpoch * 1000),
-                        mpry = 0,
-                        pitch = 0,
-                        roll = 0,
-                        yaw = 0,
-                        vgx = 0,
-                        vgy = 0,
-                        vgz = 0,
-                        templ = 0,
-                        temph = 0,
-                        tof = 0,
-                        h = 0,
-                        bat = 0,
-                        baro = 0f,
-                        time = 0,
-                        agx = 0,
-                        agy = 0,
-                        agz = 0
+                    datastoreInsertFlightData(
+                        telloFlight = flight,
+                        mid = data.missionPadId,
+                        x = data.missionPadX,
+                        y = data.missionPadY,
+                        z = data.missionPadZ,
+                        mpry = data.mpry,
+                        pitch = data.pitch,
+                        roll = data.roll,
+                        yaw = data.yaw,
+                        vgx = data.speedOfX,
+                        vgy = data.speedOfY,
+                        vgz = data.speedOfZ,
+                        templ = data.temperatureLowestCelsius,
+                        temph = data.temperatureHighestCelsius,
+                        tof = data.timeOfFlightDistanceCm,
+                        h = data.heightCm,
+                        bat = data.batteryPercentage,
+                        baro = data.barometerPressureCm,
+                        time = data.timeMotorUsed,
+                        agx = data.accelerationX,
+                        agy = data.accelerationY,
+                        agz = data.accelerationZ
                     ).doOnSuccess {
-                        println("success inserting telloflightdata")
+                        println("SUCCESS. Inserted TelloFlightData")
                     }.doOnFailure {
-                        println("failed to insert telloflightdata")
+                        println("FAILURE. Unable to insert TelloFlightData")
                     }
                 }
-
             }
             .doOnFailure {
                 // No-op
             }
+    }
+
+    private suspend fun terminatePendingFlight(asSuccess: Boolean = false) {
+        pendingFlight?.let {
+            datastoreTerminateFlight(asSuccess, it)
+                .doOnSuccess {
+                    println("SUCCESS. Terminated flight with success: $asSuccess")
+                }.doOnFailure {
+                    println("FAILURE. Unable to terminate flight with success: $asSuccess")
+                }
+        }
+        pendingFlight = null
     }
 }

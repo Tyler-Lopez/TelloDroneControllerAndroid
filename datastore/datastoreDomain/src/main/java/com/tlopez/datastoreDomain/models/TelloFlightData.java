@@ -1,4 +1,4 @@
-package com.tlopez.datastoreDomain.repository.models;
+package com.tlopez.datastoreDomain.models;
 
 import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 
@@ -23,11 +23,15 @@ import java.util.UUID;
   @AuthRule(allow = AuthStrategy.PRIVATE, operations = { ModelOperation.CREATE, ModelOperation.READ }),
   @AuthRule(allow = AuthStrategy.OWNER, ownerField = "owner", identityClaim = "cognito:username", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
-@Index(name = "byTelloFlightAndTimeSinceStartMs", fields = {"telloflightID","timeSinceStartMs"})
+@Index(name = "byTelloFlight", fields = {"telloflightID"})
 public final class TelloFlightData implements Model {
   public static final QueryField ID = field("TelloFlightData", "id");
   public static final QueryField TIME_SINCE_START_MS = field("TelloFlightData", "timeSinceStartMs");
   public static final QueryField TELLOFLIGHT_ID = field("TelloFlightData", "telloflightID");
+  public static final QueryField MID = field("TelloFlightData", "mid");
+  public static final QueryField X = field("TelloFlightData", "x");
+  public static final QueryField Y = field("TelloFlightData", "y");
+  public static final QueryField Z = field("TelloFlightData", "z");
   public static final QueryField MPRY = field("TelloFlightData", "mpry");
   public static final QueryField PITCH = field("TelloFlightData", "pitch");
   public static final QueryField ROLL = field("TelloFlightData", "roll");
@@ -48,6 +52,10 @@ public final class TelloFlightData implements Model {
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="Int", isRequired = true) Integer timeSinceStartMs;
   private final @ModelField(targetType="ID", isRequired = true) String telloflightID;
+  private final @ModelField(targetType="Int") Integer mid;
+  private final @ModelField(targetType="Int") Integer x;
+  private final @ModelField(targetType="Int") Integer y;
+  private final @ModelField(targetType="Int") Integer z;
   private final @ModelField(targetType="Int") Integer mpry;
   private final @ModelField(targetType="Int") Integer pitch;
   private final @ModelField(targetType="Int") Integer roll;
@@ -62,9 +70,9 @@ public final class TelloFlightData implements Model {
   private final @ModelField(targetType="Int") Integer bat;
   private final @ModelField(targetType="Float") Double baro;
   private final @ModelField(targetType="Int") Integer time;
-  private final @ModelField(targetType="Int") Integer agx;
-  private final @ModelField(targetType="Int") Integer agy;
-  private final @ModelField(targetType="Int") Integer agz;
+  private final @ModelField(targetType="Float") Double agx;
+  private final @ModelField(targetType="Float") Double agy;
+  private final @ModelField(targetType="Float") Double agz;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -77,6 +85,22 @@ public final class TelloFlightData implements Model {
   
   public String getTelloflightId() {
       return telloflightID;
+  }
+  
+  public Integer getMid() {
+      return mid;
+  }
+  
+  public Integer getX() {
+      return x;
+  }
+  
+  public Integer getY() {
+      return y;
+  }
+  
+  public Integer getZ() {
+      return z;
   }
   
   public Integer getMpry() {
@@ -135,15 +159,15 @@ public final class TelloFlightData implements Model {
       return time;
   }
   
-  public Integer getAgx() {
+  public Double getAgx() {
       return agx;
   }
   
-  public Integer getAgy() {
+  public Double getAgy() {
       return agy;
   }
   
-  public Integer getAgz() {
+  public Double getAgz() {
       return agz;
   }
   
@@ -155,10 +179,14 @@ public final class TelloFlightData implements Model {
       return updatedAt;
   }
   
-  private TelloFlightData(String id, Integer timeSinceStartMs, String telloflightID, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
+  private TelloFlightData(String id, Integer timeSinceStartMs, String telloflightID, Integer mid, Integer x, Integer y, Integer z, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
     this.id = id;
     this.timeSinceStartMs = timeSinceStartMs;
     this.telloflightID = telloflightID;
+    this.mid = mid;
+    this.x = x;
+    this.y = y;
+    this.z = z;
     this.mpry = mpry;
     this.pitch = pitch;
     this.roll = roll;
@@ -189,6 +217,10 @@ public final class TelloFlightData implements Model {
       return ObjectsCompat.equals(getId(), telloFlightData.getId()) &&
               ObjectsCompat.equals(getTimeSinceStartMs(), telloFlightData.getTimeSinceStartMs()) &&
               ObjectsCompat.equals(getTelloflightId(), telloFlightData.getTelloflightId()) &&
+              ObjectsCompat.equals(getMid(), telloFlightData.getMid()) &&
+              ObjectsCompat.equals(getX(), telloFlightData.getX()) &&
+              ObjectsCompat.equals(getY(), telloFlightData.getY()) &&
+              ObjectsCompat.equals(getZ(), telloFlightData.getZ()) &&
               ObjectsCompat.equals(getMpry(), telloFlightData.getMpry()) &&
               ObjectsCompat.equals(getPitch(), telloFlightData.getPitch()) &&
               ObjectsCompat.equals(getRoll(), telloFlightData.getRoll()) &&
@@ -217,6 +249,10 @@ public final class TelloFlightData implements Model {
       .append(getId())
       .append(getTimeSinceStartMs())
       .append(getTelloflightId())
+      .append(getMid())
+      .append(getX())
+      .append(getY())
+      .append(getZ())
       .append(getMpry())
       .append(getPitch())
       .append(getRoll())
@@ -247,6 +283,10 @@ public final class TelloFlightData implements Model {
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("timeSinceStartMs=" + String.valueOf(getTimeSinceStartMs()) + ", ")
       .append("telloflightID=" + String.valueOf(getTelloflightId()) + ", ")
+      .append("mid=" + String.valueOf(getMid()) + ", ")
+      .append("x=" + String.valueOf(getX()) + ", ")
+      .append("y=" + String.valueOf(getY()) + ", ")
+      .append("z=" + String.valueOf(getZ()) + ", ")
       .append("mpry=" + String.valueOf(getMpry()) + ", ")
       .append("pitch=" + String.valueOf(getPitch()) + ", ")
       .append("roll=" + String.valueOf(getRoll()) + ", ")
@@ -303,6 +343,10 @@ public final class TelloFlightData implements Model {
       null,
       null,
       null,
+      null,
+      null,
+      null,
+      null,
       null
     );
   }
@@ -311,6 +355,10 @@ public final class TelloFlightData implements Model {
     return new CopyOfBuilder(id,
       timeSinceStartMs,
       telloflightID,
+      mid,
+      x,
+      y,
+      z,
       mpry,
       pitch,
       roll,
@@ -342,6 +390,10 @@ public final class TelloFlightData implements Model {
   public interface BuildStep {
     TelloFlightData build();
     BuildStep id(String id);
+    BuildStep mid(Integer mid);
+    BuildStep x(Integer x);
+    BuildStep y(Integer y);
+    BuildStep z(Integer z);
     BuildStep mpry(Integer mpry);
     BuildStep pitch(Integer pitch);
     BuildStep roll(Integer roll);
@@ -356,9 +408,9 @@ public final class TelloFlightData implements Model {
     BuildStep bat(Integer bat);
     BuildStep baro(Double baro);
     BuildStep time(Integer time);
-    BuildStep agx(Integer agx);
-    BuildStep agy(Integer agy);
-    BuildStep agz(Integer agz);
+    BuildStep agx(Double agx);
+    BuildStep agy(Double agy);
+    BuildStep agz(Double agz);
   }
   
 
@@ -366,6 +418,10 @@ public final class TelloFlightData implements Model {
     private String id;
     private Integer timeSinceStartMs;
     private String telloflightID;
+    private Integer mid;
+    private Integer x;
+    private Integer y;
+    private Integer z;
     private Integer mpry;
     private Integer pitch;
     private Integer roll;
@@ -380,9 +436,9 @@ public final class TelloFlightData implements Model {
     private Integer bat;
     private Double baro;
     private Integer time;
-    private Integer agx;
-    private Integer agy;
-    private Integer agz;
+    private Double agx;
+    private Double agy;
+    private Double agz;
     @Override
      public TelloFlightData build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -391,6 +447,10 @@ public final class TelloFlightData implements Model {
           id,
           timeSinceStartMs,
           telloflightID,
+          mid,
+          x,
+          y,
+          z,
           mpry,
           pitch,
           roll,
@@ -421,6 +481,30 @@ public final class TelloFlightData implements Model {
      public BuildStep telloflightId(String telloflightId) {
         Objects.requireNonNull(telloflightId);
         this.telloflightID = telloflightId;
+        return this;
+    }
+    
+    @Override
+     public BuildStep mid(Integer mid) {
+        this.mid = mid;
+        return this;
+    }
+    
+    @Override
+     public BuildStep x(Integer x) {
+        this.x = x;
+        return this;
+    }
+    
+    @Override
+     public BuildStep y(Integer y) {
+        this.y = y;
+        return this;
+    }
+    
+    @Override
+     public BuildStep z(Integer z) {
+        this.z = z;
         return this;
     }
     
@@ -509,19 +593,19 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public BuildStep agx(Integer agx) {
+     public BuildStep agx(Double agx) {
         this.agx = agx;
         return this;
     }
     
     @Override
-     public BuildStep agy(Integer agy) {
+     public BuildStep agy(Double agy) {
         this.agy = agy;
         return this;
     }
     
     @Override
-     public BuildStep agz(Integer agz) {
+     public BuildStep agz(Double agz) {
         this.agz = agz;
         return this;
     }
@@ -538,10 +622,14 @@ public final class TelloFlightData implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Integer timeSinceStartMs, String telloflightId, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Integer agx, Integer agy, Integer agz) {
+    private CopyOfBuilder(String id, Integer timeSinceStartMs, String telloflightId, Integer mid, Integer x, Integer y, Integer z, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
       super.id(id);
       super.timeSinceStartMs(timeSinceStartMs)
         .telloflightId(telloflightId)
+        .mid(mid)
+        .x(x)
+        .y(y)
+        .z(z)
         .mpry(mpry)
         .pitch(pitch)
         .roll(roll)
@@ -569,6 +657,26 @@ public final class TelloFlightData implements Model {
     @Override
      public CopyOfBuilder telloflightId(String telloflightId) {
       return (CopyOfBuilder) super.telloflightId(telloflightId);
+    }
+    
+    @Override
+     public CopyOfBuilder mid(Integer mid) {
+      return (CopyOfBuilder) super.mid(mid);
+    }
+    
+    @Override
+     public CopyOfBuilder x(Integer x) {
+      return (CopyOfBuilder) super.x(x);
+    }
+    
+    @Override
+     public CopyOfBuilder y(Integer y) {
+      return (CopyOfBuilder) super.y(y);
+    }
+    
+    @Override
+     public CopyOfBuilder z(Integer z) {
+      return (CopyOfBuilder) super.z(z);
     }
     
     @Override
@@ -642,17 +750,17 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public CopyOfBuilder agx(Integer agx) {
+     public CopyOfBuilder agx(Double agx) {
       return (CopyOfBuilder) super.agx(agx);
     }
     
     @Override
-     public CopyOfBuilder agy(Integer agy) {
+     public CopyOfBuilder agy(Double agy) {
       return (CopyOfBuilder) super.agy(agy);
     }
     
     @Override
-     public CopyOfBuilder agz(Integer agz) {
+     public CopyOfBuilder agz(Double agz) {
       return (CopyOfBuilder) super.agz(agz);
     }
   }

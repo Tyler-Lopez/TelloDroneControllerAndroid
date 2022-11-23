@@ -11,7 +11,8 @@ s3_client = boto3.client('s3')
 def resize_image(image_path, resized_path):
   image = Image.open(image_path)
   image = ImageOps.exif_transpose(image) # Apply EXIF transformation
-  image.thumbnail(tuple(x / 2 for x in image.size))
+  MAX_SIZE = (200, 200)
+  image.thumbnail(MAX_SIZE) # tuple(x / 2 for x in image.size)
   image.save(resized_path)
 
 def handler(event, context):

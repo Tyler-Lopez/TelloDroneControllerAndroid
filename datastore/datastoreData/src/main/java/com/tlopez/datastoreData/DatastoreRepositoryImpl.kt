@@ -1,33 +1,47 @@
 package com.tlopez.datastoreData
 
-import android.content.Context
 import android.util.Log
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.core.model.query.Where
 import com.amplifyframework.core.model.temporal.Temporal
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
-import com.tlopez.datastoreDomain.repository.models.Challenge
-import com.tlopez.datastoreDomain.repository.models.TelloFlight
-import com.tlopez.datastoreDomain.repository.models.TelloFlightData
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.tlopez.datastoreDomain.models.Challenge
+import com.tlopez.datastoreDomain.models.TelloFlight
+import com.tlopez.datastoreDomain.models.TelloFlightData
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import kotlin.Result.Companion.success
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class DatastoreRepositoryImpl @Inject constructor(
-    @ApplicationContext applicationContext: Context
-) : DatastoreRepository {
+class DatastoreRepositoryImpl : DatastoreRepository {
 
-    override suspend fun queryTelloFlightsByOwner(): Result<List<TelloFlight>> {
-        TODO("Not yet implemented")
+    companion object {
+        private const val DEFAULT_CHALLENGE_ID = "ec885c24-3ea6-4583-880c-8b72a5213bab"
     }
 
-    override suspend fun queryTelloFlightDataByTelloFlightId(id: String): Result<List<TelloFlightData>> {
-        TODO("Not yet implemented")
+    override suspend fun queryTelloFlightsByChallengeOrderedByLength(
+        challengeId: String
+    ): Result<List<TelloFlight>> {
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.DataStore.query(
+                    TelloFlight::class.java,
+                    Where
+                        .matches(TelloFlight.CHALLENGE_ID.eq(challengeId))
+                        .matches(TelloFlight.SUCCESSFUL_LAND.eq(true))
+                        .sorted(TelloFlight.LENGTH_MS.descending()),
+                    { continuation.resume(success(it.asSequence().toList())) },
+                    { continuation.resumeWithException(it) }
+                )
+            }
+        } catch (e: Exception) {
+            println("exception caught $e")
+            Result.failure(e)
+        }
     }
 
-    override suspend fun insertChallenge(name: String): Result<Unit> {
+    override suspend fun insertChallenge(name: String): Result<Challenge> {
         return try {
             suspendCoroutine { continuation ->
                 val item: Challenge = Challenge.builder()
@@ -38,7 +52,7 @@ class DatastoreRepositoryImpl @Inject constructor(
                     item,
                     { success ->
                         println("here success")
-                        continuation.resume(Result.success(Unit))
+                        continuation.resume(success(success.item()))
                         Log.i("Amplify", "Saved item: " + success.item().name)
                     },
                     { error ->
@@ -57,23 +71,22 @@ class DatastoreRepositoryImpl @Inject constructor(
     override suspend fun insertFlight(
         owner: String,
         startedMs: Long,
-        lengthMs: Long,
-        challengeId: String
+        challengeId: String?
     ): Result<TelloFlight> {
         return try {
             suspendCoroutine { continuation ->
                 val item: TelloFlight = TelloFlight.builder()
                     .startedMs(Temporal.Timestamp(startedMs, TimeUnit.MILLISECONDS))
-                    .challengeId(challengeId)
+                    .challengeId(challengeId ?: DEFAULT_CHALLENGE_ID)
                     .owner(owner)
-                    .lengthMs(lengthMs.toInt())
+                    .successfulLand(false)
                     .build()
 
                 Amplify.DataStore.save(
                     item,
                     { success ->
                         println("here success")
-                        continuation.resume(Result.success(item))
+                        continuation.resume(success(item))
                         Log.i("Amplify", "Saved item: " + success.item())
                     },
                     { error ->
@@ -92,6 +105,10 @@ class DatastoreRepositoryImpl @Inject constructor(
     override suspend fun insertFlightData(
         telloFlightId: String,
         timeSinceStartMs: Long,
+        mid: Int,
+        x: Int,
+        y: Int,
+        z: Int,
         mpry: Int,
         pitch: Int,
         roll: Int,
@@ -106,15 +123,19 @@ class DatastoreRepositoryImpl @Inject constructor(
         bat: Int,
         baro: Float,
         time: Int,
-        agx: Int,
-        agy: Int,
-        agz: Int
+        agx: Float,
+        agy: Float,
+        agz: Float
     ): Result<TelloFlightData> {
         return try {
             suspendCoroutine { continuation ->
                 val item: TelloFlightData = TelloFlightData.builder()
                     .timeSinceStartMs(timeSinceStartMs.toInt())
                     .telloflightId(telloFlightId)
+                    .mid(mid)
+                    .x(x)
+                    .y(y)
+                    .z(z)
                     .mpry(mpry)
                     .pitch(pitch)
                     .roll(roll)
@@ -129,15 +150,15 @@ class DatastoreRepositoryImpl @Inject constructor(
                     .bat(bat)
                     .baro(baro.toDouble())
                     .time(time)
-                    .agx(agx)
-                    .agy(agy)
-                    .agz(agz)
+                    .agx(agx.toDouble())
+                    .agy(agy.toDouble())
+                    .agz(agz.toDouble())
                     .build()
                 Amplify.DataStore.save(
                     item,
-                    { success ->
+                    {
                         println("here success")
-                        continuation.resume(Result.success(item))
+                        continuation.resume(success(item))
                         Log.i("Amplify", "Saved item: ")
                     },
                     { error ->
@@ -154,22 +175,22 @@ class DatastoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateFlight(
-        telloFlight: TelloFlight,
-        lengthMs: Long?
+        hasSuccessfullyLanded: Boolean,
+        lengthMs: Long,
+        telloFlight: TelloFlight
     ): Result<TelloFlight> {
         return try {
             suspendCoroutine { continuation ->
                 val updatedFlight: TelloFlight = telloFlight
                     .copyOfBuilder()
-                    .run {
-                        lengthMs?.let { lengthMs(it.toInt()) } ?: this
-                    }
+                    .lengthMs(lengthMs.toInt())
+                    .successfulLand(hasSuccessfullyLanded)
                     .build()
                 Amplify.DataStore.save(
                     updatedFlight,
-                    { success ->
+                    {
                         println("here success")
-                        continuation.resume(Result.success(updatedFlight))
+                        continuation.resume(success(updatedFlight))
                         Log.i("Amplify", "Saved item: ")
                     },
                     { error ->
@@ -184,6 +205,4 @@ class DatastoreRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
-
-
 }

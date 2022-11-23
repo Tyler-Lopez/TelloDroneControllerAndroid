@@ -1,6 +1,5 @@
 package com.tlopez.controllerData
 
-import android.text.TextUtils.indexOf
 import com.tlopez.controllerDomain.TelloState
 
 class TelloStateUtil {
@@ -12,6 +11,7 @@ class TelloStateUtil {
         private const val BAROMETER = "baro"
         private const val HEIGHT = "h"
         private const val MISSION_PAD_ID = "mid"
+        private const val MPRY = "mpry"
         private const val MISSION_PAD_X = "x"
         private const val MISSION_PAD_Y = "y"
         private const val MISSION_PAD_Z = "z"
@@ -50,6 +50,8 @@ class TelloStateUtil {
                 ?: error("Error missing MissionPadY")
             override val missionPadZ = telloStateMap[MISSION_PAD_Z]?.toInt()
                 ?: error("Error missing MissionPadZ")
+            override val mpry: Int = telloStateMap[MPRY]?.toInt()
+                ?: error("Error missing Mpry")
             override val pitch = telloStateMap[PITCH]?.toInt()
                 ?: error("Error missing Pitch")
             override val roll = telloStateMap[ROLL]?.toInt()
