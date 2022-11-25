@@ -21,16 +21,16 @@ class DatastoreRepositoryImpl : DatastoreRepository {
     }
 
     override suspend fun queryTelloFlightsByChallengeOrderedByLength(
-        challengeId: String
+        challengeId: String?
     ): Result<List<TelloFlight>> {
         return try {
             suspendCoroutine { continuation ->
                 Amplify.DataStore.query(
                     TelloFlight::class.java,
                     Where
-                        .matches(TelloFlight.CHALLENGE_ID.eq(challengeId))
+                        .matches(TelloFlight.CHALLENGE_ID.eq(challengeId ?: DEFAULT_CHALLENGE_ID))
                         .matches(TelloFlight.SUCCESSFUL_LAND.eq(true))
-                        .sorted(TelloFlight.LENGTH_MS.descending()),
+                        .sorted(TelloFlight.LENGTH_MS.ascending()),
                     { continuation.resume(success(it.asSequence().toList())) },
                     { continuation.resumeWithException(it) }
                 )
@@ -85,6 +85,7 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                 Amplify.DataStore.save(
                     item,
                     { success ->
+                        println("WOAH INSERTED FLIGHT")
                         println("here success")
                         continuation.resume(success(item))
                         Log.i("Amplify", "Saved item: " + success.item())
@@ -102,6 +103,21 @@ class DatastoreRepositoryImpl : DatastoreRepository {
         }
     }
 
+    override suspend fun queryTelloFlightData(): Result<Unit> {
+        return try {
+            suspendCoroutine { continuation ->
+                Amplify.DataStore.query(
+                    TelloFlightData::class.java,
+                    { continuation.resume(success(Unit)) },
+                    { continuation.resumeWithException(it) }
+                )
+            }
+        } catch (e: Exception) {
+            println("exception caught $e")
+            Result.failure(e)
+        }
+    }
+
     override suspend fun insertFlightData(
         telloFlightId: String,
         timeSinceStartMs: Long,
@@ -109,7 +125,9 @@ class DatastoreRepositoryImpl : DatastoreRepository {
         x: Int,
         y: Int,
         z: Int,
-        mpry: Int,
+        mPitch: Int,
+        mRoll: Int,
+        mYaw: Int,
         pitch: Int,
         roll: Int,
         yaw: Int,
@@ -136,7 +154,9 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                     .x(x)
                     .y(y)
                     .z(z)
-                    .mpry(mpry)
+                    .mpitch(mPitch)
+                    .mroll(mRoll)
+                    .myaw(mYaw)
                     .pitch(pitch)
                     .roll(roll)
                     .yaw(yaw)
@@ -154,6 +174,7 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                     .agy(agy.toDouble())
                     .agz(agz.toDouble())
                     .build()
+                println("prior to attempting to save with datastore telloflightdata")
                 Amplify.DataStore.save(
                     item,
                     {

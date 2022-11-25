@@ -100,7 +100,9 @@ subscription OnCreateTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -154,7 +156,9 @@ subscription OnUpdateTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -208,7 +212,9 @@ subscription OnDeleteTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -257,7 +263,9 @@ subscription OnCreateTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw
@@ -294,7 +302,9 @@ subscription OnUpdateTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw
@@ -331,7 +341,9 @@ subscription OnDeleteTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw

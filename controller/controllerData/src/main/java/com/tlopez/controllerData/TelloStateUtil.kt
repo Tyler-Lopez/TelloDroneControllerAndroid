@@ -27,6 +27,10 @@ class TelloStateUtil {
         private const val YAW = "yaw"
         private const val DELIMITER_CHAR = ';'
         private const val SUB_DELIMITER_CHAR = ':'
+        private const val DELIMITER_CHAR_MPRY = ','
+        private const val POSITION_MPRY_PITCH = 0
+        private const val POSITION_MPRY_ROLL = 1
+        private const val POSITION_MPRY_YAW = 2
     }
 
     fun decodeToTelloState(byteArray: ByteArray): TelloState {
@@ -41,6 +45,8 @@ class TelloStateUtil {
                 telloStateMap[first()] = last()
             }
         }
+        val missionPadPitchRollYawArr = telloStateMap[MPRY]?.split(DELIMITER_CHAR_MPRY)
+            ?: error("Error missing MPRY")
         return object : TelloState {
             override val missionPadId = telloStateMap[MISSION_PAD_ID]?.toInt()
                 ?: error("Error missing MissionPadId")
@@ -50,8 +56,9 @@ class TelloStateUtil {
                 ?: error("Error missing MissionPadY")
             override val missionPadZ = telloStateMap[MISSION_PAD_Z]?.toInt()
                 ?: error("Error missing MissionPadZ")
-            override val mpry: Int = telloStateMap[MPRY]?.toInt()
-                ?: error("Error missing Mpry")
+            override val mPitch = missionPadPitchRollYawArr[POSITION_MPRY_PITCH].toInt()
+            override val mRoll = missionPadPitchRollYawArr[POSITION_MPRY_PITCH].toInt()
+            override val mYaw = missionPadPitchRollYawArr[POSITION_MPRY_PITCH].toInt()
             override val pitch = telloStateMap[PITCH]?.toInt()
                 ?: error("Error missing Pitch")
             override val roll = telloStateMap[ROLL]?.toInt()

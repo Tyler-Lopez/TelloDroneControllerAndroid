@@ -32,10 +32,7 @@ fun EditProfilePictureScreen(viewModel: EditProfilePictureViewModel) {
         }) {
         ScreenBackground {
             viewModel.viewState.collectAsState().value?.apply {
-                ProfilePicture(
-                    context = LocalContext.current,
-                    fileSpecification = fileSpecification
-                )
+                ProfilePicture(fileSpecification = fileSpecification)
                 Column {
                     HighEmphasisButton(
                         text = "Select New Photo",

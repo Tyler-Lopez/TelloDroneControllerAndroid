@@ -55,6 +55,7 @@ class TelloRepositoryImpl @Inject constructor(
                     )
             )
         } catch (e: Exception) {
+            println("Exception caught receiving tello state $e")
             failure(e)
         }
     }

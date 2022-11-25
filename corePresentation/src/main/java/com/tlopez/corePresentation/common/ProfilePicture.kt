@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.layout.ContentScale.Companion.Fit
 import androidx.compose.ui.layout.ContentScale.Companion.Inside
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
@@ -22,20 +23,21 @@ import coil.compose.rememberImagePainter
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.tlopez.corePresentation.ProfilePictureSize
 import com.tlopez.corePresentation.R
 
 @Composable
 fun ProfilePicture(
-    context: Context,
     contentDescription: String = "Profile Picture",
-    fileSpecification: FileSpecification?
+    fileSpecification: FileSpecification?,
+    profilePictureSize: ProfilePictureSize = ProfilePictureSize.MEDIUM
 ) {
     Box {
         Image(
             painter = painterResource(R.drawable.ic_avatar_profile),
             contentDescription = contentDescription,
             modifier = Modifier
-                .size(128.dp)
+                .size(profilePictureSize.getMinHeight())
                 .clip(CircleShape)
                 .border(
                     width = 2.dp,
@@ -44,7 +46,7 @@ fun ProfilePicture(
                 )
         )
         AsyncImage(
-            model = ImageRequest.Builder(context)
+            model = ImageRequest.Builder(LocalContext.current)
                 .data(fileSpecification?.fileUrl)
                 .memoryCacheKey(fileSpecification?.fileKey ?: fileSpecification?.fileUrl)
                 .memoryCachePolicy(CachePolicy.ENABLED)
@@ -53,7 +55,7 @@ fun ProfilePicture(
             contentDescription = contentDescription,
             contentScale = Crop,
             modifier = Modifier
-                .size(128.dp)
+                .size(profilePictureSize.getMinHeight())
                 .clip(CircleShape)
                 .border(
                     width = 2.dp,

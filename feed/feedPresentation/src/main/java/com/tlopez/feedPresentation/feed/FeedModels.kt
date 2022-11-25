@@ -3,16 +3,15 @@ package com.tlopez.feedPresentation.feed
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
 import com.tlopez.feedPresentation.NavigationItem
-import java.io.File
+import com.tlopez.feedPresentation.TelloFlightSummary
 
 sealed interface FeedViewEvent : ViewEvent {
+    data class ClickedFlightDetails(val flightIndex: Int) : FeedViewEvent
     object ClickedFly : FeedViewEvent
     object ClickedHome : FeedViewEvent
     object ClickedMyFlights : FeedViewEvent
     object ClickedSettings : FeedViewEvent
     object PulledRefresh : FeedViewEvent
-    object TempClickedInsertChallenge : FeedViewEvent
-    object TempClickedTemp : FeedViewEvent
 }
 
 sealed interface FeedViewState : ViewState {
@@ -21,7 +20,8 @@ sealed interface FeedViewState : ViewState {
 
     fun copyToggleIsRefreshing(): FeedViewState
     fun toHomeViewState(
-        isRefreshing: Boolean
+        flightSummaries: List<TelloFlightSummary>? = null,
+        isRefreshing: Boolean? = null
     ): HomeViewState
 
     fun toMyFlightsViewState(
@@ -29,6 +29,7 @@ sealed interface FeedViewState : ViewState {
     ): MyFlightsViewState
 
     data class HomeViewState(
+        val flightSummaries: List<TelloFlightSummary> = listOf(),
         override val isRefreshing: Boolean = false
     ) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME
@@ -36,9 +37,11 @@ sealed interface FeedViewState : ViewState {
             copy(isRefreshing = !isRefreshing)
 
         override fun toHomeViewState(
-            isRefreshing: Boolean
+            flightSummaries: List<TelloFlightSummary>?,
+            isRefreshing: Boolean?
         ): HomeViewState = copy(
-            isRefreshing = isRefreshing
+            flightSummaries = flightSummaries ?: this.flightSummaries,
+            isRefreshing = isRefreshing ?: this.isRefreshing
         )
 
         override fun toMyFlightsViewState(
@@ -56,9 +59,11 @@ sealed interface FeedViewState : ViewState {
             copy(isRefreshing = !isRefreshing)
 
         override fun toHomeViewState(
-            isRefreshing: Boolean
+            flightSummaries: List<TelloFlightSummary>?,
+            isRefreshing: Boolean?
         ): HomeViewState = HomeViewState(
-            isRefreshing = isRefreshing
+            flightSummaries = flightSummaries ?: listOf(),
+            isRefreshing = isRefreshing ?: this.isRefreshing
         )
 
         override fun toMyFlightsViewState(

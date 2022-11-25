@@ -93,7 +93,9 @@ query GetTelloFlight($id: ID!) {
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -199,7 +201,9 @@ query GetTelloFlightData($id: ID!) {
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw
@@ -238,7 +242,9 @@ query ListTelloFlightData(
       x
       y
       z
-      mpry
+      mpitch
+      mroll
+      myaw
       pitch
       roll
       yaw
@@ -286,7 +292,9 @@ query SyncTelloFlightData(
       x
       y
       z
-      mpry
+      mpitch
+      mroll
+      myaw
       pitch
       roll
       yaw
@@ -412,7 +420,9 @@ query TelloFlightDataByTelloFlightIdAndTimeSinceStartMs(
       x
       y
       z
-      mpry
+      mpitch
+      mroll
+      myaw
       pitch
       roll
       yaw

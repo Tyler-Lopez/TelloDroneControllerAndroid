@@ -15,7 +15,9 @@ class InsertFlightData @Inject constructor(
         x: Int,
         y: Int,
         z: Int,
-        mpry: Int,
+        mPitch: Int,
+        mRoll: Int,
+        mYaw: Int,
         pitch: Int,
         roll: Int,
         yaw: Int,
@@ -36,7 +38,8 @@ class InsertFlightData @Inject constructor(
         val timeSinceStartMs = telloFlight.startedMs.secondsSinceEpoch.let {
             System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(it)
         }
-        check(timeSinceStartMs >= 0)
+        println("Here, time since start is $timeSinceStartMs")
+       //  check(timeSinceStartMs >= 0)
         return datastoreRepository.insertFlightData(
             telloFlight.id,
             timeSinceStartMs,
@@ -44,7 +47,9 @@ class InsertFlightData @Inject constructor(
             x,
             y,
             z,
-            mpry,
+            mPitch,
+            mRoll,
+            mYaw,
             pitch,
             roll,
             yaw,

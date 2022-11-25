@@ -81,6 +81,8 @@ class ControllerViewModel @Inject constructor(
     }
 
     private suspend fun attemptLand(retryCount: Int = 0) {
+        telloStateJob?.cancel()
+        healthCheckJob?.cancel()
         telloRepository
             .land()
             .doOnSuccess {
@@ -160,6 +162,7 @@ class ControllerViewModel @Inject constructor(
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
             .doOnSuccess { data ->
+                println("Successfully received tello state.")
                 (lastPushedState as? Connected)?.updateTelloState(data)?.push()
                 pendingFlight?.let { flight ->
                     datastoreInsertFlightData(
@@ -168,7 +171,9 @@ class ControllerViewModel @Inject constructor(
                         x = data.missionPadX,
                         y = data.missionPadY,
                         z = data.missionPadZ,
-                        mpry = data.mpry,
+                        mPitch = data.mPitch,
+                        mRoll = data.mRoll,
+                        mYaw = data.mYaw,
                         pitch = data.pitch,
                         roll = data.roll,
                         yaw = data.yaw,

@@ -109,7 +109,9 @@ mutation CreateTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -163,7 +165,9 @@ mutation UpdateTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -217,7 +221,9 @@ mutation DeleteTelloFlight(
         x
         y
         z
-        mpry
+        mpitch
+        mroll
+        myaw
         pitch
         roll
         yaw
@@ -266,7 +272,9 @@ mutation CreateTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw
@@ -303,7 +311,9 @@ mutation UpdateTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw
@@ -340,7 +350,9 @@ mutation DeleteTelloFlightData(
     x
     y
     z
-    mpry
+    mpitch
+    mroll
+    myaw
     pitch
     roll
     yaw

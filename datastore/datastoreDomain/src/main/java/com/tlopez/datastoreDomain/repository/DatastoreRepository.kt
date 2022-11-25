@@ -19,7 +19,9 @@ interface DatastoreRepository {
         x: Int,
         y: Int,
         z: Int,
-        mpry: Int,
+        mPitch: Int,
+        mRoll: Int,
+        mYaw: Int,
         pitch: Int,
         roll: Int,
         yaw: Int,
@@ -38,7 +40,8 @@ interface DatastoreRepository {
         agz: Float
     ): Result<TelloFlightData>
 
-    suspend fun queryTelloFlightsByChallengeOrderedByLength(challengeId: String): Result<List<TelloFlight>>
+    suspend fun queryTelloFlightsByChallengeOrderedByLength(challengeId: String? = null): Result<List<TelloFlight>>
+    suspend fun queryTelloFlightData(): Result<Unit>
 
     suspend fun updateFlight(
         hasSuccessfullyLanded: Boolean,

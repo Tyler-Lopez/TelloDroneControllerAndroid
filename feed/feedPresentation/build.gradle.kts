@@ -11,4 +11,8 @@ dependencies {
     Accompanist.accompanistDependencies.forEach {
         "implementation"(it)
     }
+    // todo, this probably isn't needed it was added because can't use telloflight w/o
+    Amazon.amplifyDependencies.forEach {
+        "implementation"(it)
+    }
 }

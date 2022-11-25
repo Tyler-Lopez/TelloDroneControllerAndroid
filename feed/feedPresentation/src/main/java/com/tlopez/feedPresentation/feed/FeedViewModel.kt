@@ -7,40 +7,51 @@ import com.tlopez.core.ext.doOnSuccess
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
 import com.tlopez.feedPresentation.FeedDestination
 import com.tlopez.feedPresentation.FeedDestination.*
+import com.tlopez.feedPresentation.TelloFlightSummary
 import com.tlopez.feedPresentation.feed.FeedViewEvent.*
 import com.tlopez.feedPresentation.feed.FeedViewState.*
-import com.tlopez.storageDomain.repository.StorageRepository
+import com.tlopez.storageDomain.usecase.GetUserProfilePictureUrl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val datastoreRepository: DatastoreRepository,
-    private val storageRepository: StorageRepository
+    private val getUserProfilePictureUrl: GetUserProfilePictureUrl
 ) : BaseRoutingViewModel<FeedViewState, FeedViewEvent, FeedDestination>() {
 
     private var fetchDataJob: Job? = null
+    private var flightSummaries: List<TelloFlightSummary> = listOf()
 
     init {
         HomeViewState().push()
         fetchDataJob = viewModelScope.launch(Dispatchers.IO) {
+            loadFlights()
         }
     }
 
     override fun onEvent(event: FeedViewEvent) {
         when (event) {
+            is ClickedFlightDetails -> onClickedFlightDetails(event)
             is ClickedFly -> onClickedFly()
             is ClickedHome -> onClickedHome()
             is ClickedMyFlights -> onClickedMyFlights()
             is ClickedSettings -> onClickedSettings()
             is PulledRefresh -> onPulledRefresh()
-            is TempClickedInsertChallenge -> onClickedInsertChallenge()
-            is TempClickedTemp -> onTempClickedTemp()
         }
+    }
+
+    private fun onClickedFlightDetails(event: ClickedFlightDetails) {
+        routeTo(
+            NavigateFlightDetails(
+                flightId = flightSummaries[event.flightIndex].flightId
+            )
+        )
     }
 
     private fun onClickedFly() {
@@ -50,6 +61,7 @@ class FeedViewModel @Inject constructor(
     private fun onClickedHome() {
         fetchDataJob?.cancel()
         lastPushedState?.toHomeViewState(
+            flightSummaries = flightSummaries,
             isRefreshing = false
         )?.push()
     }
@@ -65,38 +77,38 @@ class FeedViewModel @Inject constructor(
         routeTo(NavigateSettings)
     }
 
-    private fun onClickedInsertChallenge() {
-        viewModelScope.launch(Dispatchers.IO) {
-            datastoreRepository.insertChallenge("Test")
-                .doOnSuccess {
-                    println("success")
-                }
-                .doOnFailure {
-                    println("failure")
-                }
-        }
-    }
-
     private fun onPulledRefresh() {
         fetchDataJob?.cancel()
         fetchDataJob = viewModelScope.launch {
             lastPushedState?.copyToggleIsRefreshing()?.push()
-            loadFlightsByChallenge()
+            loadFlights()
             lastPushedState?.copyToggleIsRefreshing()?.push()
         }
     }
 
-    private fun onTempClickedTemp() {
-        viewModelScope.launch(Dispatchers.IO) {
-            //     datastoreRepository.tempQueryAll()
-        }
-    }
-
-    private suspend fun loadFlightsByChallenge() {
+    private suspend fun loadFlights() {
         datastoreRepository
-            .queryTelloFlightsByChallengeOrderedByLength("test")
-            .doOnSuccess { println("Success") }
+            .queryTelloFlightsByChallengeOrderedByLength()
+            .doOnSuccess { flights ->
+                val flightSummaries = flights.map {
+                    TelloFlightSummary(
+                        profileUrl = getUserProfilePictureUrl(it.owner).getOrNull(),
+                        flightId = it.id,
+                        flightLength = it.lengthMs.formatFlightLength(),
+                        flightStarted = Date(it.startedMs.secondsSinceEpoch * 1000).toString(),
+                        username = it.owner
+                    )
+                }
+                this.flightSummaries = flightSummaries
+                lastPushedState?.toHomeViewState(
+                    flightSummaries = flightSummaries
+                )?.push()
+            }
             .doOnFailure { println("Failure") }
     }
-}
 
+    private fun Int.formatFlightLength(): String {
+        val millisecondsInSecond = 1000f
+        return "%.1f s".format(toFloat() / millisecondsInSecond)
+    }
+}

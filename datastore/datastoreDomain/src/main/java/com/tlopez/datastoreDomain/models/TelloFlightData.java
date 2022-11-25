@@ -32,7 +32,9 @@ public final class TelloFlightData implements Model {
   public static final QueryField X = field("TelloFlightData", "x");
   public static final QueryField Y = field("TelloFlightData", "y");
   public static final QueryField Z = field("TelloFlightData", "z");
-  public static final QueryField MPRY = field("TelloFlightData", "mpry");
+  public static final QueryField MPITCH = field("TelloFlightData", "mpitch");
+  public static final QueryField MROLL = field("TelloFlightData", "mroll");
+  public static final QueryField MYAW = field("TelloFlightData", "myaw");
   public static final QueryField PITCH = field("TelloFlightData", "pitch");
   public static final QueryField ROLL = field("TelloFlightData", "roll");
   public static final QueryField YAW = field("TelloFlightData", "yaw");
@@ -56,7 +58,9 @@ public final class TelloFlightData implements Model {
   private final @ModelField(targetType="Int") Integer x;
   private final @ModelField(targetType="Int") Integer y;
   private final @ModelField(targetType="Int") Integer z;
-  private final @ModelField(targetType="Int") Integer mpry;
+  private final @ModelField(targetType="Int") Integer mpitch;
+  private final @ModelField(targetType="Int") Integer mroll;
+  private final @ModelField(targetType="Int") Integer myaw;
   private final @ModelField(targetType="Int") Integer pitch;
   private final @ModelField(targetType="Int") Integer roll;
   private final @ModelField(targetType="Int") Integer yaw;
@@ -103,8 +107,16 @@ public final class TelloFlightData implements Model {
       return z;
   }
   
-  public Integer getMpry() {
-      return mpry;
+  public Integer getMpitch() {
+      return mpitch;
+  }
+  
+  public Integer getMroll() {
+      return mroll;
+  }
+  
+  public Integer getMyaw() {
+      return myaw;
   }
   
   public Integer getPitch() {
@@ -179,7 +191,7 @@ public final class TelloFlightData implements Model {
       return updatedAt;
   }
   
-  private TelloFlightData(String id, Integer timeSinceStartMs, String telloflightID, Integer mid, Integer x, Integer y, Integer z, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
+  private TelloFlightData(String id, Integer timeSinceStartMs, String telloflightID, Integer mid, Integer x, Integer y, Integer z, Integer mpitch, Integer mroll, Integer myaw, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
     this.id = id;
     this.timeSinceStartMs = timeSinceStartMs;
     this.telloflightID = telloflightID;
@@ -187,7 +199,9 @@ public final class TelloFlightData implements Model {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.mpry = mpry;
+    this.mpitch = mpitch;
+    this.mroll = mroll;
+    this.myaw = myaw;
     this.pitch = pitch;
     this.roll = roll;
     this.yaw = yaw;
@@ -221,7 +235,9 @@ public final class TelloFlightData implements Model {
               ObjectsCompat.equals(getX(), telloFlightData.getX()) &&
               ObjectsCompat.equals(getY(), telloFlightData.getY()) &&
               ObjectsCompat.equals(getZ(), telloFlightData.getZ()) &&
-              ObjectsCompat.equals(getMpry(), telloFlightData.getMpry()) &&
+              ObjectsCompat.equals(getMpitch(), telloFlightData.getMpitch()) &&
+              ObjectsCompat.equals(getMroll(), telloFlightData.getMroll()) &&
+              ObjectsCompat.equals(getMyaw(), telloFlightData.getMyaw()) &&
               ObjectsCompat.equals(getPitch(), telloFlightData.getPitch()) &&
               ObjectsCompat.equals(getRoll(), telloFlightData.getRoll()) &&
               ObjectsCompat.equals(getYaw(), telloFlightData.getYaw()) &&
@@ -253,7 +269,9 @@ public final class TelloFlightData implements Model {
       .append(getX())
       .append(getY())
       .append(getZ())
-      .append(getMpry())
+      .append(getMpitch())
+      .append(getMroll())
+      .append(getMyaw())
       .append(getPitch())
       .append(getRoll())
       .append(getYaw())
@@ -287,7 +305,9 @@ public final class TelloFlightData implements Model {
       .append("x=" + String.valueOf(getX()) + ", ")
       .append("y=" + String.valueOf(getY()) + ", ")
       .append("z=" + String.valueOf(getZ()) + ", ")
-      .append("mpry=" + String.valueOf(getMpry()) + ", ")
+      .append("mpitch=" + String.valueOf(getMpitch()) + ", ")
+      .append("mroll=" + String.valueOf(getMroll()) + ", ")
+      .append("myaw=" + String.valueOf(getMyaw()) + ", ")
       .append("pitch=" + String.valueOf(getPitch()) + ", ")
       .append("roll=" + String.valueOf(getRoll()) + ", ")
       .append("yaw=" + String.valueOf(getYaw()) + ", ")
@@ -347,6 +367,8 @@ public final class TelloFlightData implements Model {
       null,
       null,
       null,
+      null,
+      null,
       null
     );
   }
@@ -359,7 +381,9 @@ public final class TelloFlightData implements Model {
       x,
       y,
       z,
-      mpry,
+      mpitch,
+      mroll,
+      myaw,
       pitch,
       roll,
       yaw,
@@ -394,7 +418,9 @@ public final class TelloFlightData implements Model {
     BuildStep x(Integer x);
     BuildStep y(Integer y);
     BuildStep z(Integer z);
-    BuildStep mpry(Integer mpry);
+    BuildStep mpitch(Integer mpitch);
+    BuildStep mroll(Integer mroll);
+    BuildStep myaw(Integer myaw);
     BuildStep pitch(Integer pitch);
     BuildStep roll(Integer roll);
     BuildStep yaw(Integer yaw);
@@ -422,7 +448,9 @@ public final class TelloFlightData implements Model {
     private Integer x;
     private Integer y;
     private Integer z;
-    private Integer mpry;
+    private Integer mpitch;
+    private Integer mroll;
+    private Integer myaw;
     private Integer pitch;
     private Integer roll;
     private Integer yaw;
@@ -451,7 +479,9 @@ public final class TelloFlightData implements Model {
           x,
           y,
           z,
-          mpry,
+          mpitch,
+          mroll,
+          myaw,
           pitch,
           roll,
           yaw,
@@ -509,8 +539,20 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public BuildStep mpry(Integer mpry) {
-        this.mpry = mpry;
+     public BuildStep mpitch(Integer mpitch) {
+        this.mpitch = mpitch;
+        return this;
+    }
+    
+    @Override
+     public BuildStep mroll(Integer mroll) {
+        this.mroll = mroll;
+        return this;
+    }
+    
+    @Override
+     public BuildStep myaw(Integer myaw) {
+        this.myaw = myaw;
         return this;
     }
     
@@ -622,7 +664,7 @@ public final class TelloFlightData implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Integer timeSinceStartMs, String telloflightId, Integer mid, Integer x, Integer y, Integer z, Integer mpry, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
+    private CopyOfBuilder(String id, Integer timeSinceStartMs, String telloflightId, Integer mid, Integer x, Integer y, Integer z, Integer mpitch, Integer mroll, Integer myaw, Integer pitch, Integer roll, Integer yaw, Integer vgx, Integer vgy, Integer vgz, Integer templ, Integer temph, Integer tof, Integer h, Integer bat, Double baro, Integer time, Double agx, Double agy, Double agz) {
       super.id(id);
       super.timeSinceStartMs(timeSinceStartMs)
         .telloflightId(telloflightId)
@@ -630,7 +672,9 @@ public final class TelloFlightData implements Model {
         .x(x)
         .y(y)
         .z(z)
-        .mpry(mpry)
+        .mpitch(mpitch)
+        .mroll(mroll)
+        .myaw(myaw)
         .pitch(pitch)
         .roll(roll)
         .yaw(yaw)
@@ -680,8 +724,18 @@ public final class TelloFlightData implements Model {
     }
     
     @Override
-     public CopyOfBuilder mpry(Integer mpry) {
-      return (CopyOfBuilder) super.mpry(mpry);
+     public CopyOfBuilder mpitch(Integer mpitch) {
+      return (CopyOfBuilder) super.mpitch(mpitch);
+    }
+    
+    @Override
+     public CopyOfBuilder mroll(Integer mroll) {
+      return (CopyOfBuilder) super.mroll(mroll);
+    }
+    
+    @Override
+     public CopyOfBuilder myaw(Integer myaw) {
+      return (CopyOfBuilder) super.myaw(myaw);
     }
     
     @Override

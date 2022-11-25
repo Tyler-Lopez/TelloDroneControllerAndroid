@@ -22,7 +22,9 @@ type TelloFlightData @model @auth(rules: [{allow: private, operations: [create, 
   x: Int
   y: Int
   z: Int
-  mpry: Int
+  mpitch: Int
+  mroll: Int
+  myaw: Int
   pitch: Int
   roll: Int
   yaw: Int

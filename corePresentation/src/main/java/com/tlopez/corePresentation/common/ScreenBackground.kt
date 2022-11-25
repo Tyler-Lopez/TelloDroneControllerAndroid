@@ -12,6 +12,8 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -19,7 +21,10 @@ import androidx.compose.ui.unit.dp
 fun ScreenBackground(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    colorBackground: Color = Color.White,
+    padding: Dp = 16.dp,
     pullRefreshSpecification: PullRefreshSpecification? = null,
+    scrollEnabled: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val pullRefreshState = pullRefreshSpecification?.let {
@@ -39,9 +44,15 @@ fun ScreenBackground(
             content = content,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .background(colorBackground)
+                .run {
+                    if (scrollEnabled) {
+                        verticalScroll(rememberScrollState())
+                    } else {
+                        this
+                    }
+                }
+                .padding(padding),
             horizontalAlignment = horizontalAlignment,
             verticalArrangement = Arrangement.spacedBy(16.dp, verticalAlignment)
         )
