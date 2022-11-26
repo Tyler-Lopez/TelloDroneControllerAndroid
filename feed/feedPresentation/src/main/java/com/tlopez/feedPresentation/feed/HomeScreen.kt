@@ -30,7 +30,7 @@ import java.io.File
 @Composable
 fun HomeScreen(
     flightSummaries: List<TelloFlightSummary>,
-    viewModel: EventReceiver<FeedViewEvent>
+    eventReceiver: EventReceiver<FeedViewEvent>
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -41,7 +41,9 @@ fun HomeScreen(
                 Box(
                     modifier = Modifier
                         .clickable {
-
+                            eventReceiver.onEventDebounced(
+                                FeedViewEvent.ClickedFlightDetails(index)
+                            )
                         }
                         .background(Color.White)
                         .padding(16.dp)

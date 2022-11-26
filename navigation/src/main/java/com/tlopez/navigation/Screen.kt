@@ -17,6 +17,9 @@ sealed interface Screen {
     }
 
     /** Feed **/
+    object FlightDetails : Screen {
+        override val route: String = "FlightDetails"
+    }
     object Home : Screen {
         override val route: String = "Home"
     }

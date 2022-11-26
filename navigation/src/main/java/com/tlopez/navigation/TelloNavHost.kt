@@ -17,6 +17,8 @@ import com.tlopez.controllerPresentation.ControllerScreen
 import com.tlopez.controllerPresentation.ControllerViewModel
 import com.tlopez.feedPresentation.feed.FeedViewDelegate
 import com.tlopez.feedPresentation.feed.FeedViewModel
+import com.tlopez.feedPresentation.flightDetails.FlightDetailsScreen
+import com.tlopez.feedPresentation.flightDetails.FlightDetailsViewModel
 import com.tlopez.navigation.Screen.*
 import com.tlopez.navigation.router.AuthRouter
 import com.tlopez.navigation.router.ControllerRouter
@@ -68,12 +70,24 @@ fun TelloNavHost(navController: NavHostController) {
                 attachRouter(authRouter)
             })
         }
+
         /** Feed navigation destinations **/
         selectiveSwipingInOutComposable(route = Home.route) {
             FeedViewDelegate(viewModel = hiltViewModel<FeedViewModel>().apply {
                 attachRouter(feedRouter)
             })
         }
+        swipingInOutComposable(
+            route = FlightDetails.route + "?flight_id={flight_id}",
+            arguments = listOf(
+                navArgument("flight_id") { type = NavType.StringType },
+            )
+        ) {
+            FlightDetailsScreen(viewModel = hiltViewModel<FlightDetailsViewModel>().apply {
+                attachRouter(feedRouter)
+            })
+        }
+
         /** Settings navigation destinations **/
         swipingInOutComposable(route = Settings.route) {
             SettingsScreen(viewModel = hiltViewModel<SettingsViewModel>().apply {
