@@ -29,7 +29,7 @@ sealed interface FeedViewState : ViewState {
     ): MyFlightsViewState
 
     data class HomeViewState(
-        val flightSummaries: List<TelloFlightSummary> = listOf(),
+        val flightSummaries: List<TelloFlightSummary>? = null,
         override val isRefreshing: Boolean = false
     ) : FeedViewState {
         override val selectedNavigationItem = NavigationItem.HOME

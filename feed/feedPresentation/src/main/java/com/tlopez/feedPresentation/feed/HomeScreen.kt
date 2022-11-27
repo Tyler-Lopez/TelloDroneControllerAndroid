@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,82 +26,80 @@ import java.io.File
 
 @Composable
 fun HomeScreen(
-    flightSummaries: List<TelloFlightSummary>,
+    flightSummaries: List<TelloFlightSummary>?,
     eventReceiver: EventReceiver<FeedViewEvent>
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(flightSummaries.size) { index ->
-            val flightSummary = flightSummaries[index]
-            Column {
-                Box(
-                    modifier = Modifier
-                        .clickable {
-                            eventReceiver.onEventDebounced(
-                                FeedViewEvent.ClickedFlightDetails(index)
-                            )
-                        }
-                        .background(Color.White)
-                        .padding(16.dp)
-                        .fillMaxWidth()
+    if (flightSummaries == null) {
+        CircularProgressIndicator()
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(flightSummaries.size) { index ->
+                val flightSummary = flightSummaries[index]
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                eventReceiver.onEventDebounced(
+                                    FeedViewEvent.ClickedFlightDetails(index)
+                                )
+                            }
+                            .background(Color.White)
+                            .padding(16.dp)
+                            .fillMaxWidth()
 
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Row(
-                                modifier = Modifier.weight(2f),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                ProfilePicture(
-                                    fileSpecification = flightSummary.profileUrl?.let {
-                                        FileSpecification(
-                                            fileUrl = it,
-                                            fileKey = flightSummary.username
+                                Row(
+                                    modifier = Modifier.weight(2f),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    ProfilePicture(
+                                        fileSpecification = flightSummary.profileUrl?.let {
+                                            FileSpecification(
+                                                fileUrl = it,
+                                                fileKey = flightSummary.username
+                                            )
+                                        },
+                                        profilePictureSize = ProfilePictureSize.SMALL
+                                    )
+                                    Column {
+                                        Text(
+                                            text = "@${flightSummary.username}",
+                                            style = Typography.h5
                                         )
-                                    },
-                                    profilePictureSize = ProfilePictureSize.SMALL
-                                )
-                                Column {
-                                    Text(
-                                        text = "@${flightSummary.username}",
-                                        style = Typography.h5
-                                    )
-                                    Text(
-                                        text = flightSummary.flightStarted,
-                                        style = Typography.subtitle1
-                                    )
+                                        Text(
+                                            text = flightSummary.flightStarted,
+                                            style = Typography.subtitle1
+                                        )
+                                    }
                                 }
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = flightSummary.flightLength,
+                                    textAlign = TextAlign.End
+                                )
                             }
-                            Text(
-                                modifier = Modifier.weight(1f),
-                                text = flightSummary.flightLength,
-                                textAlign = TextAlign.End
-                            )
                         }
+                        //  Divider()
                     }
-                    //  Divider()
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    )
                 }
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                )
             }
         }
     }
 }
-
-/*
-
-    Text("hi")
-
- */

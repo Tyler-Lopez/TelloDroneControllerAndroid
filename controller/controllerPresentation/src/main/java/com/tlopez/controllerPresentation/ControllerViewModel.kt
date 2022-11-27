@@ -1,5 +1,6 @@
 package com.tlopez.controllerPresentation
 
+import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import com.tlopez.controllerDomain.TelloRepository
 import com.tlopez.controllerPresentation.ControllerViewEvent.*
@@ -70,8 +71,26 @@ class ControllerViewModel @Inject constructor(
         }
     }
 
+    private fun onBitmapReceived(bitmap: Bitmap) {
+        (lastPushedState as? Connected)?.updateBitmap(bitmap)?.push()
+    }
+
     private fun onToggledVideo() {
-        (lastPushedState as? Connected)?.toggleVideo()?.push()
+        (lastPushedState as? Connected)
+            ?.toggleVideo()
+            ?.updateBitmap(null)
+            ?.apply {
+                viewModelScope.launch(commandsDispatcher) {
+                    if (videoOn) {
+                        telloRepository.setVideoBitmapListener(::onBitmapReceived)
+                        telloRepository.videoStart()
+                    } else {
+                        telloRepository.setVideoBitmapListener(null)
+                        telloRepository.videoStop()
+                    }
+                }
+            }
+            ?.push()
     }
 
     override fun onCleared() {

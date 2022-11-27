@@ -1,8 +1,15 @@
 package com.tlopez.controllerPresentation
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.unit.dp
 import com.tlopez.controllerPresentation.ControllerViewEvent.ToggledVideo
 import com.tlopez.controllerPresentation.ControllerViewState.Connected
 import com.tlopez.controllerPresentation.ControllerViewState.Disconnected
@@ -41,13 +48,26 @@ private fun ConnectedStateHandler(
                 BatteryIconText(batteryPercentage = state.telloState?.batteryPercentage ?: 0)
             }
         }) {
-        ScreenBackground {
-            when (state) {
-                is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
-                is Connected.Flying -> FlyingScreen(eventReceiver)
-                is Connected.Landed -> LandedScreen()
-                is Connected.Landing -> LandingScreen()
-                is Connected.TakingOff -> TakingOffScreen()
+        ScreenBackground(
+            padding = 0.dp
+        ) {
+            Box {
+                state.bitmapLatest?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Column {
+                    when (state) {
+                        is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
+                        is Connected.Flying -> FlyingScreen(eventReceiver)
+                        is Connected.Landed -> LandedScreen()
+                        is Connected.Landing -> LandingScreen()
+                        is Connected.TakingOff -> TakingOffScreen()
+                    }
+                }
             }
         }
     }

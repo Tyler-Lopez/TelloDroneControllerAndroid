@@ -18,7 +18,7 @@ interface TelloRepository {
     /** Set a listener to the callback which is invoked when a new video frame
      * is received from the device.
      * To prompt the device to receive video-feed, [videoStart] must first be invoked. */
-    suspend fun setVideoBitmapListener(onBitmap: (Bitmap) -> Unit)
+    suspend fun setVideoBitmapListener(onBitmap: ((Bitmap) -> Unit)?)
 
     /** Sets the lever force of the device. **/
     suspend fun setLeverForce(
