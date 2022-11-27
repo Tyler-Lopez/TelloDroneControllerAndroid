@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.tlopez.controllerPresentation.ControllerViewEvent.ToggledVideo
 import com.tlopez.controllerPresentation.ControllerViewState.Connected
@@ -56,7 +57,8 @@ private fun ConnectedStateHandler(
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillBounds
                     )
                 }
                 Column {

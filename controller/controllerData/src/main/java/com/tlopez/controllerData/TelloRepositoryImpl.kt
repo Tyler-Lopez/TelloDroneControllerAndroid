@@ -3,13 +3,15 @@ package com.tlopez.controllerData
 import android.graphics.*
 import android.media.Image
 import android.media.MediaCodec
-import android.provider.ContactsContract
 import com.tlopez.controllerDomain.TelloRepository
 import com.tlopez.controllerDomain.TelloResponse
 import com.tlopez.controllerDomain.TelloState
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.lang.String.format
 import java.net.DatagramPacket
@@ -19,9 +21,6 @@ import java.nio.ByteBuffer
 import javax.inject.Inject
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class TelloRepositoryImpl @Inject constructor(
     private val telloStateUtil: TelloStateUtil,
@@ -96,7 +95,11 @@ class TelloRepositoryImpl @Inject constructor(
         return socketCommands.sendCommandWithResponse(COMMAND_VIDEO_START)
             .doOnSuccess {
                 if (it == TelloResponse.OK) {
-                    receiveVideoLoop()
+                    withContext(ioDispatcher) {
+                        videoJob = launch {
+                            receiveVideoLoop()
+                        }
+                    }
                 }
             }
     }
@@ -104,8 +107,7 @@ class TelloRepositoryImpl @Inject constructor(
     override suspend fun videoStop(): Result<TelloResponse> {
         return socketCommands.sendCommandWithResponse(COMMAND_VIDEO_STOP)
             .doOnSuccess {
-                ioDispatcher[Job]?.cancel()
-
+                videoJob?.cancel()
             }
     }
 
@@ -186,18 +188,16 @@ class TelloRepositoryImpl @Inject constructor(
     private var destPos = 0
     private val startMs = System.currentTimeMillis()
 
-    private var videoFuckingJob: Job? = null
+    private var videoJob: Job? = null
 
     private fun receiveVideoLoop() {
         socketVideoStream
             .receiveResponseAsDatagramPacket()
             .doOnSuccess {
-                println("HERE FUCKING SUCCESS")
                 it.parseVideoLoopResponse()
                 receiveVideoLoop()
             }
             .doOnFailure {
-                println("HERE FUCKING FAILURE $it")
             }
     }
 
