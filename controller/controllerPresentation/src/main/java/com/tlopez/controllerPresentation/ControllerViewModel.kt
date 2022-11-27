@@ -53,6 +53,7 @@ class ControllerViewModel @Inject constructor(
         when (event) {
             is ClickedLand -> onClickedLand()
             is ClickedTakeOff -> onClickedTakeOff()
+            is ClickedTakePicture -> onClickedTakePicture()
             is ToggledVideo -> onToggledVideo()
         }
     }
@@ -69,6 +70,10 @@ class ControllerViewModel @Inject constructor(
         viewModelScope.launch(commandsDispatcher) {
             attemptTakeOff()
         }
+    }
+
+    private fun onClickedTakePicture() {
+
     }
 
     private fun onBitmapReceived(bitmap: Bitmap) {

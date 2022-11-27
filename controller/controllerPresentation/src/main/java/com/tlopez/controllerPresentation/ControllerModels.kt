@@ -8,6 +8,7 @@ import com.tlopez.core.architecture.ViewState
 sealed interface ControllerViewEvent : ViewEvent {
     object ClickedLand : ControllerViewEvent
     object ClickedTakeOff : ControllerViewEvent
+    object ClickedTakePicture : ControllerViewEvent
     object ToggledVideo : ControllerViewEvent
 }
 
