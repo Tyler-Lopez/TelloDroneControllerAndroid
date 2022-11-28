@@ -3,6 +3,7 @@ package com.tlopez.controllerPresentation
 import android.graphics.Bitmap
 import androidx.compose.ui.geometry.Offset
 import com.tlopez.controllerDomain.TelloState
+import com.tlopez.controllerPresentation.composable.thumbstick.ThumbstickState
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
 
@@ -88,7 +89,9 @@ sealed interface ControllerViewState : ViewState {
             override val bitmapLatest: Bitmap? = null,
             override val flightLengthMs: Int,
             override val telloState: TelloState?,
-            override val videoOn: Boolean
+            override val videoOn: Boolean,
+            val thumbstickStateRollPitch: ThumbstickState = ThumbstickState(),
+            val thumbstickStateThrottleYaw: ThumbstickState = ThumbstickState()
         ) : Connected {
             override fun toggleVideo() = copy(videoOn = !videoOn)
             override fun updateBitmap(bitmap: Bitmap?) = copy(bitmapLatest = bitmap)

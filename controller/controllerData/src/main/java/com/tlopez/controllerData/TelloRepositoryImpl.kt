@@ -21,6 +21,9 @@ import java.nio.ByteBuffer
 import javax.inject.Inject
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class TelloRepositoryImpl @Inject constructor(
     private val telloStateUtil: TelloStateUtil,
@@ -96,6 +99,7 @@ class TelloRepositoryImpl @Inject constructor(
             .doOnSuccess {
                 if (it == TelloResponse.OK) {
                     withContext(ioDispatcher) {
+                        videoJob?.cancel()
                         videoJob = launch {
                             receiveVideoLoop()
                         }
@@ -105,10 +109,8 @@ class TelloRepositoryImpl @Inject constructor(
     }
 
     override suspend fun videoStop(): Result<TelloResponse> {
+        videoJob?.cancel()
         return socketCommands.sendCommandWithResponse(COMMAND_VIDEO_STOP)
-            .doOnSuccess {
-                videoJob?.cancel()
-            }
     }
 
     private fun sendCommand(command: String): Result<Unit> {
@@ -190,15 +192,19 @@ class TelloRepositoryImpl @Inject constructor(
 
     private var videoJob: Job? = null
 
-    private fun receiveVideoLoop() {
-        socketVideoStream
-            .receiveResponseAsDatagramPacket()
-            .doOnSuccess {
-                it.parseVideoLoopResponse()
-                receiveVideoLoop()
-            }
-            .doOnFailure {
-            }
+    private suspend fun receiveVideoLoop() {
+        while (videoJob?.isActive == true) {
+            suspendCoroutine { continuation ->
+                socketVideoStream
+                    .receiveResponseAsDatagramPacket()
+                    .doOnSuccess {
+                        continuation.resume(it)
+                    }
+                    .doOnFailure {
+                        continuation.resumeWithException(it ?: UnknownError())
+                    }
+            }.parseVideoLoopResponse()
+        }
     }
 
     private fun DatagramPacket.parseVideoLoopResponse() {

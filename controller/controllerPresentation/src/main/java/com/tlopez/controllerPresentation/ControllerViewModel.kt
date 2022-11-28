@@ -9,6 +9,7 @@ import com.tlopez.controllerPresentation.ControllerViewState.Connected.Connected
 import com.tlopez.controllerPresentation.ControllerViewState.Connected.Flying
 import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.DisconnectedError
 import com.tlopez.controllerPresentation.ControllerViewState.Disconnected.DisconnectedIdle
+import com.tlopez.controllerPresentation.composable.thumbstick.ThumbstickState
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
@@ -31,12 +32,14 @@ class ControllerViewModel @Inject constructor(
 
     companion object {
         private const val DELAY_MS_HEALTH_CHECK = 500L
+        private const val DELAY_MS_LEVER_FORCE = 100L
         private const val DELAY_MS_TELLO_STATE = 1000L
         private const val MAX_RETRY_COUNT_LAND = 3
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
     }
 
     private var healthCheckJob: Job? = null
+    private var leverForceJob: Job? = null
     private var telloStateJob: Job? = null
 
     private var pendingFlight: TelloFlight? = null
@@ -81,19 +84,33 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onMovedRollPitchThumbstick(event: MovedRollPitchThumbstick) {
-
+        (lastPushedState as? Flying)?.run {
+            copy(
+                thumbstickStateRollPitch = thumbstickStateRollPitch.copyWithPercentAdjustment(
+                    event.movedByPercent.x,
+                    event.movedByPercent.y
+                )
+            )
+        }?.push()
     }
 
     private fun onMovedThrottleYawThumbstick(event: MovedThrottleYawThumbstick) {
-
+        (lastPushedState as? Flying)?.run {
+            copy(
+                thumbstickStateThrottleYaw = thumbstickStateThrottleYaw.copyWithPercentAdjustment(
+                    event.movedByPercent.x,
+                    event.movedByPercent.y
+                )
+            )
+        }?.push()
     }
 
     private fun onResetRollPitchThumbstick() {
-
+        (lastPushedState as? Flying)?.copy(thumbstickStateRollPitch = ThumbstickState())?.push()
     }
 
     private fun onResetThrottleYawThumbstick() {
-        
+        (lastPushedState as? Flying)?.copy(thumbstickStateThrottleYaw = ThumbstickState())?.push()
     }
 
     private fun onToggledVideo() {
@@ -119,9 +136,13 @@ class ControllerViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        println("On cleared invoked")
         super.onCleared()
         healthCheckJob?.cancel()
         telloStateJob?.cancel()
+        viewModelScope.launch(commandsDispatcher) {
+            telloRepository.videoStop()
+        }
     }
 
     private suspend fun attemptLand(retryCount: Int = 0) {
@@ -148,6 +169,8 @@ class ControllerViewModel @Inject constructor(
             .doOnSuccess {
                 println("Successfully took off.")
                 (lastPushedState as? Connected)?.toFlying()?.push()
+                // On any successful take-off, begin listening to lever force changes
+                leverForceLoop()
                 datastoreInitializeFlight().doOnSuccess {
                     println("Successfully initialized flight.")
                     pendingFlight = it
@@ -192,6 +215,27 @@ class ControllerViewModel @Inject constructor(
                     DisconnectedIdle
                 }.push()
             }
+    }
+
+    private fun leverForceLoop() {
+        leverForceJob?.cancel()
+        leverForceJob = viewModelScope.launch(commandsDispatcher) {
+            leverForceAction()
+            delay(DELAY_MS_LEVER_FORCE)
+            if (lastPushedState is Flying) leverForceLoop()
+        }
+    }
+
+    private suspend fun leverForceAction() {
+        (lastPushedState as? Flying)?.apply {
+            telloRepository
+                .setLeverForce(
+                    roll = (thumbstickStateRollPitch.fractionHorizontal * 100).toInt(),
+                    pitch = (thumbstickStateRollPitch.fractionVertical * 100).toInt(),
+                    throttle = (thumbstickStateThrottleYaw.fractionHorizontal * 100).toInt(),
+                    yaw = (thumbstickStateThrottleYaw.fractionVertical * 100).toInt()
+                )
+        } ?: telloRepository.setLeverForce(0, 0, 0, 0)
     }
 
     private fun telloStateLoop() {
@@ -257,4 +301,11 @@ class ControllerViewModel @Inject constructor(
         }
         pendingFlight = null
     }
+
+    private data class LeverForce(
+        val roll: Int = 0,
+        val pitch: Int = 0,
+        val throttle: Int = 0,
+        val yaw: Int = 0
+    )
 }

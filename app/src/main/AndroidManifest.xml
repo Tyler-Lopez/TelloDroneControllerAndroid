@@ -17,7 +17,7 @@
         android:theme="@style/Theme.TelloController"
         tools:targetApi="31">
         <activity
-            android:name="com.tlopez.telloShare.presentation.MainActivity"
+            android:name="com.tlopez.telloShare.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TelloController">
             <intent-filter>

@@ -107,7 +107,11 @@ private fun ConnectedStateHandler(
                 Column {
                     when (state) {
                         is Connected.ConnectedIdle -> ConnectedIdleScreen(eventReceiver)
-                        is Connected.Flying -> FlyingScreen(eventReceiver)
+                        is Connected.Flying -> FlyingScreen(
+                            state.thumbstickStateRollPitch,
+                            state.thumbstickStateThrottleYaw,
+                            eventReceiver
+                        )
                         is Connected.Landed -> LandedScreen()
                         is Connected.Landing -> LandingScreen()
                         is Connected.TakingOff -> TakingOffScreen()
