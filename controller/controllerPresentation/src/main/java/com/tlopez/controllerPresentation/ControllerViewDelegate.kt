@@ -70,7 +70,7 @@ private fun ConnectedStateHandler(
                                 println("Should show rationale")
                             }
                             else -> {
-                                println("Shouldn't show rationale, perma denied rip")
+                                println("Shouldn't show rationale, perma-denied rip")
                             }
                         }
                     }) {
