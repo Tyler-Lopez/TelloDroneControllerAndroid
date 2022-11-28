@@ -1,6 +1,7 @@
 package com.tlopez.controllerPresentation
 
 import android.graphics.Bitmap
+import androidx.compose.ui.geometry.Offset
 import com.tlopez.controllerDomain.TelloState
 import com.tlopez.core.architecture.ViewEvent
 import com.tlopez.core.architecture.ViewState
@@ -9,6 +10,10 @@ sealed interface ControllerViewEvent : ViewEvent {
     object ClickedLand : ControllerViewEvent
     object ClickedTakeOff : ControllerViewEvent
     object ClickedTakePicture : ControllerViewEvent
+    data class MovedRollPitchThumbstick(val movedByPercent: Offset) : ControllerViewEvent
+    data class MovedThrottleYawThumbstick(val movedByPercent: Offset) : ControllerViewEvent
+    object ResetRollPitchThumbstick : ControllerViewEvent
+    object ResetThrottleYawThumbstick : ControllerViewEvent
     object ToggledVideo : ControllerViewEvent
 }
 

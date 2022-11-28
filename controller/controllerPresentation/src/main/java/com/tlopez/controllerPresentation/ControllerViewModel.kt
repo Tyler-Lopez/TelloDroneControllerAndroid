@@ -54,6 +54,10 @@ class ControllerViewModel @Inject constructor(
             is ClickedLand -> onClickedLand()
             is ClickedTakeOff -> onClickedTakeOff()
             is ClickedTakePicture -> onClickedTakePicture()
+            is MovedRollPitchThumbstick -> onMovedRollPitchThumbstick(event)
+            is MovedThrottleYawThumbstick -> onMovedThrottleYawThumbstick(event)
+            is ResetRollPitchThumbstick -> onResetRollPitchThumbstick()
+            is ResetThrottleYawThumbstick -> onResetThrottleYawThumbstick()
             is ToggledVideo -> onToggledVideo()
         }
     }
@@ -76,8 +80,20 @@ class ControllerViewModel @Inject constructor(
 
     }
 
-    private fun onBitmapReceived(bitmap: Bitmap) {
-        (lastPushedState as? Connected)?.updateBitmap(bitmap)?.push()
+    private fun onMovedRollPitchThumbstick(event: MovedRollPitchThumbstick) {
+
+    }
+
+    private fun onMovedThrottleYawThumbstick(event: MovedThrottleYawThumbstick) {
+
+    }
+
+    private fun onResetRollPitchThumbstick() {
+
+    }
+
+    private fun onResetThrottleYawThumbstick() {
+        
     }
 
     private fun onToggledVideo() {
@@ -96,6 +112,10 @@ class ControllerViewModel @Inject constructor(
                 }
             }
             ?.push()
+    }
+
+    private fun onBitmapReceived(bitmap: Bitmap) {
+        (lastPushedState as? Connected)?.updateBitmap(bitmap)?.push()
     }
 
     override fun onCleared() {
