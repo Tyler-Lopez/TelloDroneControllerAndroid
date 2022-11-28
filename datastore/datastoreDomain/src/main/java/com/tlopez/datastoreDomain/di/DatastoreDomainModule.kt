@@ -2,6 +2,7 @@ package com.tlopez.datastoreDomain.di
 
 import com.tlopez.authDomain.usecase.GetUser
 import com.tlopez.datastoreDomain.repository.DatastoreRepository
+import com.tlopez.datastoreDomain.usecase.GetTelloFlightData
 import com.tlopez.datastoreDomain.usecase.InitializeFlight
 import com.tlopez.datastoreDomain.usecase.InsertFlightData
 import com.tlopez.datastoreDomain.usecase.TerminateFlight
@@ -15,6 +16,14 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @InstallIn(ViewModelComponent::class)
 object DatastoreDomainModule {
 
+    @Provides
+    @ViewModelScoped
+    fun provideGetTelloFlightData(
+        datastoreRepository: DatastoreRepository
+    ): GetTelloFlightData {
+        return GetTelloFlightData(datastoreRepository)
+    }
+    
     @Provides
     @ViewModelScoped
     fun provideInitializeFlight(

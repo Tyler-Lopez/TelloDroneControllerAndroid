@@ -41,7 +41,7 @@ interface DatastoreRepository {
     ): Result<TelloFlightData>
 
     suspend fun queryTelloFlightsByChallengeOrderedByLength(challengeId: String? = null): Result<List<TelloFlight>>
-    suspend fun queryTelloFlightData(): Result<Unit>
+    suspend fun queryTelloFlightData(flightId: String): Result<List<TelloFlightData>>
 
     suspend fun updateFlight(
         hasSuccessfullyLanded: Boolean,

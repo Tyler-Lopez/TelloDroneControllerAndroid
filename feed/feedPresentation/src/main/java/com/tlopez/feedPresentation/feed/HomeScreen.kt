@@ -96,7 +96,13 @@ fun HomeScreen(
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(8.dp)
+                            .height(
+                                if (index == flightSummaries.lastIndex) {
+                                    128.dp
+                                } else {
+                                    8.dp
+                                }
+                            )
                     )
                 }
             }

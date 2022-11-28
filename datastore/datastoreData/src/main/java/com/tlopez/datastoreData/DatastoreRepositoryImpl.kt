@@ -85,13 +85,10 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                 Amplify.DataStore.save(
                     item,
                     { success ->
-                        println("WOAH INSERTED FLIGHT")
-                        println("here success")
                         continuation.resume(success(item))
                         Log.i("Amplify", "Saved item: " + success.item())
                     },
                     { error ->
-                        println("here error $error")
                         Log.e("Amplify", "Could not save item to DataStore", error)
                         continuation.resumeWithException(error)
                     }
@@ -103,12 +100,14 @@ class DatastoreRepositoryImpl : DatastoreRepository {
         }
     }
 
-    override suspend fun queryTelloFlightData(): Result<Unit> {
+    override suspend fun queryTelloFlightData(flightId: String): Result<List<TelloFlightData>> {
         return try {
             suspendCoroutine { continuation ->
                 Amplify.DataStore.query(
                     TelloFlightData::class.java,
-                    { continuation.resume(success(Unit)) },
+                    Where
+                        .matches(TelloFlightData.TELLOFLIGHT_ID.eq(flightId)),
+                    { continuation.resume(success(it.asSequence().toList())) },
                     { continuation.resumeWithException(it) }
                 )
             }
