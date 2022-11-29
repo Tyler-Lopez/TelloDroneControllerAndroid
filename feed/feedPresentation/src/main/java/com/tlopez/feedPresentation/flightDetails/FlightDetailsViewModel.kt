@@ -19,7 +19,7 @@ class FlightDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseRoutingViewModel<FlightDetailsViewState, FlightDetailsViewEvent, FeedDestination>() {
 
-    val flightId: String = savedStateHandle["flight_id"] ?: error("Missing flight_id")
+    private val flightId: String = savedStateHandle["flight_id"] ?: error("Missing flight_id")
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

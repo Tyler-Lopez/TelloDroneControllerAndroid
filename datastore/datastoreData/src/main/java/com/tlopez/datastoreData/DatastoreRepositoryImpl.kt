@@ -18,6 +18,7 @@ class DatastoreRepositoryImpl : DatastoreRepository {
 
     companion object {
         private const val DEFAULT_CHALLENGE_ID = "ec885c24-3ea6-4583-880c-8b72a5213bab"
+        private const val DEFAULT_UNTERMINATED_FLIGHT_LENGTH = -1
     }
 
     override suspend fun queryTelloFlightsByChallengeOrderedByLength(
@@ -79,6 +80,7 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                     .startedMs(Temporal.Timestamp(startedMs, TimeUnit.MILLISECONDS))
                     .challengeId(challengeId ?: DEFAULT_CHALLENGE_ID)
                     .owner(owner)
+                    .lengthMs(DEFAULT_UNTERMINATED_FLIGHT_LENGTH)
                     .successfulLand(false)
                     .build()
 
