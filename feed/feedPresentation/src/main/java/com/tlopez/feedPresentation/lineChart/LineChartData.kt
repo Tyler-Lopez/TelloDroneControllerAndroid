@@ -1,21 +1,17 @@
 package com.tlopez.feedPresentation.lineChart
 
-data class LineChartData<TypeOfDataNumber : Number, TypeOfRangeNumber : Number>(
-    val dataRangePoints: List<Pair<TypeOfDataNumber, TypeOfRangeNumber>>,
-    val dataMaximum: TypeOfDataNumber,
-    val dataMinimum: TypeOfDataNumber,
-    val rangeMaximum: TypeOfRangeNumber,
-    val rangeMinimum: TypeOfRangeNumber
+data class LineChartData(
+    val dataSets: List<DataSet>,
+    val rangeMaximum: Float,
+    val rangeMinimum: Float
 ) {
-    val normalizedDataRangePoints: List<Pair<Float, Float>> = dataRangePoints.map {
-        val dataMaximumFloat = dataMaximum.toFloat()
-        val dataMinimumFloat = dataMinimum.toFloat()
-        val rangeMaximumFloat = rangeMaximum.toFloat()
-        val rangeMinimumFloat = rangeMinimum.toFloat()
-
-        val normalizedData = (it.first.toFloat() - dataMinimumFloat) / (dataMaximumFloat - dataMinimumFloat)
-        val normalizedRange = (it.second.toFloat() - rangeMinimumFloat) / (rangeMaximumFloat - rangeMinimumFloat)
-
-        normalizedData to normalizedRange
+    fun DataSet.normalized(): List<Pair<Float, Float>> {
+        return dataPoints.map {
+            val normalizedData =
+                (it.first - dataMinimum) / (dataMaximum - dataMinimum)
+            val normalizedRange =
+                (it.second - rangeMinimum) / (rangeMaximum - rangeMinimum)
+            normalizedData to normalizedRange
+        }
     }
 }
