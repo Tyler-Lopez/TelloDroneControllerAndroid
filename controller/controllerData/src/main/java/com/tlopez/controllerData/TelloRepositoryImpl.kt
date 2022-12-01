@@ -113,6 +113,11 @@ class TelloRepositoryImpl @Inject constructor(
         return socketCommands.sendCommandWithResponse(COMMAND_VIDEO_STOP)
     }
 
+    override suspend fun missionPadDetectionEnable(): Result<TelloResponse> {
+        socketCommands.sendCommandWithResponse("mon")
+        return socketCommands.sendCommandWithResponse("mdirection 2")
+    }
+
     private fun sendCommand(command: String): Result<Unit> {
         return try {
             val commandArr = command.toByteArray()

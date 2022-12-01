@@ -167,6 +167,7 @@ class ControllerViewModel @Inject constructor(
         telloRepository
             .takeOff()
             .doOnSuccess {
+
                 println("Successfully took off.")
                 (lastPushedState as? Connected)?.toFlying()?.push()
                 // On any successful take-off, begin listening to lever force changes
@@ -201,8 +202,16 @@ class ControllerViewModel @Inject constructor(
             .doOnSuccess {
                 println("HEALTH CHECK: Success")
                 if (lastPushedState is DisconnectedIdle) {
-                    ConnectedIdle().push()
-                    telloStateLoop()
+                    telloRepository.missionPadDetectionEnable()
+                        .doOnSuccess {
+                            println("mission pad enabled with response ${it.name}")
+                            ConnectedIdle().push()
+                            telloStateLoop()
+                        }
+                        .doOnFailure {
+                            println("failed to enable mp")
+                        }
+
                 }
             }
             .doOnFailure {
@@ -250,7 +259,7 @@ class ControllerViewModel @Inject constructor(
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
             .doOnSuccess { data ->
-                println("Successfully received tello state.")
+                println("Successfully received tello state id: ${data.missionPadId} x: ${data.missionPadX}.")
                 (lastPushedState as? Connected)?.updateTelloState(data)?.push()
                 pendingFlight?.let { flight ->
                     datastoreInsertFlightData(

@@ -36,4 +36,7 @@ interface TelloRepository {
 
     /** Stops receiving video from the device. **/
     suspend fun videoStop(): Result<TelloResponse>
+
+    suspend fun missionPadDetectionEnable(): Result<TelloResponse>
+
 }

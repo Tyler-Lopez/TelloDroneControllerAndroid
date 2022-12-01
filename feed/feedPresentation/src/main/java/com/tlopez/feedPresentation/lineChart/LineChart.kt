@@ -15,16 +15,14 @@ fun LineChart(
     Canvas(modifier = modifier) {
         lineChartData.apply {
             dataSets.forEach { dataSet ->
-                val rnd = Random()
-                val dataSetColor = Color(rnd.nextInt(), rnd.nextInt(), rnd.nextInt())
-
+                val dataSetColor = dataSet.dataType.color
                 var prevPoint: Offset? = null
 
                 dataSet.normalized().forEach {
                     println("Trying to draw normalized... $it")
                     val newPoint = Offset(
                         size.width * it.second,
-                        size.height * if (it.first.isNaN()) 0f else it.first
+                        size.height * if (it.first.isNaN()) (size.height / 2f) else it.first
                     )
                     prevPoint?.let {
                         drawLine(
