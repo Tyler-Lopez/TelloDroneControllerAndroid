@@ -38,5 +38,5 @@ interface TelloRepository {
     suspend fun videoStop(): Result<TelloResponse>
 
     suspend fun missionPadDetectionEnable(): Result<TelloResponse>
-
+    suspend fun missionPadDetectionEnableBothSensors(): Result<TelloResponse>
 }

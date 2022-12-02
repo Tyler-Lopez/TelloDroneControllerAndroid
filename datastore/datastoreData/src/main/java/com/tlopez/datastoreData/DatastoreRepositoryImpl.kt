@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 class DatastoreRepositoryImpl : DatastoreRepository {
 
     companion object {
-        private const val DEFAULT_CHALLENGE_ID = "ec885c24-3ea6-4583-880c-8b72a5213bab"
+        private const val DEFAULT_CHALLENGE_ID = "3f0e2b38-8387-41dd-bfad-696bfd42ee4c"
         private const val DEFAULT_UNTERMINATED_FLIGHT_LENGTH = -1
     }
 
@@ -108,7 +108,8 @@ class DatastoreRepositoryImpl : DatastoreRepository {
                 Amplify.DataStore.query(
                     TelloFlightData::class.java,
                     Where
-                        .matches(TelloFlightData.TELLOFLIGHT_ID.eq(flightId)),
+                        .matches(TelloFlightData.TELLOFLIGHT_ID.eq(flightId))
+                        .sorted(TelloFlightData.TIME_SINCE_START_MS.ascending()),
                     { continuation.resume(success(it.asSequence().toList())) },
                     { continuation.resumeWithException(it) }
                 )

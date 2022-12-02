@@ -114,7 +114,11 @@ class TelloRepositoryImpl @Inject constructor(
     }
 
     override suspend fun missionPadDetectionEnable(): Result<TelloResponse> {
-        socketCommands.sendCommandWithResponse("mon")
+        return socketCommands.sendCommandWithResponse("mon")
+            //  return socketCommands.sendCommandWithResponse("mdirection 2")
+    }
+
+    override suspend fun missionPadDetectionEnableBothSensors(): Result<TelloResponse> {
         return socketCommands.sendCommandWithResponse("mdirection 2")
     }
 

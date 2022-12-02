@@ -48,7 +48,7 @@
     },
     "AppSync": {
         "Default": {
-            "ApiUrl": "https://nauspaed2zaklbqxwz2yomnvlq.appsync-api.us-east-1.amazonaws.com/graphql",
+            "ApiUrl": "https://x6htphq5svgjbivmzjct4mwodu.appsync-api.us-east-1.amazonaws.com/graphql",
             "Region": "us-east-1",
             "AuthMode": "AMAZON_COGNITO_USER_POOLS",
             "ClientDatabasePrefix": "telloshare_AMAZON_COGNITO_USER_POOLS"

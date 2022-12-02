@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.amplifyframework.api.aws.AWSApiPlugin
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
+import com.amplifyframework.core.Action
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.AWSDataStorePlugin
 import com.amplifyframework.datastore.DataStoreConfiguration
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
                 .modelProvider(AmplifyModelProvider.getInstance())
                 .build()
         )
+
 
         Amplify.configure(applicationContext)
         setContent {

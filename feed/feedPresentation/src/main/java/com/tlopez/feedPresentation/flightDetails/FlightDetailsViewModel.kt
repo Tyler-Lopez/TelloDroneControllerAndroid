@@ -14,6 +14,8 @@ import com.tlopez.feedPresentation.lineChart.DataTypeLineChart
 import com.tlopez.feedPresentation.lineChart.DataTypeLineChart.*
 import com.tlopez.feedPresentation.lineChart.LineChartData
 import com.tlopez.feedPresentation.flightDetails.FlightDetailsViewEvent.*
+import com.tlopez.feedPresentation.quadrantGraph.PositionData
+import com.tlopez.feedPresentation.quadrantGraph.Velocity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,16 +43,28 @@ class FlightDetailsViewModel @Inject constructor(
             getTelloFlightData(flightId)
                 .doOnSuccess {
                     flightData = it
+                    println("flight data is of size ${flightData.size}")
+                    flightData.forEach {
+                        println("here, y is ${it.y} x is ${it.x}")
+                    }
+
+
                     FlightDetailsViewState(
                         lineChartData = flightData.run {
                             LineChartData(
-                                dataSets = defaultDataTypeLineChart.map { type ->
-                                    dataSetByDataType(type)
-                                },
+                                dataSet = dataSetByDataType(ACCELERATION_Z),
                                 rangeMaximum = maxOf(TelloFlightData::getTimeSinceStartMs).toFloat(),
                                 rangeMinimum = minOf(TelloFlightData::getTimeSinceStartMs).toFloat()
                             )
                         },
+                        positionData = PositionData(flightData.map {
+                            println("yo yaw is ${it.yaw}")
+                            Velocity(
+                                it.vgx,
+                                it.vgy,
+                                it.timeSinceStartMs
+                            )
+                        }),
                         selectedDataTypeLineChart = defaultDataTypeLineChart
                     ).push()
                 }
@@ -75,12 +89,8 @@ class FlightDetailsViewModel @Inject constructor(
             }
             copy(
                 lineChartData = lineChartData.copy(
-                    dataSets = flightData.run {
-                        newSelections.map {
-                            dataSetByDataType(it)
-                        }
-                    }),
-                selectedDataTypeLineChart = newSelections
+                    dataSet = flightData.dataSetByDataType(event.type)
+                )
             )
         }?.push()
     }

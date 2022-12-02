@@ -33,7 +33,7 @@ class ControllerViewModel @Inject constructor(
     companion object {
         private const val DELAY_MS_HEALTH_CHECK = 500L
         private const val DELAY_MS_LEVER_FORCE = 100L
-        private const val DELAY_MS_TELLO_STATE = 1000L
+        private const val DELAY_MS_TELLO_STATE = 50L
         private const val MAX_RETRY_COUNT_LAND = 3
         private const val MAX_RETRY_COUNT_TAKEOFF = 3
     }
@@ -196,33 +196,31 @@ class ControllerViewModel @Inject constructor(
         }
     }
 
+    private var failuresInRow = 0
+
     private suspend fun healthCheckAction() {
         telloRepository
             .connect()
             .doOnSuccess {
                 println("HEALTH CHECK: Success")
+                failuresInRow = 0
                 if (lastPushedState is DisconnectedIdle) {
-                    telloRepository.missionPadDetectionEnable()
-                        .doOnSuccess {
-                            println("mission pad enabled with response ${it.name}")
-                            ConnectedIdle().push()
-                            telloStateLoop()
-                        }
-                        .doOnFailure {
-                            println("failed to enable mp")
-                        }
-
+                    ConnectedIdle().push()
+                    telloStateLoop()
                 }
             }
             .doOnFailure {
-                telloStateJob?.cancel()
+                failuresInRow++
                 println("HEALTH CHECK: Failure")
-                terminatePendingFlight(asSuccess = false)
-                if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
-                    DisconnectedError
-                } else {
-                    DisconnectedIdle
-                }.push()
+                if (failuresInRow > 2) {
+                    telloStateJob?.cancel()
+                    terminatePendingFlight(asSuccess = false)
+                    if (lastPushedState is Flying || lastPushedState is DisconnectedError) {
+                        DisconnectedError
+                    } else {
+                        DisconnectedIdle
+                    }.push()
+                }
             }
     }
 
@@ -259,7 +257,7 @@ class ControllerViewModel @Inject constructor(
     private suspend fun telloStateAction() {
         telloRepository.receiveTelloState()
             .doOnSuccess { data ->
-                println("Successfully received tello state id: ${data.missionPadId} x: ${data.missionPadX}.")
+                println("Successfully received tello state id: ${data.missionPadId} x: ${data.missionPadX}. Speed ${data.speedOfX}")
                 (lastPushedState as? Connected)?.updateTelloState(data)?.push()
                 pendingFlight?.let { flight ->
                     datastoreInsertFlightData(
@@ -310,11 +308,4 @@ class ControllerViewModel @Inject constructor(
         }
         pendingFlight = null
     }
-
-    private data class LeverForce(
-        val roll: Int = 0,
-        val pitch: Int = 0,
-        val throttle: Int = 0,
-        val yaw: Int = 0
-    )
 }

@@ -15,6 +15,7 @@ import com.tlopez.corePresentation.common.ScreenBackground
 import com.tlopez.feedPresentation.flightDetails.FlightDetailsViewEvent.*
 import com.tlopez.feedPresentation.lineChart.DataTypeLineChart
 import com.tlopez.feedPresentation.lineChart.LineChart
+import com.tlopez.feedPresentation.quadrantGraph.QuadrantGraph
 
 @Composable
 fun FlightDetailsScreen(viewModel: FlightDetailsViewModel) {
@@ -29,6 +30,14 @@ fun FlightDetailsScreen(viewModel: FlightDetailsViewModel) {
             padding = 0.dp
         ) {
             viewModel.viewState.collectAsState().value?.apply {
+                Text("Flight Path")
+                QuadrantGraph(
+                    positions = positionData.positions,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+                Text("Data Over Time")
                 LineChart(
                     lineChartData = lineChartData,
                     modifier = Modifier

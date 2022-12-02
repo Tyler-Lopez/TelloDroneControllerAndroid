@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val datastoreRepository: DatastoreRepository,
-    private val getUserProfilePictureUrl: GetUserProfilePictureUrl
+    private val getUserProfilePictureUrl: GetUserProfilePictureUrl,
 ) : BaseRoutingViewModel<FeedViewState, FeedViewEvent, FeedDestination>() {
 
     private var fetchDataJob: Job? = null
