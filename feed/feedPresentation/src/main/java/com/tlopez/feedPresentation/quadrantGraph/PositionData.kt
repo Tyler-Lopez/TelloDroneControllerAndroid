@@ -38,19 +38,16 @@ data class PositionData(
         }
     }
 
-    /**
-     * Provided a list of positions, return a new position which is centered in the theoretical
-     * square created between the bottom-left and the top-right.
-     */
-    fun List<Position>.center(): Position {
-        val minX = minOf { it.positionDecimeterX }
-        val maxX = maxOf { it.positionDecimeterX }
-        val minY = minOf { it.positionDecimeterY }
-        val maxY = maxOf { it.positionDecimeterY}
-        return Position(
-            positionDecimeterX = (minX + maxX) / 2f,
-            positionDecimeterY = (minY + maxY) / 2f
-        )
-    }
+    private val maxX = positions.maxOf { it.positionDecimeterX }
+    private val maxY = positions.maxOf { it.positionDecimeterY }
+    private val minX = positions.minOf { it.positionDecimeterX }
+    private val minY = positions.minOf { it.positionDecimeterY }
+    val rangeX = maxX - minX
+    val rangeY = maxY - minY
+    val centerPosition = Position(
+        positionDecimeterX = (minX + maxX) / 2f,
+        positionDecimeterY = (minY + maxY) / 2f
+    )
+
 }
 
