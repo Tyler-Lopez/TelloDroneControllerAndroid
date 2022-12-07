@@ -23,13 +23,6 @@ Three models exist in the GraphQL schema: Challenge, TelloFlight, TelloFlightDat
 
 ## Running This Application
 
-*From an APK (easy)*
-
-https://github.com/Tyler-Lopez/TelloDroneControllerAndroid/blob/main/tellodronecontroller.apk
-
-Open this link on your phone to install the pre-built application directly.
-
-*Building the Application Yourself (hard)*
 1. If not yet downloaded, download the latest version of Android Studio.
 2. Download this repository and extract it.
 3. Open the extracted folder in Android Studio.
