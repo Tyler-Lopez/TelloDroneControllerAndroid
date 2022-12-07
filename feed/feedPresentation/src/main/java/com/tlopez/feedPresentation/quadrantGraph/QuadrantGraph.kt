@@ -43,10 +43,10 @@ fun QuadrantGraph(
     Text("X Traversal: ${"%.1f".format(positionData.distanceFeetX)} ft")
     Text("Y Traversal: ${"%.1f".format(positionData.distanceFeetY)} ft")
     positionData.percentErrorProjectiles().apply {
-        Text("Closest distances to (5ft, 0ft), (10ft, 0ft), (15ft, 0ft)")
+        Text("Closest distances (5ft, 0ft), (10ft, 0ft), (15ft, 0ft)...")
         Text("Mean: $mean ft")
         Text("Variance: $variance ft")
-        Text("Std. Dev.: $standardDeviation ftg")
+        Text("Std. Dev.: $standardDeviation ft")
     }
 
 }

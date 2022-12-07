@@ -27,7 +27,8 @@ class ControllerViewModel @Inject constructor(
     private val telloRepository: TelloRepository,
     private val datastoreInitializeFlight: InitializeFlight,
     private val datastoreInsertFlightData: InsertFlightData,
-    private val datastoreTerminateFlight: TerminateFlight
+    private val datastoreTerminateFlight: TerminateFlight,
+    private val fileUtils: FileUtils
 ) : BaseRoutingViewModel<ControllerViewState, ControllerViewEvent, ControllerDestination>() {
 
     companion object {
@@ -80,7 +81,13 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onClickedTakePicture() {
-
+        println("Here, clicked take picture")
+        (lastPushedState as? Connected)?.apply {
+            bitmapLatest?.let {
+                println("Here, saving bitmap")
+                fileUtils.saveImage(it)
+            }
+        }
     }
 
     private fun onMovedRollPitchThumbstick(event: MovedRollPitchThumbstick) {

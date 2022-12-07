@@ -59,10 +59,11 @@ data class PositionData(
         val standardDeviation: Float
     )
 
+    val closestToFirst = positions.minBy { abs(15.24f - it.positionDecimeterX) }
+    val closestToSecond = positions.minBy { abs(30.48f - it.positionDecimeterX) }
+    val closestToThird = positions.minBy { abs(45.72f - it.positionDecimeterX) }
+
     fun percentErrorProjectiles(): TempMath {
-        val closestToFirst = positions.minBy { abs(15.24f - it.positionDecimeterX) }
-        val closestToSecond = positions.minBy { abs(30.48f - it.positionDecimeterX) }
-        val closestToThird = positions.minBy { abs(45.72f - it.positionDecimeterX) }
 
         val distance1 = sqrt(
             (closestToFirst.positionDecimeterX - proj1).pow(2) +

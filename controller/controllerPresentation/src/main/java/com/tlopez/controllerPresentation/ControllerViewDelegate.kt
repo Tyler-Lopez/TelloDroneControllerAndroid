@@ -63,6 +63,7 @@ private fun ConnectedStateHandler(
                     IconButton(onClick = {
                         when {
                             permissionsState.hasPermission -> {
+                                println("here, has permission")
                                 eventReceiver.onEventDebounced(ClickedTakePicture)
                             }
                             permissionsState.shouldShowRationale -> {

@@ -65,6 +65,7 @@ class StorageRepositoryImpl @Inject constructor(
         return try {
             val fileType = MimeTypeMap.getSingleton()
                 .getExtensionFromMimeType(context.contentResolver.getType(fileUri))
+            println("yo, file type is $fileType")
             if (fileType != FILE_EXTENSION_JPG) throw NonJpgFileException
             suspendCoroutine { continuation ->
                 runCatching {
