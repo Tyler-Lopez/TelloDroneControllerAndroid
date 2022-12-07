@@ -1,36 +1,29 @@
 package com.tlopez.feedPresentation.quadrantGraph
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun QuadrantGraph(
-    positions: List<Position>,
+    positionData: PositionData,
     modifier: Modifier
 ) {
-    Canvas(modifier = modifier) {
-        drawLine(
-            Color.Gray,
-            Offset(0f, size.height / 2f),
-            Offset(size.width, size.height / 2f)
-        )
-        drawLine(
-            Color.Gray,
-            Offset(size.width / 2f, 0f),
-            Offset(size.width / 2f, size.height)
-        )
+    Canvas(modifier = Modifier.size(250.dp).background(Color.White)) {
         val maximumPosition = 100
         val halfHeight = center.y
         val halfWidth = center.x
         var lastOffset: Offset? = null
-        positions.forEach {
-            println("Position is $it")
-            val x = (it.positionDecimeterX / maximumPosition) * halfWidth + halfWidth
-            val y = (it.positionDecimeterY / maximumPosition) * halfHeight + halfHeight
-            val newOffset = Offset(x, y)
+        positionData.positionsAsScaledOffsets(size.width, size.height).forEach {
+            val x = (it)
+            val y = (it)
+            val newOffset = it
             lastOffset?.let {
                 drawLine(
                     Color.Black,
@@ -43,9 +36,17 @@ fun QuadrantGraph(
             drawCircle(
                 Color.Red,
                 1f,
-                Offset(x, y)
+                it
             )
         }
+    }
+    Text("X Traversal: ${"%.1f".format(positionData.distanceFeetX)} ft")
+    Text("Y Traversal: ${"%.1f".format(positionData.distanceFeetY)} ft")
+    positionData.percentErrorProjectiles().apply {
+        Text("Closest distances to (5ft, 0ft), (10ft, 0ft), (15ft, 0ft)")
+        Text("Mean: $mean ft")
+        Text("Variance: $variance ft")
+        Text("Std. Dev.: $standardDeviation ftg")
     }
 
 }

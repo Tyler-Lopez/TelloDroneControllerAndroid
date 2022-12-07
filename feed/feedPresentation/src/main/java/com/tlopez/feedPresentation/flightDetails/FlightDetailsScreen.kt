@@ -32,7 +32,7 @@ fun FlightDetailsScreen(viewModel: FlightDetailsViewModel) {
             viewModel.viewState.collectAsState().value?.apply {
                 Text("Flight Path")
                 QuadrantGraph(
-                    positions = positionData.positions,
+                    positionData = positionData,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)

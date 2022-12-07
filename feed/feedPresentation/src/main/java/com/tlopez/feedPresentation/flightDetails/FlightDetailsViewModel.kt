@@ -97,6 +97,7 @@ class FlightDetailsViewModel @Inject constructor(
 
     private fun List<TelloFlightData>.dataSetByDataType(type: DataTypeLineChart): DataSet {
         val selector: (TelloFlightData) -> Double = {
+            println("here type is $type")
             when (type) {
                 ACCELERATION_X -> it.agx
                 ACCELERATION_Y -> it.agy
