@@ -97,7 +97,6 @@ class FlightDetailsViewModel @Inject constructor(
 
     private fun List<TelloFlightData>.dataSetByDataType(type: DataTypeLineChart): DataSet {
         val selector: (TelloFlightData) -> Double = {
-            println("here type is $type")
             when (type) {
                 ACCELERATION_X -> it.agx
                 ACCELERATION_Y -> it.agy
@@ -119,13 +118,3 @@ class FlightDetailsViewModel @Inject constructor(
         )
     }
 }
-/*
-    private fun <R> List<TelloFlightData>.dataSetByDataTypeSelector(selector: KFunction1<TelloFlightData, R>): DataSet
-            where R : Number, R : Comparable<R> = DataSet(
-        dataMaximum = maxOf(selector).toFloat(),
-        dataMinimum = minOf(selector).toFloat(),
-        dataPoints = map { selector(it).toFloat() to it.timeSinceStartMs.toFloat() }
-    )
-}
-
- */
