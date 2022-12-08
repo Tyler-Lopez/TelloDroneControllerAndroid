@@ -2,6 +2,7 @@ package com.tlopez.controllerPresentation
 
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
+import com.tlopez.controllerDomain.FileRepository
 import com.tlopez.controllerDomain.TelloRepository
 import com.tlopez.controllerPresentation.ControllerViewEvent.*
 import com.tlopez.controllerPresentation.ControllerViewState.Connected
@@ -13,7 +14,6 @@ import com.tlopez.controllerPresentation.composable.thumbstick.ThumbstickState
 import com.tlopez.core.architecture.BaseRoutingViewModel
 import com.tlopez.core.ext.doOnFailure
 import com.tlopez.core.ext.doOnSuccess
-import com.tlopez.datastoreDomain.repository.DatastoreRepository
 import com.tlopez.datastoreDomain.models.TelloFlight
 import com.tlopez.datastoreDomain.usecase.InitializeFlight
 import com.tlopez.datastoreDomain.usecase.InsertFlightData
@@ -28,7 +28,7 @@ class ControllerViewModel @Inject constructor(
     private val datastoreInitializeFlight: InitializeFlight,
     private val datastoreInsertFlightData: InsertFlightData,
     private val datastoreTerminateFlight: TerminateFlight,
-    private val fileUtils: FileUtils
+    private val fileRepository: FileRepository
 ) : BaseRoutingViewModel<ControllerViewState, ControllerViewEvent, ControllerDestination>() {
 
     companion object {
@@ -81,11 +81,18 @@ class ControllerViewModel @Inject constructor(
     }
 
     private fun onClickedTakePicture() {
-        println("Here, clicked take picture")
-        (lastPushedState as? Connected)?.apply {
-            bitmapLatest?.let {
-                println("Here, saving bitmap")
-                fileUtils.saveImage(it)
+        viewModelScope.launch(Dispatchers.IO) {
+            (lastPushedState as? Connected)?.apply {
+                bitmapLatest?.let {
+                    fileRepository
+                        .saveBitmap(it)
+                        .doOnSuccess {
+                            println("Picture saved successfully.")
+                        }
+                        .doOnFailure {
+                            println("Picture not saved successfully.")
+                        }
+                }
             }
         }
     }
