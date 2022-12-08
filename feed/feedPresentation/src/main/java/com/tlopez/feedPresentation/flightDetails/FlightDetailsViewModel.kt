@@ -57,8 +57,8 @@ class FlightDetailsViewModel @Inject constructor(
                                 rangeMinimum = minOf(TelloFlightData::getTimeSinceStartMs).toFloat()
                             )
                         },
-                        positionData = PositionData(flightData.map {
-                            println("yo yaw is ${it.yaw}")
+                        positionData = PositionData(flightData.sortedBy { it.timeSinceStartMs }.map {
+                            println("Here, time since ${it.timeSinceStartMs} vgx: ${it.vgx}")
                             Velocity(
                                 it.vgx,
                                 it.vgy,
